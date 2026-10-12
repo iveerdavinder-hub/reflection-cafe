@@ -9,9 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./node_modules/@designcodeio/threeui/lib-dist/style.css">
 <link rel="stylesheet" href="./dist/Scene.css?v=2">
 <style>
+.threeui-background{position:relative;isolation:isolate;background:#030304}.threeui-background>canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 :root{--ink:#17241e;--green:#233d32;--sage:#c5d2b8;--cream:#f7f5ef;--paper:#fffdf8;--orange:#d88c5a;--muted:#69746d;--line:rgba(23,36,30,.13);--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);overflow-x:hidden}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}button,a{ -webkit-tap-highlight-color:transparent}img{display:block;max-width:100%;object-fit:cover}::selection{background:var(--sage);color:var(--ink)}
 .menu-carousel-wrapper{position:relative;width:100%;height:520px;margin:24px 0 16px;overflow:hidden;border-radius:22px;background:radial-gradient(circle at center,rgba(255,255,255,.9) 0%,rgba(233,237,228,.95) 100%);border:1px solid rgba(23,36,30,.09);box-shadow:0 18px 45px rgba(35,61,50,.07)}
@@ -305,7 +305,7 @@ document.getElementById('year').textContent=new Date().getFullYear();
 const glow=document.querySelector('.cursor-glow');if(!reduced&&window.matchMedia('(pointer:fine)').matches){window.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'},{passive:true})}else glow.remove();
 </script>
 <script type="module">
-import { PREDICTIVE_ARC_DEFAULTS, createPredictiveArcRenderer } from "./node_modules/@designcodeio/threeui/lib-dist/shaders/predictive-arc/predictiveArcRenderer.js";
+import { PREDICTIVE_ARC_DEFAULTS, createPredictiveArcRenderer } from "./dist/predictiveArcRenderer.js";
 
 const arcContainer = document.getElementById('heroPredictiveArc');
 const arcCanvas = document.getElementById('predictiveArcCanvas');

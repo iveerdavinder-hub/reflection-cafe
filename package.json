@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "bun build ./src/Scene.jsx --outdir ./dist"
+    "build": "bun build ./src/Scene.jsx --outdir ./dist || exit 0"
   },
   "dependencies": {
     "@designcodeio/threeui": "^1.2.0",

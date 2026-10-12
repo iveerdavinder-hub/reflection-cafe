@@ -31,9 +31,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./node_modules/@designcodeio/threeui/lib-dist/style.css">
 <link rel="stylesheet" href="./dist/Scene.css?v=2">
 <style>
+.threeui-background{position:relative;isolation:isolate;background:#030304}.threeui-background>canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 :root{--ink:#17241e;--green:#233d32;--sage:#c5d2b8;--cream:#f7f5ef;--paper:#fffdf8;--orange:#d88c5a;--orange-light:#e5a174;--muted:#69746d;--line:rgba(23,36,30,.13);--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif;--grain:url(https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/40b7fef3-410d-4ef3-bd67-0a2fc7ee5a1d.svg);--card-red:#ef5d44;--card-yellow:#fcdd71;--card-blue:#9fd5f7;--card-dark:#151515;--card-cream:#f9f6f1}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:88px;-webkit-overflow-scrolling:touch}
@@ -1260,7 +1260,7 @@ document.querySelectorAll('.filter-chip').forEach(btn => {
 });
 </script>
 <script type="module">
-import { PREDICTIVE_ARC_DEFAULTS, createPredictiveArcRenderer } from "./node_modules/@designcodeio/threeui/lib-dist/shaders/predictive-arc/predictiveArcRenderer.js";
+import { PREDICTIVE_ARC_DEFAULTS, createPredictiveArcRenderer } from "./dist/predictiveArcRenderer.js";
 
 const arcContainer = document.getElementById('heroPredictiveArc');
 const arcCanvas = document.getElementById('predictiveArcCanvas');
