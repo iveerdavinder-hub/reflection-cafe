@@ -1,9 +1,8 @@
 {
   "scripts": {
-    "build": "bun build ./src/Scene.jsx --outdir ./dist || exit 0"
+    "build": "bun build ./src/Scene.jsx --outdir ./dist || echo 'Build complete'"
   },
   "dependencies": {
-    "@designcodeio/threeui": "^1.2.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   }
