@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14251f">
+<meta name="description" content="Reflections Cafe in Sector 35, Chandigarh — comforting favourites, beautiful coffee, and a cozy place to gather.">
+<title>Reflections Cafe — A Little Pause, Beautifully Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./node_modules/@designcodeio/threeui/lib-dist/style.css">
+<link rel="stylesheet" href="./dist/Scene.css?v=2">
+<style>
+:root{--ink:#17241e;--green:#233d32;--sage:#c5d2b8;--cream:#f7f5ef;--paper:#fffdf8;--orange:#d88c5a;--muted:#69746d;--line:rgba(23,36,30,.13);--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);overflow-x:hidden}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}button,a{ -webkit-tap-highlight-color:transparent}img{display:block;max-width:100%;object-fit:cover}::selection{background:var(--sage);color:var(--ink)}
+.menu-carousel-wrapper{position:relative;width:100%;height:520px;margin:24px 0 16px;overflow:hidden;border-radius:22px;background:radial-gradient(circle at center,rgba(255,255,255,.9) 0%,rgba(233,237,228,.95) 100%);border:1px solid rgba(23,36,30,.09);box-shadow:0 18px 45px rgba(35,61,50,.07)}
+.menu-carousel-hint{display:flex;justify-content:center;align-items:center;gap:8px;margin:6px 0 35px;color:var(--muted);font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+.atmosphere-section{background:var(--paper);padding:110px 7.5%;position:relative}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:20px}
+.gallery-card{position:relative;height:340px;border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(23,36,30,.08);transition:transform .4s ease,box-shadow .4s ease}
+.gallery-card img{width:100%;height:100%;object-fit:cover;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
+.gallery-card:hover{transform:translateY(-6px);box-shadow:0 22px 45px rgba(23,36,30,.16)}
+.gallery-card:hover img{transform:scale(1.08)}
+.gallery-overlay{position:absolute;inset:auto 0 0 0;padding:24px 20px 18px;background:linear-gradient(to top,rgba(16,28,22,.9) 0%,rgba(16,28,22,.55) 65%,transparent 100%);color:#fff;transform:translateY(6px);transition:transform .3s ease}
+.gallery-card:hover .gallery-overlay{transform:translateY(0)}
+.gallery-overlay h4{font:500 18px var(--serif);margin:0 0 4px;color:#fdfaf5}
+.gallery-overlay p{font-size:11px;margin:0;color:#d7e0d9;line-height:1.5}
+.footer-map-box{background:#1a2e24;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;margin:32px 0 24px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.footer-map-bar{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(20,35,28,.85);border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:14px}
+.footer-map-info{display:flex;align-items:center;gap:12px}
+.map-live-dot{width:10px;height:10px;border-radius:50%;background:#d88c5a;box-shadow:0 0 10px #d88c5a;flex-shrink:0;animation:mapPulse 2s infinite}
+@keyframes mapPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.7}}
+.footer-map-info strong{display:block;font-size:13px;color:#f7f5ef;font-weight:600}
+.footer-map-info small{display:block;font-size:11px;color:#aab8ad;margin-top:2px}
+.footer-map-btn{border:1px solid rgba(216,140,90,.6);color:#f7f5ef;background:rgba(216,140,90,.15);padding:10px 18px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .25s;text-decoration:none}
+.footer-map-btn:hover{background:#d88c5a;color:#17241e;border-color:#d88c5a}
+.footer-map-frame iframe{display:block;width:100%;height:290px;border:0}
+.cursor-glow{position:fixed;width:260px;height:260px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(216,140,90,.10),transparent 70%);z-index:0;transform:translate(-50%,-50%);opacity:.8}
+.nav{position:fixed;z-index:20;top:0;left:0;width:100%;padding:20px 5.5%;display:flex;align-items:center;justify-content:space-between;transition:background .35s,padding .35s,box-shadow .35s;color:white}.nav.scrolled{padding-top:12px;padding-bottom:12px;background:rgba(247,245,239,.92);color:var(--ink);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+.brand{display:flex;gap:11px;align-items:center;font-weight:700;letter-spacing:.02em}.brand-mark{width:38px;height:38px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:21px}.brand small{display:block;font-size:9px;letter-spacing:.23em;text-transform:uppercase;opacity:.72;margin-top:3px}
+.nav-links{display:flex;gap:4px;align-items:center;font-size:11.5px;font-weight:600;background:rgba(20,37,30,.45);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px 6px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 30px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.14);transition:all .35s cubic-bezier(.22,1,.36,1)}
+.nav.scrolled .nav-links{background:rgba(247,245,239,.82);border-color:rgba(23,36,30,.12);box-shadow:0 6px 20px rgba(23,36,30,.06),inset 0 1px #ffffffaa}
+.nav-links a{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:7px 13px;border-radius:999px;color:rgba(255,255,255,.88);letter-spacing:.02em;text-decoration:none;transition:color .25s ease,background .25s ease,transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease;will-change:transform,background}
+.nav.scrolled .nav-links a{color:var(--ink);opacity:.82}
+.nav-links a::after{content:"";position:absolute;bottom:3px;left:50%;width:0;height:2px;background:var(--orange);border-radius:2px;transition:width .28s cubic-bezier(.22,1,.36,1),opacity .28s ease;transform:translateX(-50%);opacity:0}
+.nav-links a:hover{opacity:1;color:#fff;background:rgba(255,255,255,.18);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.nav.scrolled .nav-links a:hover{color:var(--ink);background:rgba(23,36,30,.08);box-shadow:0 4px 12px rgba(23,36,30,.07)}
+.nav-links a:hover::after{width:36%;opacity:1}
+.nav-links a:active{transform:translateY(0) scale(.93)}
+.nav-links a.active{opacity:1!important;color:#17241e!important;background:var(--orange)!important;font-weight:700;box-shadow:0 4px 16px rgba(216,140,90,.45);transform:translateY(-1px)}
+.nav-links a.active::after{display:none}
+.nav-cta,.btn{border:0;border-radius:999px;background:var(--orange);color:#1d271f;padding:14px 21px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:12px;transition:transform .25s,box-shadow .25s,background .25s;cursor:pointer}.nav-cta:hover,.btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px #0002;background:#e5a174}.menu-toggle{display:none;background:none;border:1px solid currentColor;color:inherit;border-radius:50%;width:42px;height:42px;font-size:20px}
+.hero{min-height:100svh;position:relative;display:flex;align-items:center;color:#fff;overflow:hidden;background:#17251f}.hero-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,25,19,.83) 0%,rgba(12,25,19,.58) 48%,rgba(12,25,19,.12) 100%),url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=2200&q=85') center 54%/cover;transform:scale(1.05);animation:heroZoom 14s ease-out forwards}.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 78% 25%,rgba(202,158,109,.25),transparent 32%),linear-gradient(0deg,rgba(13,25,19,.35),transparent 45%);pointer-events:none}.hero-arc-layer{position:absolute;inset:0;z-index:1;pointer-events:none;background:transparent!important;mix-blend-mode:screen;opacity:.65}.hero-arc-layer canvas{display:block;width:100%;height:100%;filter:hue-rotate(25deg) saturate(1.4) brightness(1.1)}.hero-content{position:relative;z-index:2;width:min(780px,90%);margin:90px 0 50px 10%;animation:rise .9s .15s both}.eyebrow{font-size:10px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;display:flex;align-items:center;gap:12px}.eyebrow:before{content:"";width:32px;height:1px;background:var(--orange)}.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(52px,7.4vw,104px);line-height:.99;letter-spacing:-.045em;max-width:800px;margin:27px 0}.hero h1 em{color:#d9b18c;font-weight:500}.hero p{max-width:450px;color:#e1e5df;line-height:1.85;font-size:14px}.hero-actions{display:flex;gap:13px;align-items:center;margin-top:32px;flex-wrap:wrap}.btn-outline{background:transparent;border:1px solid #ffffff78;color:white}.btn-outline:hover{background:#ffffff17;box-shadow:none}.hero-bottom{position:absolute;z-index:2;bottom:34px;left:5.5%;right:5.5%;display:flex;justify-content:space-between;align-items:end;color:#ffffffc7;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.hero-rating{display:flex;align-items:center;gap:12px}.stars{color:#e9b36e;letter-spacing:.12em}.scroll-cue{display:flex;align-items:center;gap:12px}.scroll-cue:after{content:"";width:50px;height:1px;background:#ffffff8c}
+.section{padding:115px 7.5%;position:relative}.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:48px}.section-kicker{color:#8b6d51;font-size:10px;font-weight:700;letter-spacing:.23em;text-transform:uppercase}.section h2{font:500 clamp(36px,5vw,64px)/1.06 var(--serif);letter-spacing:-.035em;margin:14px 0 0;max-width:670px}.section-intro{max-width:365px;color:var(--muted);font-size:13px;line-height:1.9}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:8%;align-items:center}.about-photo-wrap{position:relative;padding:0 30px 30px 0}.about-photo{width:100%;height:550px;border-radius:3px;object-fit:cover}.photo-note{position:absolute;right:0;bottom:0;width:180px;background:var(--sage);padding:24px;color:var(--green);font:500 19px/1.25 var(--serif)}.about-copy p{font-size:14px;line-height:1.95;color:var(--muted)}.about-copy .lead{font:500 23px/1.5 var(--serif);color:var(--ink)}.text-link{display:inline-flex;align-items:center;gap:15px;font-size:12px;font-weight:700;margin-top:17px;padding-bottom:9px;border-bottom:1px solid var(--orange)}.text-link span{transition:transform .2s}.text-link:hover span{transform:translateX(5px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:75px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.stat{padding:27px 20px 27px 0;border-right:1px solid var(--line)}.stat:not(:first-child){padding-left:26px}.stat:last-child{border-right:0}.stat strong{font:500 clamp(32px,4vw,48px) var(--serif);letter-spacing:-.04em}.stat span{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:9px}
+.menu-section{background:#e9ede4}.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.menu-card{background:var(--paper);padding:0;overflow:hidden;position:relative;transition:transform .35s,box-shadow .35s}.menu-card:hover{transform:translateY(-8px);box-shadow:0 24px 45px #233d3215}.menu-img{height:280px;overflow:hidden;position:relative}.menu-img img{width:100%;height:100%;transition:transform .65s cubic-bezier(.2,.7,.2,1)}.menu-card:hover .menu-img img{transform:scale(1.07)}.menu-label{position:absolute;top:16px;left:16px;background:var(--cream);padding:8px 11px;font-size:9px;letter-spacing:.15em;text-transform:uppercase}.menu-info{padding:23px 24px 25px}.menu-info h3{font:500 25px var(--serif);margin:0 0 9px}.menu-info p{color:var(--muted);font-size:12px;line-height:1.75;margin:0}.menu-foot{display:flex;justify-content:space-between;align-items:center;margin-top:20px;font-size:11px;font-weight:700}.round-arrow{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;transition:background .2s}.menu-card:hover .round-arrow{background:var(--orange)}
+.experience{background:var(--green);color:#fff}.experience .section-kicker{color:#d6a982}.experience .section-intro{color:#c6d0c8}.experience-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.experience-image{height:560px;position:relative}.experience-image img{width:100%;height:100%;object-fit:cover}.experience-image:after{content:"";position:absolute;inset:18px -18px -18px 18px;border:1px solid #ffffff4c;pointer-events:none}.experience-points{display:grid;grid-template-columns:1fr 1fr;gap:32px 25px;margin-top:38px}.point-icon{width:36px;height:36px;border:1px solid #ffffff4d;border-radius:50%;display:grid;place-items:center;color:#e6b78f;font-size:17px}.point h3{font:500 20px var(--serif);margin:14px 0 8px}.point p{font-size:12px;color:#c6d0c8;line-height:1.8;margin:0}
+.testimonial{background:var(--paper);text-align:center}.quote-mark{font:80px/.8 var(--serif);color:var(--orange);margin-bottom:16px}.quote-text{font:500 clamp(25px,3.7vw,42px)/1.35 var(--serif);max-width:850px;margin:0 auto 28px;letter-spacing:-.02em}.quote-author{font-size:12px;font-weight:700}.quote-role{font-size:11px;color:var(--muted);margin-top:6px}.quote-controls{display:flex;justify-content:center;gap:12px;margin-top:30px}.quote-controls button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;cursor:pointer;transition:background .2s}.quote-controls button:hover{background:var(--sage)}.quote-dots{display:flex;gap:7px;justify-content:center;align-items:center;margin-top:22px}.dot{width:5px;height:5px;border-radius:50%;background:#c8cec7}.dot.active{width:22px;border-radius:9px;background:var(--orange);transition:width .25s}
+.cta{padding:95px 7.5%;background:#d9e0d1;position:relative;overflow:hidden}.cta:before,.cta:after{content:"";position:absolute;border:1px solid #233d3218;border-radius:50%;width:470px;height:470px;right:-100px;top:-240px;animation:orbit 20s linear infinite}.cta:after{width:330px;height:330px;right:15px;top:-160px;animation-direction:reverse}.cta-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:35px}.cta h2{font:500 clamp(36px,5vw,62px)/1.08 var(--serif);letter-spacing:-.04em;max-width:700px;margin:14px 0}.cta p{font-size:13px;color:#536057}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:10%;align-items:start}.contact-details{margin-top:36px;display:grid;gap:24px}.contact-item{display:flex;gap:15px;align-items:flex-start}.contact-icon{width:39px;height:39px;flex:0 0 39px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:#8b6d51}.contact-item small{display:block;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}.contact-item strong{font-size:13px;line-height:1.65;font-weight:600}.contact-form{background:var(--paper);padding:36px;border:1px solid var(--line)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{margin-bottom:20px}.field label{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;margin-bottom:9px}.field input,.field select,.field textarea{width:100%;border:1px solid #dce0d8;background:transparent;padding:13px 14px;border-radius:2px;outline:none;font-size:12px;color:var(--ink);transition:border-color .2s,box-shadow .2s}.field textarea{min-height:115px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#78917d;box-shadow:0 0 0 3px #78917d20}.form-success{display:none;padding:20px;text-align:center;background:#e8efe5;color:var(--green);margin-top:16px;font-size:13px}.form-success.show{display:block;animation:rise .4s both}
+footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:48px}.footer-brand p{max-width:270px;color:#aebbb0;font-size:12px;line-height:1.9;margin-top:20px}.footer-col h4{font-size:10px;text-transform:uppercase;letter-spacing:.17em;margin:7px 0 20px;color:#d8b18d}.footer-col a,.footer-col p{display:block;font-size:12px;color:#b7c2b8;margin:0 0 13px;line-height:1.6;transition:color .2s}.footer-col a:hover{color:#fff}.socials{display:flex;gap:9px;margin-top:20px}.socials a{width:33px;height:33px;border:1px solid #ffffff35;border-radius:50%;display:grid;place-items:center;margin:0;font-size:11px}.footer-bottom{border-top:1px solid #ffffff20;padding-top:22px;display:flex;justify-content:space-between;gap:20px;color:#8d9b90;font-size:10px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1)}.reveal.visible{opacity:1;transform:translateY(0)}.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}@keyframes heroZoom{to{transform:scale(1)}}@keyframes orbit{to{transform:rotate(360deg)}}
+@media(max-width:980px){.nav{padding:14px 4%}.nav-links{gap:2px;padding:3px 4px}.nav-links a{padding:6px 9px;font-size:11px}.nav-cta{padding:11px 14px}.section{padding:85px 6%}.about-grid,.experience-grid{gap:40px}.about-photo{height:450px}.menu-img{height:220px}.footer-top{grid-template-columns:1.4fr 1fr 1fr;}.footer-col:last-child{grid-column:2/4}.contact-grid{gap:6%}}
+@media(max-width:768px){.cursor-glow{display:none}.nav{padding:13px 5%;}.menu-toggle{display:block}.nav-cta{display:none}.nav-links{display:none;position:absolute;top:65px;left:4%;right:4%;padding:16px;border-radius:18px;background:var(--paper);color:var(--ink);box-shadow:0 24px 50px rgba(0,0,0,.22);border:1px solid var(--line);flex-direction:column;align-items:stretch;gap:4px}.nav-links.open{display:flex;animation:rise .25s both}.nav-links a{padding:12px 16px;border-radius:10px;color:var(--ink)!important;font-size:13px;justify-content:flex-start}.nav-links a.active{background:var(--orange)!important;color:#17241e!important}.hero-content{margin:100px 7% 80px}.hero h1{font-size:clamp(48px,13vw,74px)}.hero p{font-size:13px}.hero-bottom{left:7%;right:7%;bottom:23px}.scroll-cue{display:none}.section{padding:75px 6%}.section-head{display:block;margin-bottom:32px}.section-intro{margin-top:20px}.about-grid,.experience-grid,.contact-grid{grid-template-columns:1fr;gap:42px}.about-photo-wrap{max-width:520px}.about-photo{height:390px}.about-copy .lead{font-size:21px}.stats{grid-template-columns:1fr 1fr;margin-top:50px}.stat{padding:22px 10px 22px 0;border-bottom:1px solid var(--line)}.stat:not(:first-child){padding-left:15px}.stat:nth-child(2){border-right:0}.stat:nth-child(3),.stat:nth-child(4){border-bottom:0}.stat strong{font-size:37px}.menu-grid{grid-template-columns:1fr;gap:20px}.menu-img{height:280px}.experience-image{height:380px;margin-right:12px}.experience-points{gap:26px 18px}.cta{padding:75px 6%}.cta-inner{display:block}.cta .btn{margin-top:15px}.contact-form{padding:24px 19px}.form-row{grid-template-columns:1fr;gap:0}.footer-top{grid-template-columns:1fr 1fr;gap:32px 22px}.footer-brand{grid-column:1/3}.footer-col:last-child{grid-column:auto}.footer-bottom{flex-direction:column;gap:10px}.quote-text{font-size:27px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}.hero-bg{transform:none}}
+</style>
+</head>
+<body>
+<div class="cursor-glow" aria-hidden="true"></div>
+<header class="nav" id="navbar">
+  <a class="brand" href="#home" aria-label="Reflections Cafe home"><span class="brand-mark">R</span><span>REFLECTIONS<small>CAFE · CHANDIGARH</small></span></a>
+  <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+    <a href="#home">Home</a><a href="#story">Our Story</a><a href="#menu">Menu Highlights</a><a href="#experience">The Experience</a><a href="#moments">Atmosphere</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a>
+  </nav>
+  <a class="nav-cta" href="#contact">Plan Your Visit <span>↗</span></a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+</header>
+<main>
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="threeui-background predictive-arc predictive-arc--dark hero-arc-layer" id="heroPredictiveArc" aria-hidden="true">
+    <canvas id="predictiveArcCanvas"></canvas>
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow">Your little corner of calm</div>
+    <h1>A little pause.<br><em>A lot of feeling.</em></h1>
+    <p>Good food, beautifully poured coffee, and conversations that stay with you. Find your kind of comfort at Reflections Cafe, Chandigarh.</p>
+    <div class="hero-actions"><a class="btn" href="#menu">Explore the menu <span>↗</span></a><a class="btn btn-outline" href="#story">Discover our story <span>↓</span></a></div>
+  </div>
+  <div class="hero-bottom"><div class="hero-rating"><span class="stars">★★★★★</span><span>4.7 · 2,600+ reviews</span></div><div class="scroll-cue">Scroll to explore</div></div>
+</section>
+
+<section class="section" id="story">
+  <div class="about-grid">
+    <div class="about-photo-wrap reveal"><img class="about-photo" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1100&q=85" alt="Warm, inviting cafe interior with wooden tables and natural light" loading="lazy"><div class="photo-note">Made for<br>moments that matter.</div></div>
+    <div class="about-copy reveal delay-1"><div class="section-kicker">A seat at our table</div><h2>More than coffee.<br>It's how you <em>feel.</em></h2><p class="lead">A welcoming space for slow mornings, spontaneous catch-ups, and one more bite before you go.</p><p>At Reflections, the little things make the experience: familiar favourites, fresh flavours, thoughtful service, and an atmosphere that makes it easy to stay a little longer. Come for the food. Leave with a good memory.</p><a class="text-link" href="#contact">Come say hello <span>↗</span></a></div>
+  </div>
+  <div class="stats">
+    <div class="stat reveal"><strong><span data-count="4.7" data-decimal="1">0</span><sup>★</sup></strong><span>Guest rating</span></div>
+    <div class="stat reveal delay-1"><strong><span data-count="2646">0</span><sup>+</sup></strong><span>Guest reviews</span></div>
+    <div class="stat reveal delay-2"><strong><span data-count="35">0</span><sup>C</sup></strong><span>Sector 35, Chandigarh</span></div>
+    <div class="stat reveal delay-3"><strong><span data-count="11">0</span><sup>pm</sup></strong><span>Open until late</span></div>
+  </div>
+</section>
+
+<section class="section menu-section" id="menu">
+  <div class="section-head"><div class="reveal"><div class="section-kicker">Interactive 3D Carousel</div><h2>Familiar favourites.<br>Unexpected delights.</h2></div><p class="section-intro reveal delay-1">Explore our chef creations and coffee specialties in 3D. Drag to spin the carousel, and click any dish card to focus and learn more.</p></div>
+  <div id="menu-carousel-root" class="reveal delay-1"></div>
+  <div class="menu-carousel-hint reveal delay-2"><span>✦ Drag or scroll horizontally to rotate · Click any dish to focus</span></div>
+  <div class="menu-grid">
+    <article class="menu-card reveal"><div class="menu-img"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=85" alt="Steamed dumplings served with dipping sauce" loading="lazy"><span class="menu-label">Guest favourite</span></div><div class="menu-info"><h3>Jhol Momos</h3><p>Comforting, flavour-packed dumplings with a rich, warming sesame broth.</p><div class="menu-foot"><span>A little spice, a lot of joy</span><span class="round-arrow">↗</span></div></div></article>
+    <article class="menu-card reveal delay-1"><div class="menu-img"><img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=900&q=85" alt="Crispy potatoes tossed with a glossy chilli sauce" loading="lazy"><span class="menu-label">A crowd pleaser</span></div><div class="menu-info"><h3>Honey Chilli Potato</h3><p>Crispy, sweet, savoury, and made for sharing across the table.</p><div class="menu-foot"><span>The perfect sidekick</span><span class="round-arrow">↗</span></div></div></article>
+    <article class="menu-card reveal delay-2"><div class="menu-img"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=85" alt="Decadent layered dessert ready to be enjoyed" loading="lazy"><span class="menu-label">Save room for this</span></div><div class="menu-info"><h3>Kunafa & Sweet Treats</h3><p>A sweet finish for lingering conversations and little celebrations.</p><div class="menu-foot"><span>One more spoonful</span><span class="round-arrow">↗</span></div></div></article>
+    <article class="menu-card reveal"><div class="menu-img"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=900&q=85" alt="Fresh artisan pour-over coffee being brewed" loading="lazy"><span class="menu-label">Specialty Roast</span></div><div class="menu-info"><h3>Pour-Over Coffee</h3><p>Carefully hand-poured single origin beans with citrus notes and silky finish.</p><div class="menu-foot"><span>Freshly brewed daily</span><span class="round-arrow">↗</span></div></div></article>
+    <article class="menu-card reveal delay-1"><div class="menu-img"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=85" alt="Crispy woodfired pizza with wild mushrooms and cheese" loading="lazy"><span class="menu-label">Woodfired Delight</span></div><div class="menu-info"><h3>Truffle Mushroom Pizza</h3><p>Slow-fermented sourdough crust topped with roasted fungi & creamy mozzarella.</p><div class="menu-foot"><span>Hot from the stone</span><span class="round-arrow">↗</span></div></div></article>
+    <article class="menu-card reveal delay-2"><div class="menu-img"><img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=900&q=85" alt="Artisan sourdough avocado toast with fresh herbs and feta" loading="lazy"><span class="menu-label">All-Day Brunch</span></div><div class="menu-info"><h3>Smashed Avocado Toast</h3><p>Creamy hass avocado on toasted rustic sourdough with crumbled feta & chili flakes.</p><div class="menu-foot"><span>Vibrant & wholesome</span><span class="round-arrow">↗</span></div></div></article>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin-top:25px">Menu items and availability may change. Ask our team for today's selection.</p>
+</section>
+
+<section class="section experience" id="experience">
+  <div class="experience-grid">
+    <div class="reveal"><div class="section-kicker">The Reflections feeling</div><h2>Come as you are.<br>Stay as long as you like.</h2><p class="section-intro" style="margin-top:20px">Whether it's a catch-up with your favourite people or a well-earned solo coffee, we're here for the moments in between.</p>
+      <div class="experience-points">
+        <div class="point"><div class="point-icon">✳</div><h3>A cosy atmosphere</h3><p>A thoughtfully styled space with an easy, welcoming energy.</p></div>
+        <div class="point"><div class="point-icon">♡</div><h3>Warm hospitality</h3><p>Friendly service that helps you feel right at home.</p></div>
+        <div class="point"><div class="point-icon">✦</div><h3>Something for everyone</h3><p>Food and drinks to make every kind of outing feel special.</p></div>
+        <div class="point"><div class="point-icon">◷</div><h3>Made for meet-ups</h3><p>Your neighbourhood spot for conversations that run long.</p></div>
+      </div>
+    </div>
+    <div class="experience-image reveal delay-1"><img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&w=1100&q=85" alt="Sunlit cafe table set for a relaxed visit" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="section atmosphere-section" id="moments">
+  <div class="section-head">
+    <div class="reveal">
+      <div class="section-kicker">Atmosphere & Moments</div>
+      <h2>Slow mornings.<br>Lively evenings. <em>Pure joy.</em></h2>
+    </div>
+    <p class="section-intro reveal delay-1">Reflections is built around the feeling of being somewhere that welcomes you back. Take a glimpse into the warmth, laughter, and shared moments that fill our cafe every day.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-card reveal">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=85" alt="Warm ambient cafe interior illuminated with fairy lights" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>Golden Hour Glow</h4>
+        <p>Warm ambient lighting designed for unhurried evenings</p>
+      </div>
+    </div>
+    <div class="gallery-card reveal delay-1">
+      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=85" alt="Friends laughing and enjoying drinks together at a cafe table" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>Catch-Ups & Laughter</h4>
+        <p>Tables made for long stories and shared smiles</p>
+      </div>
+    </div>
+    <div class="gallery-card reveal delay-2">
+      <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1000&q=85" alt="Barista pouring delicate latte art into a ceramic cup" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>The Barista Craft</h4>
+        <p>Every pour prepared with dedication and detail</p>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1000&q=85" alt="Cozy seating corner with plush seating and warm interior decor" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>Your Cozy Corner</h4>
+        <p>A serene nook for reading, writing, and calm</p>
+      </div>
+    </div>
+    <div class="gallery-card reveal delay-1">
+      <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=1000&q=85" alt="Group of friends sharing delicious plates and coffee" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>Gather Around The Table</h4>
+        <p>Delicious food made for sharing together</p>
+      </div>
+    </div>
+    <div class="gallery-card reveal delay-2">
+      <img src="https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&w=1000&q=85" alt="Sunlight streaming across wooden coffee table and plants" loading="lazy">
+      <div class="gallery-overlay">
+        <h4>Sunlit Pauses</h4>
+        <p>Natural daylight, fresh greens, and easy calm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section testimonial" id="reviews">
+  <div class="section-kicker reveal">Kind words, good company</div><div class="quote-mark reveal">“</div>
+  <div class="quote-text reveal" id="quoteText">Pretty cafe and good food. The ambience makes it a lovely place to spend time with friends.</div>
+  <div class="quote-author reveal" id="quoteAuthor">A Reflections guest</div><div class="quote-role reveal" id="quoteRole">Chandigarh · Guest review</div>
+  <div class="quote-controls"><button id="prevQuote" aria-label="Previous testimonial">←</button><button id="nextQuote" aria-label="Next testimonial">→</button></div><div class="quote-dots" id="quoteDots" aria-label="Testimonial slide indicators"></div>
+  <p style="font-size:10px;color:var(--muted);margin-top:24px">Inspired by themes in guest feedback; wording shown here is illustrative.</p>
+</section>
+
+<section class="cta" id="visit"><div class="cta-inner"><div class="reveal"><div class="section-kicker">Your table is waiting</div><h2>Make room for a<br>really good moment.</h2><p>Bring your people. Bring your appetite. We'll take care of the rest.</p></div><a class="btn reveal delay-1" href="#contact">Plan your visit <span>↗</span></a></div></section>
+
+<section class="section" id="contact">
+  <div class="contact-grid">
+    <div class="reveal"><div class="section-kicker">Find your way to us</div><h2>Let's make it<br>a coffee date.</h2><p class="section-intro" style="margin-top:20px">Drop by for your favourites, or get in touch if you have a question. We look forward to welcoming you.</p>
+      <div class="contact-details">
+        <div class="contact-item"><div class="contact-icon">⌖</div><div><small>Visit us</small><strong>First Floor, SCO 473–474, beside 24 Seven,<br>Sector 35C, Chandigarh 160022</strong></div></div>
+        <div class="contact-item"><div class="contact-icon">↗</div><div><small>Call us</small><strong><a href="tel:+919518408629">+91 95184 08629</a></strong></div></div>
+        <div class="contact-item"><div class="contact-icon">◷</div><div><small>Opening hours</small><strong>Open daily · Closes at 11:00 PM</strong></div></div>
+        <div class="contact-item"><div class="contact-icon">◎</div><div><small>Find us online</small><strong><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram ↗</a></strong></div></div>
+      </div>
+    </div>
+    <form class="contact-form reveal delay-1" id="contactForm">
+      <div class="form-row"><div class="field"><label for="name">YOUR NAME</label><input id="name" name="name" placeholder="How should we call you?" required autocomplete="name"></div><div class="field"><label for="email">EMAIL ADDRESS</label><input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email"></div></div>
+      <div class="form-row"><div class="field"><label for="phone">PHONE (OPTIONAL)</label><input id="phone" name="phone" type="tel" placeholder="+91"></div><div class="field"><label for="reason">WHAT'S IT ABOUT?</label><select id="reason" name="reason"><option>General enquiry</option><option>Group visit</option><option>Menu question</option><option>Feedback</option></select></div></div>
+      <div class="field"><label for="message">YOUR MESSAGE</label><textarea id="message" name="message" placeholder="Tell us a little more..." required></textarea></div>
+      <button class="btn" type="submit">Send your message <span>↗</span></button>
+      <div class="form-success" id="formSuccess" role="status">Thanks for reaching out! This demo form is working locally; connect it to your email or booking system to receive submissions.</div>
+    </form>
+  </div>
+</section>
+</main>
+<footer><div class="footer-top">
+  <div class="footer-brand"><a class="brand" href="#home"><span class="brand-mark">R</span><span>REFLECTIONS<small>CAFE · CHANDIGARH</small></span></a><p>A little pause in the middle of everything. Good food, thoughtful coffee, and a place to feel at home.</p><div class="socials"><a href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noreferrer">ig</a><a href="#contact" aria-label="Contact">↗</a></div></div>
+  <div class="footer-col"><h4>Explore</h4><a href="#story">Our story</a><a href="#menu">Menu highlights</a><a href="#experience">The experience</a><a href="#moments">Atmosphere</a><a href="#reviews">Guest reviews</a></div>
+  <div class="footer-col"><h4>Good to know</h4><a href="#contact">Contact & location</a><a href="#visit">Plan your visit</a><a href="tel:+919518408629">Call the cafe</a></div>
+  <div class="footer-col"><h4>Come find us</h4><p>First Floor, SCO 473–474<br>Sector 35C, Chandigarh 160022</p><a href="https://maps.app.goo.gl/gRyPjiHaZZtcYTNp8" target="_blank" rel="noreferrer">Get directions ↗</a><a href="tel:+919518408629">+91 95184 08629</a></div>
+</div>
+<div class="footer-map-box reveal">
+  <div class="footer-map-bar">
+    <div class="footer-map-info">
+      <span class="map-live-dot" aria-hidden="true"></span>
+      <div>
+        <strong>Reflections Cafe · Sector 35C, Chandigarh</strong>
+        <small>First Floor, SCO 473–474, beside 24 Seven, Sector 35C, Chandigarh 160022 · Closes 11:00 PM</small>
+      </div>
+    </div>
+    <a href="https://maps.app.goo.gl/gRyPjiHaZZtcYTNp8" target="_blank" rel="noreferrer" class="footer-map-btn">Open in Google Maps ↗</a>
+  </div>
+  <div class="footer-map-frame">
+    <iframe src="https://maps.google.com/maps?q=Reflections+Cafe+Chandigarh&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="290" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Reflections Cafe Google Maps Location"></iframe>
+  </div>
+</div>
+<div class="footer-bottom"><span>© <span id="year"></span> Reflections Cafe. Made for good moments.</span><span>Chandigarh, India · Please enjoy responsibly.</span></div></footer>
+<script>
+const navbar=document.getElementById('navbar');
+const navLinks=document.getElementById('navLinks');
+const toggle=document.getElementById('menuToggle');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function onScroll(){navbar.classList.toggle('scrolled',window.scrollY>30)}
+onScroll();
+toggle.addEventListener('click',()=>{const open=navLinks.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'×':'☰'});
+
+const sectionIds=['home','story','menu','experience','moments','reviews','contact'];
+const navLinksArray=Array.from(navLinks.querySelectorAll('a'));
+
+function updateActiveNav(){
+  const scrollPos=window.scrollY+140;
+  let activeId=sectionIds[0];
+  for(let i=0;i<sectionIds.length;i++){
+    const el=document.getElementById(sectionIds[i]);
+    if(el){
+      const top=el.offsetTop;
+      const height=el.offsetHeight;
+      if(scrollPos>=top&&scrollPos<top+height){activeId=sectionIds[i]}
+    }
+  }
+  if((window.innerHeight+window.scrollY)>=(document.documentElement.scrollHeight-60)){
+    activeId='contact';
+  }
+  navLinksArray.forEach(link=>{
+    const href=link.getAttribute('href');
+    if(href==='#'+activeId){
+      link.classList.add('active');
+    }else{
+      link.classList.remove('active');
+    }
+  });
+}
+
+window.addEventListener('scroll',()=>{onScroll();updateActiveNav()},{passive:true});
+updateActiveNav();
+
+navLinksArray.forEach(a=>a.addEventListener('click',()=>{
+  navLinks.classList.remove('open');
+  toggle.setAttribute('aria-expanded','false');
+  toggle.textContent='☰';
+  navLinksArray.forEach(l=>l.classList.remove('active'));
+  a.classList.add('active');
+}));
+const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target)}}),{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+const counterObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target;const end=Number(el.dataset.count);const decimal=Number(el.dataset.decimal||0);if(reduced){el.textContent=end.toLocaleString('en-IN',{minimumFractionDigits:decimal,maximumFractionDigits:decimal});counterObserver.unobserve(el);return}const start=performance.now(),duration=1300;function tick(now){const p=Math.min((now-start)/duration,1),ease=1-Math.pow(1-p,3);el.textContent=(end*ease).toLocaleString('en-IN',{minimumFractionDigits:decimal,maximumFractionDigits:decimal});if(p<1)requestAnimationFrame(tick)}requestAnimationFrame(tick);counterObserver.unobserve(el)}),{threshold:.65});
+document.querySelectorAll('[data-count]').forEach(el=>counterObserver.observe(el));
+const quotes=[
+{text:'Pretty cafe and good food. The ambience makes it a lovely place to spend time with friends.',author:'A Reflections guest',role:'Chandigarh · Guest review'},
+{text:'A cosy atmosphere, friendly service, and plenty of tempting things to try on the menu.',author:'A Reflections guest',role:'Chandigarh · Guest review'},
+{ text:'A great spot to catch up, slow down, and enjoy something delicious together.',author:'A Reflections guest',role:'Chandigarh · Guest review'}
+];
+let quoteIndex=0;const quoteText=document.getElementById('quoteText'),quoteAuthor=document.getElementById('quoteAuthor'),quoteRole=document.getElementById('quoteRole'),dots=document.getElementById('quoteDots');
+function renderDots(){dots.innerHTML='';quotes.forEach((q,i)=>{const d=document.createElement('span');d.className='dot'+(i===quoteIndex?' active':'');dots.appendChild(d)})}
+function showQuote(i){quoteIndex=(i+quotes.length)%quotes.length;[quoteText,quoteAuthor,quoteRole].forEach(el=>{el.style.opacity=0;el.style.transform='translateY(8px)'});setTimeout(()=>{const q=quotes[quoteIndex];quoteText.textContent=q.text;quoteAuthor.textContent=q.author;quoteRole.textContent=q.role;[quoteText,quoteAuthor,quoteRole].forEach(el=>{el.style.transition='opacity .35s,transform .35s';el.style.opacity=1;el.style.transform='translateY(0)'});renderDots()},reduced?0:180)}
+document.getElementById('prevQuote').addEventListener('click',()=>showQuote(quoteIndex-1));document.getElementById('nextQuote').addEventListener('click',()=>showQuote(quoteIndex+1));renderDots();
+let autoplay;if(!reduced){autoplay=setInterval(()=>showQuote(quoteIndex+1),6500);document.getElementById('reviews').addEventListener('mouseenter',()=>clearInterval(autoplay));document.getElementById('reviews').addEventListener('mouseleave',()=>autoplay=setInterval(()=>showQuote(quoteIndex+1),6500))}
+document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDefault();document.getElementById('formSuccess').classList.add('show');e.target.querySelector('button[type="submit"]').innerHTML='Message noted ✓';});
+document.getElementById('year').textContent=new Date().getFullYear();
+const glow=document.querySelector('.cursor-glow');if(!reduced&&window.matchMedia('(pointer:fine)').matches){window.addEventListener('pointermove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'},{passive:true})}else glow.remove();
+</script>
+<script type="module">
+import { PREDICTIVE_ARC_DEFAULTS, createPredictiveArcRenderer } from "./node_modules/@designcodeio/threeui/lib-dist/shaders/predictive-arc/predictiveArcRenderer.js";
+
+const arcContainer = document.getElementById('heroPredictiveArc');
+const arcCanvas = document.getElementById('predictiveArcCanvas');
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (arcContainer && arcCanvas && typeof createPredictiveArcRenderer === 'function') {
+  const arcConfig = {
+    ...PREDICTIVE_ARC_DEFAULTS,
+    mode: "dark",
+    speed: 0.85,
+    spacing: 5,
+    dotSize: 5.5,
+    archHeight: 0.68,
+    thickness: 1.15,
+    brightness: 1.1,
+    hue: 24,
+    saturation: 1.35
+  };
+
+  const renderer = createPredictiveArcRenderer(arcCanvas, () => arcConfig);
+
+  if (renderer) {
+    let animId = 0;
+    let isVisible = true;
+
+    const resize = () => {
+      const rect = arcContainer.getBoundingClientRect();
+      renderer.resize(rect.width, rect.height);
+      renderer.render();
+    };
+
+    const loop = () => {
+      renderer.render();
+      if (isVisible && !document.hidden && !prefersReduced) {
+        animId = requestAnimationFrame(loop);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(arcContainer);
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry?.isIntersecting ?? true;
+      if (isVisible && !animId && !prefersReduced) {
+        animId = requestAnimationFrame(loop);
+      } else if (!isVisible && animId) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    });
+    intersectionObserver.observe(arcContainer);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && animId) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      } else if (!document.hidden && isVisible && !animId && !prefersReduced) {
+        animId = requestAnimationFrame(loop);
+      }
+    });
+
+    const heroSection = document.getElementById('home');
+    if (heroSection && !prefersReduced && window.matchMedia('(pointer:fine)').matches) {
+      heroSection.addEventListener('pointermove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        const normY = (e.clientY - rect.top) / rect.height;
+        const normX = (e.clientX - rect.left) / rect.width;
+        arcConfig.archHeight = 0.55 + normY * 0.22;
+        arcConfig.speed = 0.65 + normX * 0.45;
+      }, { passive: true });
+    }
+
+    resize();
+    if (!prefersReduced) {
+      animId = requestAnimationFrame(loop);
+    } else {
+      renderer.render();
+    }
+  }
+}
+</script>
+<script type="module" src="./dist/Scene.js?v=2"></script>
+</body>
+</html>

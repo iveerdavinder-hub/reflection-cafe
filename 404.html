@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14251f">
+<title>404 · Page Not Found — Reflections Cafe, Chandigarh</title>
+<meta name="description" content="This page seems to have wandered off or finished down to the last drop. Return to Reflections Cafe, Sector 35C, Chandigarh for fresh coffee and comforting food.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2317241e'/><text x='50' y='65' font-size='48' text-anchor='middle' fill='%23d88c5a' font-family='Georgia,serif'>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #17241e;
+  --green: #233d32;
+  --dark-green: #14231c;
+  --sage: #c5d2b8;
+  --cream: #f7f5ef;
+  --paper: #fffdf8;
+  --orange: #d88c5a;
+  --orange-light: #e5a174;
+  --muted: #69746d;
+  --line: rgba(23, 36, 30, .13);
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "DM Sans", Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* Subtle ambient background */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse at 80% 20%, rgba(216, 140, 90, .12), transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(35, 61, 50, .08), transparent 50%);
+  z-index: 0;
+}
+
+/* Header */
+.header {
+  position: relative;
+  z-index: 10;
+  padding: 24px 7.5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: rgba(247, 245, 239, .88);
+  backdrop-filter: blur(12px);
+}
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--green);
+}
+.brand small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: .23em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  padding: 9px 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  transition: all .25s ease;
+}
+.nav-back:hover {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(23, 36, 30, .12);
+}
+
+/* Main Container */
+.main-wrap {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 7.5%;
+}
+.error-card {
+  max-width: 740px;
+  width: 100%;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 64px 48px;
+  box-shadow: 0 24px 60px rgba(23, 36, 30, .07);
+  animation: cardFadeUp .7s cubic-bezier(.2, .8, .2, 1) both;
+}
+@keyframes cardFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 404 Illustration */
+.illustration-box {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 28px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.cup-svg {
+  width: 130px;
+  height: 130px;
+  filter: drop-shadow(0 12px 24px rgba(216, 140, 90, .25));
+}
+.steam {
+  animation: steamRise 3s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+@keyframes steamRise {
+  0% { transform: translateY(0) scaleY(1); opacity: .6; }
+  100% { transform: translateY(-7px) scaleY(1.15); opacity: 1; }
+}
+
+.kicker {
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(38px, 5.5vw, 64px);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+h1 em {
+  color: var(--orange);
+  font-style: italic;
+}
+.desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 0 auto 36px;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.btn-primary {
+  background: var(--orange);
+  color: #1d271f;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all .25s ease;
+  box-shadow: 0 4px 14px rgba(216, 140, 90, .3);
+}
+.btn-primary:hover {
+  background: var(--orange-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(216, 140, 90, .4);
+}
+.btn-secondary {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all .25s ease;
+}
+.btn-secondary:hover {
+  background: #fff;
+  border-color: rgba(23, 36, 30, .3);
+  transform: translateY(-2px);
+}
+
+/* Quick recommendations */
+.suggestions {
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  text-align: left;
+}
+.sugg-item {
+  padding: 16px 18px;
+  background: var(--cream);
+  border-radius: 14px;
+  border: 1px solid rgba(23, 36, 30, .06);
+  transition: all .25s ease;
+}
+.sugg-item:hover {
+  background: #fff;
+  border-color: var(--orange);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(23, 36, 30, .06);
+}
+.sugg-icon {
+  font-size: 18px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.sugg-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.sugg-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Footer */
+footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid var(--line);
+  padding: 24px 7.5%;
+  background: var(--dark-green);
+  color: #b7c2b8;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+footer a {
+  color: #fff;
+  transition: color .2s;
+}
+footer a:hover {
+  color: var(--orange);
+}
+
+@media (max-width: 768px) {
+  .header { padding: 18px 5%; }
+  .main-wrap { padding: 40px 5%; }
+  .error-card { padding: 40px 24px; border-radius: 20px; }
+  .suggestions { grid-template-columns: 1fr; gap: 12px; }
+  footer { padding: 20px 5%; flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="bg-glow" aria-hidden="true"></div>
+
+<header class="header">
+  <a class="brand" href="index.html#home" aria-label="Return to Reflections Cafe Home">
+    <span class="brand-mark">R</span>
+    <span>REFLECTIONS<small>CAFE · CHANDIGARH</small></span>
+  </a>
+  <a class="nav-back" href="index.html#home">
+    <span>← Back to Home</span>
+  </a>
+</header>
+
+<main class="main-wrap">
+  <div class="error-card">
+    <div class="illustration-box" aria-hidden="true">
+      <svg class="cup-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Floating Steam Lines -->
+        <g class="steam">
+          <path d="M48 24C46 16 52 10 50 4" stroke="#d88c5a" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M60 22C58 14 64 8 62 2" stroke="#d88c5a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M72 25C70 18 75 12 73 6" stroke="#d88c5a" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <!-- Ceramic Coffee Cup -->
+        <path d="M25 46H87V82C87 95.2548 76.2548 106 63 106H49C35.7452 106 25 95.2548 25 82V46Z" fill="#233d32" stroke="#17241e" stroke-width="3"/>
+        <!-- Handle -->
+        <path d="M87 56C98 56 106 64 106 74C106 84 97 90 87 90" stroke="#233d32" stroke-width="6" stroke-linecap="round"/>
+        <path d="M87 56C98 56 106 64 106 74C106 84 97 90 87 90" stroke="#17241e" stroke-width="2" stroke-linecap="round"/>
+        <!-- Coffee Top Surface with 404 Latte Art -->
+        <ellipse cx="56" cy="46" rx="31" ry="8" fill="#d88c5a"/>
+        <ellipse cx="56" cy="46" rx="26" ry="6" fill="#442a1b"/>
+        <text x="56" y="49" font-family="'Playfair Display', Georgia, serif" font-size="10" font-weight="700" fill="#f7f5ef" text-anchor="middle" letter-spacing="1">404</text>
+        <!-- Saucer Plate -->
+        <path d="M12 106C12 102 24 99 56 99C88 99 100 102 100 106C100 110 88 114 56 114C24 114 12 110 12 106Z" fill="#c5d2b8" stroke="#17241e" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <div class="kicker">Error 404 · Table Not Found</div>
+    <h1>This cup is <em>empty.</em></h1>
+    <p class="desc">
+      The page you were searching for seems to have been savoured down to the last drop, or moved to a different corner of our cafe. Let's find you a fresh table.
+    </p>
+
+    <div class="actions">
+      <a class="btn-primary" href="index.html#home">
+        <span>Return to Home</span>
+        <span>↗</span>
+      </a>
+      <a class="btn-secondary" href="index.html#menu">
+        <span>Explore the Menu</span>
+        <span>☕</span>
+      </a>
+      <a class="btn-secondary" href="tel:+919518408629">
+        <span>Call the Cafe</span>
+        <span>📞</span>
+      </a>
+    </div>
+
+    <div class="suggestions">
+      <a class="sugg-item" href="index.html#menu">
+        <span class="sugg-icon">🍽️</span>
+        <div class="sugg-title">Artisan Menu</div>
+        <div class="sugg-desc">From Jhol Momos &amp; Kunafa to hand-pulled single origin coffee.</div>
+      </a>
+      <a class="sugg-item" href="index.html#moments">
+        <span class="sugg-icon">📸</span>
+        <div class="sugg-title">Atmosphere Gallery</div>
+        <div class="sugg-desc">Sunlit spaces, cozy reading nooks, and unhurried laughter.</div>
+      </a>
+      <a class="sugg-item" href="index.html#contact">
+        <span class="sugg-icon">📍</span>
+        <div class="sugg-title">Sector 35C, Chandigarh</div>
+        <div class="sugg-desc">Open daily until 11:00 PM. Reserve your table or drop by.</div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>© <span id="year">2026</span> Reflections Cafe · Sector 35C, Chandigarh.</span>
+  <div>
+    <span>Need directions? </span>
+    <a href="https://maps.app.goo.gl/gRyPjiHaZZtcYTNp8" target="_blank" rel="noreferrer">Open Google Maps ↗</a>
+  </div>
+</footer>
+
+<script>
+  const yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
