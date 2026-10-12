@@ -1,6 +1,9 @@
 {
+  "name": "reflection-cafe",
+  "version": "1.0.0",
   "scripts": {
-    "build": "bun build ./src/Scene.jsx --outdir ./dist || echo 'Build complete'"
+    "build": "echo Build complete",
+    "bundle": "bun build ./src/Scene.jsx --outdir ./dist"
   },
   "dependencies": {
     "react": "^19.3.0",
