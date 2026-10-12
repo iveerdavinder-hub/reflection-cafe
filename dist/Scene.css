@@ -1,0 +1,238 @@
+/* src/components/CircularCarousel/CircularCarousel.css */
+.circular-carousel {
+  --cc-fade: #000;
+  --cc-radius: 12px;
+  --cc-inner: .4;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+  height: 100%;
+}
+
+.circular-carousel[data-axis="x"] {
+  touch-action: pan-x;
+}
+
+.circular-carousel[data-draggable] {
+  cursor: grab;
+}
+
+.circular-carousel[data-dragging] {
+  cursor: grabbing;
+}
+
+.circular-carousel:focus-visible {
+  box-shadow: inset 0 0 0 2px #80808c8c;
+}
+
+.circular-carousel__view {
+  position: absolute;
+  inset: 0;
+}
+
+.circular-carousel[data-shape="wheel"] .circular-carousel__view {
+  -webkit-mask-image: linear-gradient(#0000, #000 18% 82%, #0000);
+  mask-image: linear-gradient(#0000, #000 18% 82%, #0000);
+}
+
+.circular-carousel[data-shape="panorama"] .circular-carousel__view {
+  -webkit-mask-image: linear-gradient(to right, #0000, #000 12% 88%, #0000);
+  mask-image: linear-gradient(to right, #0000, #000 12% 88%, #0000);
+}
+
+.circular-carousel__stage {
+  position: absolute;
+  display: flex;
+  opacity: 0;
+  justify-content: center;
+  align-items:  center;
+  transition: opacity .45s;
+  inset: 0;
+}
+
+.circular-carousel[data-ready] .circular-carousel__stage {
+  opacity: 1;
+}
+
+.circular-carousel__camera, .circular-carousel__ring, .circular-carousel__card {
+  transform-style: preserve-3d;
+  width: 0;
+  height: 0;
+}
+
+.circular-carousel__camera {
+  position: relative;
+}
+
+.circular-carousel__ring, .circular-carousel__card {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.circular-carousel__tile {
+  position: absolute;
+  outline: 1px solid #0000;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.circular-carousel__frame {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.circular-carousel__photo {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  max-width: none;
+}
+
+.circular-carousel__photo--leaving {
+  animation: .7s cubic-bezier(.33,1,.68,1) both circular-carousel-leave;
+}
+
+.circular-carousel__shade, .circular-carousel__inner {
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+}
+
+.circular-carousel__shade {
+  background: var(--cc-fade);
+  opacity: var(--cc-depth, 0);
+}
+
+.circular-carousel__inner {
+  opacity: var(--cc-inner);
+  background: #000;
+}
+
+.circular-carousel__caption {
+  position: absolute;
+  display: flex;
+  color: inherit;
+  text-align: center;
+  pointer-events: none;
+  animation: .9s both circular-carousel-reveal;
+  flex-direction: column;
+  align-items:  center;
+  gap: 6px;
+  padding: 0 16px;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+}
+
+.circular-carousel__title {
+  display: flex;
+  animation: .52s cubic-bezier(.22,1,.36,1) circular-carousel-title;
+  flex-direction: column;
+  align-items:  center;
+  max-width: 100%;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.circular-carousel__subtitle {
+  opacity: .6;
+  font-weight: 400;
+}
+
+.circular-carousel__count {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+  opacity: .5;
+  align-items:  center;
+  gap: 3px;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.circular-carousel__slash {
+  opacity: .6;
+}
+
+.circular-carousel__digits {
+  display: inline-flex;
+}
+
+.circular-carousel__digit {
+  display: inline-block;
+  overflow: hidden;
+  height: 1em;
+}
+
+.circular-carousel__reel {
+  display: flex;
+  flex-direction: column;
+  transition: transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.circular-carousel__reel > span {
+  height: 1em;
+}
+
+.circular-carousel__live {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  width: 1px;
+  height: 1px;
+}
+
+@keyframes circular-carousel-title {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes circular-carousel-leave {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes circular-carousel-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circular-carousel__stage, .circular-carousel__reel {
+    transition: none;
+  }
+
+  .circular-carousel__caption, .circular-carousel__title {
+    animation: none;
+  }
+}
