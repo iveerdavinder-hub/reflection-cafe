@@ -1,8 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import CircularCarousel from "./components/CircularCarousel/CircularCarousel";
+import MorphGallery from "./components/ui/morph-gallery";
 
-export function MenuDishesCarousel() {
+const CAFE_MORPH_ITEMS = [
+  {
+    src: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=160&q=80",
+    alt: "Artisan Pour-Over Coffee — Single-Origin Roast"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=160&q=80",
+    alt: "Jhol Momos — Comfort Dumplings in Spiced Sesame Broth"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=160&q=80",
+    alt: "Woodfired Truffle Mushroom Pizza — Slow-Fermented Crust"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=160&q=80",
+    alt: "Smashed Avocado Sourdough Toast with Crumbled Feta"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=160&q=80",
+    alt: "Crispy Honey Chilli Potato with Sweet Sesame Glaze"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=160&q=80",
+    alt: "Kunafa & Sweet Treats with Golden Kataifi & Rose Drizzle"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=160&q=80",
+    alt: "Cold Brew Float & Iced Spanish Latte"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=160&q=80",
+    alt: "Warm Reflections Cafe Ambience and Sunlit Seating"
+  }
+];
+
+export function MenuDishesShowcase() {
+  const [view, setView] = useState("morph"); // "morph" | "3d"
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200
   );
@@ -26,6 +71,7 @@ export function MenuDishesCarousel() {
   const isTablet = windowWidth >= 640 && windowWidth < 1024;
   const cardWidth = isMobile ? 175 : isTablet ? 210 : 240;
   const gap = isMobile ? 32 : isTablet ? 42 : 54;
+
   const dishes = [
     {
       src: "./images/dishes/jhol-momos.jpg",
@@ -102,29 +148,113 @@ export function MenuDishesCarousel() {
   ];
 
   return (
-    <div className="menu-carousel-wrapper">
-      <CircularCarousel
-        items={dishes}
-        preset="cylinder"
-        cardWidth={cardWidth}
-        aspectRatio={0.82}
-        gap={gap}
-        speed={10}
-        autoplay="drift"
-        draggable={true}
-        momentum={0.65}
-        snap={true}
-        pauseOnHover={true}
-        captions={true}
-        focusOnClick={true}
-        fadeColor="#e9ede4"
-        cornerRadius={14}
-      />
+    <div className="menu-showcase-container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "10px",
+          marginBottom: "18px",
+          position: "relative",
+          zIndex: 5
+        }}
+      >
+        <button
+          type="button"
+          onClick={() => setView("morph")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "7px",
+            padding: "9px 20px",
+            borderRadius: "999px",
+            fontSize: "12.5px",
+            fontWeight: 700,
+            cursor: "pointer",
+            transition: "all .25s ease",
+            background: view === "morph" ? "var(--orange)" : "rgba(23,36,30,.06)",
+            color: view === "morph" ? "#17241e" : "var(--muted)",
+            border: view === "morph" ? "1px solid var(--orange)" : "1px solid var(--line)",
+            boxShadow: view === "morph" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
+          }}
+          aria-pressed={view === "morph"}
+        >
+          <span>✨</span> Shader Morph Gallery
+        </button>
+        <button
+          type="button"
+          onClick={() => setView("3d")}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "7px",
+            padding: "9px 20px",
+            borderRadius: "999px",
+            fontSize: "12.5px",
+            fontWeight: 700,
+            cursor: "pointer",
+            transition: "all .25s ease",
+            background: view === "3d" ? "var(--orange)" : "rgba(23,36,30,.06)",
+            color: view === "3d" ? "#17241e" : "var(--muted)",
+            border: view === "3d" ? "1px solid var(--orange)" : "1px solid var(--line)",
+            boxShadow: view === "3d" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
+          }}
+          aria-pressed={view === "3d"}
+        >
+          <span>🔄</span> 3D Circular Cylinder
+        </button>
+      </div>
+
+      {view === "morph" ? (
+        <div
+          style={{
+            borderRadius: "24px",
+            overflow: "hidden",
+            boxShadow: "0 22px 50px rgba(23,36,30,.12)",
+            border: "1px solid rgba(23,36,30,.12)",
+            position: "relative",
+            background: "#0a0a0a"
+          }}
+        >
+          <MorphGallery
+            items={CAFE_MORPH_ITEMS}
+            height={isMobile ? "380px" : "520px"}
+            duration={1400}
+            noiseScale={3.5}
+            edge={0.16}
+            drift={0.45}
+            autoplay={4500}
+            loop={true}
+            arrows={true}
+            thumbnails={!isMobile}
+          />
+        </div>
+      ) : (
+        <div className="menu-carousel-wrapper">
+          <CircularCarousel
+            items={dishes}
+            preset="cylinder"
+            cardWidth={cardWidth}
+            aspectRatio={0.82}
+            gap={gap}
+            speed={10}
+            autoplay="drift"
+            draggable={true}
+            momentum={0.65}
+            snap={true}
+            pauseOnHover={true}
+            captions={true}
+            focusOnClick={true}
+            fadeColor="#e9ede4"
+            cornerRadius={14}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
 const menuContainer = document.getElementById("menu-carousel-root");
 if (menuContainer) {
-  createRoot(menuContainer).render(<MenuDishesCarousel />);
+  createRoot(menuContainer).render(<MenuDishesShowcase />);
 }

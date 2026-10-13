@@ -18531,8 +18531,8 @@ var require_client = __commonJS(function(exports, module) {
   }
 });
 
-// node_modules/react/cjs/react-jsx-dev-runtime.development.js
-var require_react_jsx_dev_runtime_development = __commonJS(function(exports) {
+// node_modules/react/cjs/react-jsx-runtime.development.js
+var require_react_jsx_runtime_development = __commonJS(function(exports) {
   var React = __toESM(require_react());
   (function() {
     function getComponentNameFromType(type) {
@@ -18741,7 +18741,7 @@ React keys must be passed directly to JSX without using spread:
     var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
     var didWarnAboutKeySpread = {};
     exports.Fragment = REACT_FRAGMENT_TYPE;
-    exports.jsxDEV = function(type, config, maybeKey, isStaticChildren) {
+    exports.jsx = function(type, config, maybeKey) {
       var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
       if (trackActualOwner) {
         var previousStackTraceLimit = Error.stackTraceLimit;
@@ -18750,26 +18750,37 @@ React keys must be passed directly to JSX without using spread:
         Error.stackTraceLimit = previousStackTraceLimit;
       } else
         debugStackDEV = unknownOwnerDebugStack;
-      return jsxDEVImpl(type, config, maybeKey, isStaticChildren, debugStackDEV, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
+      return jsxDEVImpl(type, config, maybeKey, false, debugStackDEV, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
+    };
+    exports.jsxs = function(type, config, maybeKey) {
+      var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
+      if (trackActualOwner) {
+        var previousStackTraceLimit = Error.stackTraceLimit;
+        Error.stackTraceLimit = 10;
+        var debugStackDEV = Error("react-stack-top-frame");
+        Error.stackTraceLimit = previousStackTraceLimit;
+      } else
+        debugStackDEV = unknownOwnerDebugStack;
+      return jsxDEVImpl(type, config, maybeKey, true, debugStackDEV, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
     };
   })();
 });
 
-// node_modules/react/jsx-dev-runtime.js
-var require_jsx_dev_runtime = __commonJS(function(exports, module) {
-  var react_jsx_dev_runtime_development = __toESM(require_react_jsx_dev_runtime_development());
+// node_modules/react/jsx-runtime.js
+var require_jsx_runtime = __commonJS(function(exports, module) {
+  var react_jsx_runtime_development = __toESM(require_react_jsx_runtime_development());
   if (false) {} else {
-    module.exports = react_jsx_dev_runtime_development;
+    module.exports = react_jsx_runtime_development;
   }
 });
 
 // src/Scene.jsx
-var import_react2 = __toESM(require_react());
+var import_react5 = __toESM(require_react());
 var import_client = __toESM(require_client());
 
 // src/components/CircularCarousel/CircularCarousel.jsx
 var import_react = __toESM(require_react());
-var jsx_dev_runtime = __toESM(require_jsx_dev_runtime());
+var jsx_runtime = __toESM(require_jsx_runtime());
 "use client";
 var photo = (id) => `https://images.unsplash.com/${id}?w=900&q=80&auto=format&fit=max&sat=-100`;
 var DEFAULT_ITEMS = [
@@ -18906,19 +18917,19 @@ var rotateY = (p, degrees) => {
   const s = Math.sin(r);
   return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c];
 };
-var Digits = ({ value }) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+var Digits = ({ value }) => /* @__PURE__ */ jsx_runtime.jsx("span", {
   className: "circular-carousel__digits",
-  children: String(value).padStart(2, "0").split("").map((digit, index) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+  children: String(value).padStart(2, "0").split("").map((digit, index) => /* @__PURE__ */ jsx_runtime.jsx("span", {
     className: "circular-carousel__digit",
-    children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+    children: /* @__PURE__ */ jsx_runtime.jsx("span", {
       className: "circular-carousel__reel",
       style: { transform: `translateY(${-Number(digit) * 10}%)` },
-      children: "0123456789".split("").map((n) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+      children: "0123456789".split("").map((n) => /* @__PURE__ */ jsx_runtime.jsx("span", {
         children: n
-      }, n, false, undefined, this))
-    }, undefined, false, undefined, this)
-  }, index, false, undefined, this))
-}, undefined, false, undefined, this);
+      }, n))
+    })
+  }, index))
+});
 var usePrefersReducedMotion = () => {
   const [reduced, setReduced] = import_react.useState(false);
   import_react.useEffect(() => {
@@ -19596,15 +19607,15 @@ var CircularCarousel = ({
     const photoStyle = axis === "x" ? { left: 0, top: -offset, width: cardW, height: cardH } : { left: -offset, top: 0, width: cardW, height: cardH };
     const flip = axis === "x" ? " rotateX(180deg)" : " rotateY(180deg)";
     const gone = leaving?.items[index];
-    return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_runtime.jsx("div", {
       className: "circular-carousel__tile",
       style: { ...box, transform: tile.move + (back ? flip : "") },
       "aria-hidden": "true",
-      children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      children: /* @__PURE__ */ jsx_runtime.jsxs("div", {
         className: "circular-carousel__frame",
         style: { height: axis === "x" ? size : cardH, borderRadius: frameRadius },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("img", {
+          /* @__PURE__ */ jsx_runtime.jsx("img", {
             className: "circular-carousel__photo",
             src: item.src,
             alt: "",
@@ -19617,27 +19628,27 @@ var CircularCarousel = ({
                 e.currentTarget.src = "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=85";
               }
             }
-          }, undefined, false, undefined, this),
-          gone && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("img", {
+          }),
+          gone && /* @__PURE__ */ jsx_runtime.jsx("img", {
             className: "circular-carousel__photo circular-carousel__photo--leaving",
             src: gone.src,
             alt: "",
             draggable: false,
             decoding: "async",
             style: { ...photoStyle, animationDelay: `${Math.round(leaving.delays[index])}ms` }
-          }, `leaving-${leaving.id}`, false, undefined, this),
-          back && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+          }, `leaving-${leaving.id}`),
+          back && /* @__PURE__ */ jsx_runtime.jsx("div", {
             className: "circular-carousel__inner"
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+          }),
+          /* @__PURE__ */ jsx_runtime.jsx("div", {
             className: "circular-carousel__shade"
-          }, undefined, false, undefined, this)
+          })
         ]
-      }, undefined, true, undefined, this)
-    }, `${back ? "b" : "f"}${tile.index}`, false, undefined, this);
+      })
+    }, `${back ? "b" : "f"}${tile.index}`);
   }, [axis, cardW, cardH, along, leaving]);
   const renderedCards = import_react.useMemo(() => {
-    return list.map((item, index) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+    return list.map((item, index) => /* @__PURE__ */ jsx_runtime.jsxs("div", {
       ref: (element) => {
         cardRefs.current[index] = element;
       },
@@ -19650,9 +19661,9 @@ var CircularCarousel = ({
         tiles.map((tile) => renderTile(item, tile, false, index)),
         layout.backfaces && tiles.map((tile) => renderTile(item, tile, true, index))
       ]
-    }, index, true, undefined, this));
+    }, index));
   }, [list, tiles, layout.backfaces, count, renderTile]);
-  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_runtime.jsxs("div", {
     ref: rootRef,
     className: `circular-carousel ${className}`.trim(),
     style: {
@@ -19679,69 +19690,854 @@ var CircularCarousel = ({
     onClick: handleClick,
     onKeyDown: handleKeyDown,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      /* @__PURE__ */ jsx_runtime.jsx("div", {
         className: "circular-carousel__view",
-        children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+        children: /* @__PURE__ */ jsx_runtime.jsx("div", {
           ref: stageRef,
           className: "circular-carousel__stage",
-          children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+          children: /* @__PURE__ */ jsx_runtime.jsx("div", {
             ref: cameraRef,
             className: "circular-carousel__camera",
-            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+            children: /* @__PURE__ */ jsx_runtime.jsx("div", {
               ref: ringRef,
               className: "circular-carousel__ring",
               children: renderedCards
-            }, undefined, false, undefined, this)
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this),
-      captions && current && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+            })
+          })
+        })
+      }),
+      captions && current && /* @__PURE__ */ jsx_runtime.jsxs("div", {
         className: "circular-carousel__caption",
         "aria-hidden": "true",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+          /* @__PURE__ */ jsx_runtime.jsxs("span", {
             className: "circular-carousel__title",
             children: [
               current.title || current.alt,
-              current.subtitle && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+              current.subtitle && /* @__PURE__ */ jsx_runtime.jsx("span", {
                 className: "circular-carousel__subtitle",
                 children: current.subtitle
-              }, undefined, false, undefined, this)
+              })
             ]
-          }, active, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+          }, active),
+          /* @__PURE__ */ jsx_runtime.jsxs("span", {
             className: "circular-carousel__count",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime.jsxDEV(Digits, {
+              /* @__PURE__ */ jsx_runtime.jsx(Digits, {
                 value: active + 1
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+              }),
+              /* @__PURE__ */ jsx_runtime.jsx("span", {
                 className: "circular-carousel__slash",
                 children: "/"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+              }),
+              /* @__PURE__ */ jsx_runtime.jsx("span", {
                 children: String(count).padStart(2, "0")
-              }, undefined, false, undefined, this)
+              })
             ]
-          }, undefined, true, undefined, this)
+          })
         ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      }),
+      /* @__PURE__ */ jsx_runtime.jsx("div", {
         className: "circular-carousel__live",
         "aria-live": "polite",
         "aria-atomic": "true",
         children: `${label}, ${active + 1} of ${count}`
-      }, undefined, false, undefined, this)
+      })
     ]
-  }, undefined, true, undefined, this);
+  });
 };
 var CircularCarousel_default = CircularCarousel;
 
+// src/components/ui/morph-gallery.tsx
+var React = __toESM(require_react());
+// node_modules/lucide-react/dist/esm/createLucideIcon.mjs
+var import_react4 = __toESM(require_react(), 1);
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
+var toKebabCase = (string) => string?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/toLucideIconData.mjs
+function toLucideIconData(iconName, iconNode, aliases = []) {
+  if (iconNode == null) {
+    throw new Error("[lucide]: iconNode is required when icon name is used");
+  }
+  return {
+    name: toKebabCase(iconName),
+    size: 24,
+    node: iconNode,
+    ...aliases.length > 0 ? { aliases } : {}
+  };
+}
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/toCamelCase.mjs
+var toCamelCase = (string) => {
+  let out = "";
+  let upperNext = false;
+  for (const ch of string) {
+    if (ch === "-" || ch === "_" || ch <= " ") {
+      upperNext = out.length > 0;
+      continue;
+    }
+    if (out.length === 0) {
+      out += ch.toLowerCase();
+    } else {
+      out += upperNext ? ch.toUpperCase() : ch;
+    }
+    upperNext = false;
+  }
+  return out;
+};
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/toPascalCase.mjs
+var toPascalCase = (string) => {
+  const camelCase = toCamelCase(string);
+  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+};
+
+// node_modules/lucide-react/dist/esm/Icon.mjs
+var import_react3 = __toESM(require_react(), 1);
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
+var mergeClasses = (...classes) => classes.filter((className, index, array) => {
+  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+}).join(" ").trim();
+
+// node_modules/lucide-react/dist/esm/shared/src/build/defaultAttributes.mjs
+var defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  "stroke-width": 2,
+  "stroke-linecap": "round",
+  "stroke-linejoin": "round"
+};
+
+// node_modules/lucide-react/dist/esm/shared/src/build/buildLucideIconNode.mjs
+function isDefined(value) {
+  return value !== null && value !== undefined;
+}
+function buildLucideIconNode(icon, params = {}) {
+  const attributeNames = params.attributeNames ?? {};
+  const getAttributeName = (attributeName) => attributeNames[attributeName] ?? attributeName;
+  const viewBoxWidth = icon.size ?? icon.width ?? defaultAttributes["width"];
+  const viewBoxHeight = icon.size ?? icon.height ?? defaultAttributes["height"];
+  const aliasClassNames = icon.aliases?.filter((alias) => typeof alias === "string" && alias.trim() !== "").map((alias) => `lucide-${alias}`) ?? [];
+  const iconClassNames = [...icon.name ? [`lucide-${icon.name}`] : [], ...aliasClassNames];
+  const classNamesFromClassName = params.className?.split(" ").filter(Boolean) ?? [];
+  const className = params.includeDefaultClasses === false ? mergeClasses(...classNamesFromClassName) : mergeClasses("lucide", ...iconClassNames, ...classNamesFromClassName);
+  const calculatedStrokeWidth = params.absoluteStrokeWidth ? Number(params.strokeWidth ?? defaultAttributes["stroke-width"]) * Number(icon.size ?? icon.width ?? defaultAttributes["width"]) / Number(params.size ?? params.width ?? defaultAttributes["width"]) : params.strokeWidth ?? defaultAttributes["stroke-width"];
+  const attributes = {
+    ...Object.entries(defaultAttributes).reduce((attrs, [attrName, value]) => {
+      attrs[getAttributeName(attrName)] = value;
+      return attrs;
+    }, {}),
+    ..."color" in params && params.color && {
+      [getAttributeName("stroke")]: params.color
+    },
+    ..."size" in params && isDefined(params.size) && {
+      [getAttributeName("width")]: params.size,
+      [getAttributeName("height")]: params.size
+    },
+    ..."width" in params && isDefined(params.width) && {
+      [getAttributeName("width")]: params.width
+    },
+    ..."height" in params && isDefined(params.height) && {
+      [getAttributeName("height")]: params.height
+    },
+    [getAttributeName("stroke-width")]: calculatedStrokeWidth,
+    ...className && {
+      [getAttributeName("class")]: className
+    },
+    [getAttributeName("viewBox")]: `0 0 ${viewBoxWidth} ${viewBoxHeight}`,
+    ...params.hasA11yProp === false ? {
+      [getAttributeName("aria-hidden")]: "true"
+    } : {},
+    ..."attributes" in params && params.attributes
+  };
+  return [
+    "svg",
+    attributes,
+    icon.node.map((child) => {
+      const [name, attrs, children] = child;
+      const nextAttrs = params.nonScalingStroke ? { [getAttributeName("vector-effect")]: "non-scaling-stroke", ...attrs } : attrs;
+      return children ? [name, nextAttrs, children] : [name, nextAttrs];
+    })
+  ];
+}
+
+// node_modules/lucide-react/dist/esm/shared/src/build/buildLucideIconForReact.mjs
+function buildLucideIconForReact(icon, params = {}) {
+  return buildLucideIconNode(icon, {
+    ...params,
+    attributeNames: {
+      ...params.attributeNames,
+      class: "className",
+      "stroke-width": "strokeWidth",
+      "stroke-linecap": "strokeLinecap",
+      "stroke-linejoin": "strokeLinejoin",
+      "vector-effect": "vectorEffect"
+    }
+  });
+}
+
+// node_modules/lucide-react/dist/esm/shared/src/utils/hasA11yProp.mjs
+var hasA11yProp = (props) => {
+  for (const prop in props) {
+    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+      return true;
+    }
+  }
+  return false;
+};
+
+// node_modules/lucide-react/dist/esm/context.mjs
+var import_react2 = __toESM(require_react(), 1);
+"use client";
+var LucideContext = import_react2.createContext({});
+var useLucideContext = () => import_react2.useContext(LucideContext);
+
+// node_modules/lucide-react/dist/esm/Icon.mjs
+"use client";
+var Icon = import_react3.forwardRef(({
+  color,
+  size,
+  width,
+  height,
+  strokeWidth,
+  absoluteStrokeWidth,
+  nonScalingStroke,
+  className = "",
+  children,
+  iconNode = [],
+  icon = {
+    node: iconNode,
+    aliases: [],
+    size: 24
+  },
+  ...rest
+}, ref) => {
+  const {
+    size: contextSize = 24,
+    strokeWidth: contextStrokeWidth = 2,
+    absoluteStrokeWidth: contextAbsoluteStrokeWidth = false,
+    nonScalingStroke: contextNonScalingStroke = false,
+    color: contextColor = "currentColor",
+    className: contextClass = ""
+  } = useLucideContext() ?? {};
+  const hasAccessibleProp = Boolean(children) || hasA11yProp(rest);
+  const [name, svgAttributes, builtIconNode = []] = buildLucideIconForReact(icon, {
+    color: color ?? contextColor,
+    width: width ?? size ?? contextSize,
+    height: height ?? size ?? contextSize,
+    strokeWidth: strokeWidth ?? contextStrokeWidth,
+    absoluteStrokeWidth: absoluteStrokeWidth ?? contextAbsoluteStrokeWidth,
+    nonScalingStroke: nonScalingStroke ?? contextNonScalingStroke,
+    className: mergeClasses(contextClass, className),
+    hasA11yProp: hasAccessibleProp,
+    attributes: rest
+  });
+  return import_react3.createElement(name, {
+    ref,
+    ...svgAttributes
+  }, [
+    ...builtIconNode.map(([tag, attrs]) => import_react3.createElement(tag, attrs)),
+    ...Array.isArray(children) ? children : [children]
+  ]);
+});
+
+// node_modules/lucide-react/dist/esm/createLucideIcon.mjs
+function createLucideIcon(iconDataOrName, iconNode = [], aliases = []) {
+  const iconData = typeof iconDataOrName === "string" ? toLucideIconData(iconDataOrName, iconNode, aliases) : iconDataOrName;
+  const Component = import_react4.forwardRef(({ className, ...props }, ref) => import_react4.createElement(Icon, {
+    ref,
+    icon: iconData,
+    className,
+    ...props
+  }));
+  if (iconData.name) {
+    Component.displayName = toPascalCase(iconData.name);
+  }
+  return Component;
+}
+
+// node_modules/lucide-react/dist/esm/icons/chevron-left.mjs
+var __iconData = {
+  name: "chevron-left",
+  size: 24,
+  node: [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]]
+};
+__iconData.node;
+var ChevronLeft = createLucideIcon(__iconData);
+// node_modules/lucide-react/dist/esm/icons/chevron-right.mjs
+var __iconData2 = {
+  name: "chevron-right",
+  size: 24,
+  node: [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]]
+};
+__iconData2.node;
+var ChevronRight = createLucideIcon(__iconData2);
+// src/components/ui/morph-gallery.tsx
+var jsx_runtime2 = __toESM(require_jsx_runtime());
+"use client";
+var wrapIndex = (i, n, loop) => {
+  if (n <= 0)
+    return 0;
+  return loop ? (i % n + n) % n : Math.min(Math.max(i, 0), n - 1);
+};
+var easeInOutQuint = (t) => {
+  const x = Math.min(Math.max(t, 0), 1);
+  return x < 0.5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2;
+};
+var VERT = `
+attribute vec2 a_position;
+varying vec2 v_uv;
+void main() {
+  v_uv = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}
+`;
+var FRAG = `
+precision highp float;
+
+uniform sampler2D u_from;
+uniform sampler2D u_to;
+uniform float u_progress;
+uniform vec2 u_resolution;
+uniform float u_fromAspect;
+uniform float u_toAspect;
+uniform float u_scale;
+uniform float u_direction;
+uniform float u_edge;
+uniform float u_drift;
+
+varying vec2 v_uv;
+
+vec3 permute(vec3 x) {
+  return mod(((x * 34.0) + 1.0) * x, 289.0);
+}
+
+float snoise(vec2 v) {
+  const vec4 C = vec4(
+    0.211324865405187,
+    0.366025403784439,
+   -0.577350269189626,
+    0.024390243902439
+  );
+  vec2 i  = floor(v + dot(v, C.yy));
+  vec2 x0 = v - i + dot(i, C.xx);
+  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+  vec4 x12 = x0.xyxy + C.xxzz;
+  x12.xy -= i1;
+  i = mod(i, 289.0);
+  vec3 p = permute(
+    permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0)
+  );
+  vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+  m = m * m;
+  m = m * m;
+  vec3 x  = 2.0 * fract(p * C.www) - 1.0;
+  vec3 h  = abs(x) - 0.5;
+  vec3 ox = floor(x + 0.5);
+  vec3 a0 = x - ox;
+  m *= 1.79284291400159 - 0.85373472095314 * (a0 * a0 + h * h);
+  vec3 g;
+  g.x  = a0.x  * x0.x  + h.x  * x0.y;
+  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+  return 130.0 * dot(m, g);
+}
+
+float fbm(vec2 v) {
+  float value = 0.0;
+  float amplitude = 0.5;
+  for (int i = 0; i < 5; i++) {
+    value += amplitude * snoise(v);
+    v *= 2.0;
+    amplitude *= 0.5;
+  }
+  return value;
+}
+
+// The drift below pushes UVs past the edge of the image, and CLAMP_TO_EDGE
+// answers that by smearing the last row of pixels into long vertical streaks.
+// Reflecting instead keeps real picture there. Done in the shader because
+// MIRRORED_REPEAT is illegal on the non-power-of-two textures photos produce.
+vec2 mirror(vec2 uv) {
+  return 1.0 - abs(1.0 - mod(uv, 2.0));
+}
+
+vec2 coverUV(vec2 uv, float imgAspect) {
+  float canvasAspect = u_resolution.x / u_resolution.y;
+  vec2 scale = (canvasAspect > imgAspect)
+    ? vec2(1.0, imgAspect / canvasAspect)
+    : vec2(canvasAspect / imgAspect, 1.0);
+  return mirror((uv - 0.5) * scale + 0.5);
+}
+
+void main() {
+  // Widen the sweep by one edge at each end, so progress 0 and 1 are fully
+  // one image or the other rather than already half-dissolved.
+  float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
+
+  float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
+  // Bias the threshold by how bright the incoming frame is here: its lit areas
+  // cross the front first, so the new image appears to burn through the old.
+  noise = smoothstep(
+    0.0,
+    2.0,
+    length(texture2D(u_to, coverUV(v_uv, u_toAspect)).rgb) + noise
+  );
+
+  float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
+
+  // Both frames slide, by different amounts and in opposite directions, so the
+  // tatters have parallax against each other instead of sitting in one plane.
+  vec2 fromUV = coverUV(
+    v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction),
+    u_fromAspect
+  );
+  vec2 toUV = coverUV(
+    v_uv + vec2(0.0, noise * (1.0 - u_progress) * -0.5 * u_drift * u_direction),
+    u_toAspect
+  );
+
+  gl_FragColor = mix(texture2D(u_from, fromUV), texture2D(u_to, toUV), mixFactor);
+}
+`;
+var compile = (gl, type, src) => {
+  const shader = gl.createShader(type);
+  if (!shader)
+    throw new Error("could not create shader");
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const log = gl.getShaderInfoLog(shader);
+    gl.deleteShader(shader);
+    throw new Error("shader compile failed: " + log);
+  }
+  return shader;
+};
+var link = (gl, vertSrc, fragSrc) => {
+  const vert = compile(gl, gl.VERTEX_SHADER, vertSrc);
+  const frag = compile(gl, gl.FRAGMENT_SHADER, fragSrc);
+  const program = gl.createProgram();
+  if (!program)
+    throw new Error("could not create program");
+  gl.attachShader(program, vert);
+  gl.attachShader(program, frag);
+  gl.linkProgram(program);
+  gl.deleteShader(vert);
+  gl.deleteShader(frag);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    const log = gl.getProgramInfoLog(program);
+    gl.deleteProgram(program);
+    throw new Error("program link failed: " + log);
+  }
+  return program;
+};
+var loadImage = (src) => new Promise((resolve, reject) => {
+  const img = new Image;
+  img.crossOrigin = "anonymous";
+  img.decoding = "async";
+  img.onload = () => resolve(img);
+  img.onerror = () => reject(new Error("could not load " + src));
+  img.src = src;
+});
+function MorphGallery({
+  items,
+  height = "100svh",
+  duration = 1500,
+  noiseScale = 3.5,
+  edge = 0.15,
+  drift = 0.5,
+  loop = true,
+  autoplay = 0,
+  arrows = true,
+  thumbnails = true,
+  index,
+  defaultIndex = 0,
+  onIndexChange,
+  className = ""
+}) {
+  const canvasRef = React.useRef(null);
+  const [uncontrolled, setUncontrolled] = React.useState(() => wrapIndex(defaultIndex, items.length, loop));
+  const active = index === undefined ? uncontrolled : wrapIndex(index, items.length, loop);
+  const [failed, setFailed] = React.useState(false);
+  const [ready, setReady] = React.useState(false);
+  const [generation, setGeneration] = React.useState(0);
+  const [reduced, setReduced] = React.useState(false);
+  const [paused, setPaused] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  const go = React.useCallback((next) => {
+    const wrapped = wrapIndex(next, items.length, loop);
+    if (index === undefined)
+      setUncontrolled(wrapped);
+    onIndexChange?.(wrapped);
+  }, [index, items.length, loop, onIndexChange]);
+  const tuning = React.useRef({ duration, noiseScale, edge, drift, reduced });
+  tuning.current = { duration, noiseScale, edge, drift, reduced };
+  const request = React.useRef(null);
+  const previous = React.useRef(active);
+  React.useEffect(() => {
+    if (previous.current === active)
+      return;
+    request.current = { from: previous.current, to: active };
+    previous.current = active;
+  }, [active]);
+  const sources = items.map((i) => i.src).join(`
+`);
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || items.length === 0)
+      return;
+    const gl = canvas.getContext("webgl", { alpha: false, antialias: false }) ?? canvas.getContext("experimental-webgl");
+    if (!gl) {
+      setFailed(true);
+      return;
+    }
+    let program = null;
+    let buffer = null;
+    const textures = items.map(() => null);
+    const aspects = items.map(() => 1);
+    let raf = 0;
+    let disposed = false;
+    let from = active;
+    let to = active;
+    let progress = 1;
+    let startedAt = 0;
+    let direction = 1;
+    const onLost = (e) => {
+      e.preventDefault();
+      cancelAnimationFrame(raf);
+    };
+    const onRestored = () => setGeneration((g) => g + 1);
+    canvas.addEventListener("webglcontextlost", onLost);
+    canvas.addEventListener("webglcontextrestored", onRestored);
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      if (w === 0 || h === 0 || canvas.width === w && canvas.height === h)
+        return;
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+    let uniforms = {};
+    const pick = (i) => textures[i] ?? textures.find((t) => t) ?? null;
+    const draw = () => {
+      if (disposed)
+        return;
+      const t = tuning.current;
+      const pending = request.current;
+      if (pending) {
+        request.current = null;
+        if (pending.from !== pending.to) {
+          from = pending.from;
+          to = pending.to;
+          progress = 0;
+          startedAt = performance.now();
+          const n = items.length;
+          const forward = loop ? (pending.to - pending.from + n) % n * 2 <= n : pending.to > pending.from;
+          direction = forward ? 1 : -1;
+        }
+      }
+      if (progress < 1) {
+        const span = t.reduced ? 0 : Math.max(t.duration, 1);
+        const elapsed = performance.now() - startedAt;
+        progress = span === 0 ? 1 : easeInOutQuint(Math.min(elapsed / span, 1));
+      }
+      const fromTex = pick(from);
+      const toTex = pick(to);
+      if (!fromTex || !toTex)
+        return;
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, fromTex);
+      gl.uniform1i(uniforms.from, 0);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, toTex);
+      gl.uniform1i(uniforms.to, 1);
+      gl.uniform1f(uniforms.progress, progress);
+      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+      gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1);
+      gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1);
+      gl.uniform1f(uniforms.scale, t.noiseScale);
+      gl.uniform1f(uniforms.direction, direction);
+      gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001));
+      gl.uniform1f(uniforms.drift, t.drift);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    const frame = () => {
+      draw();
+      raf = requestAnimationFrame(frame);
+    };
+    const start = async () => {
+      try {
+        program = link(gl, VERT, FRAG);
+        gl.useProgram(program);
+        buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        const loc = gl.getAttribLocation(program, "a_position");
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        for (const name of [
+          "from",
+          "to",
+          "progress",
+          "resolution",
+          "fromAspect",
+          "toAspect",
+          "scale",
+          "direction",
+          "edge",
+          "drift"
+        ]) {
+          uniforms[name] = gl.getUniformLocation(program, "u_" + name);
+        }
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        let running = false;
+        let refused = 0;
+        await Promise.all(items.map((item, i) => loadImage(item.src).then((img) => {
+          if (disposed)
+            return;
+          const tex = gl.createTexture();
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          textures[i] = tex;
+          aspects[i] = img.naturalWidth / Math.max(img.naturalHeight, 1);
+          if (!running) {
+            running = true;
+            resize();
+            setReady(true);
+            raf = requestAnimationFrame(frame);
+          }
+        }, () => {
+          refused += 1;
+          if (refused === items.length && !disposed)
+            setFailed(true);
+        })));
+      } catch {
+        if (!disposed)
+          setFailed(true);
+      }
+    };
+    start();
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+      canvas.removeEventListener("webglcontextlost", onLost);
+      canvas.removeEventListener("webglcontextrestored", onRestored);
+      for (const tex of textures)
+        if (tex)
+          gl.deleteTexture(tex);
+      if (buffer)
+        gl.deleteBuffer(buffer);
+      if (program)
+        gl.deleteProgram(program);
+      textures.fill(null);
+    };
+  }, [sources, generation, items.length, loop]);
+  React.useEffect(() => {
+    if (!autoplay || reduced || paused || items.length < 2)
+      return;
+    const id = window.setInterval(() => go(active + 1), Math.max(autoplay, 600));
+    return () => window.clearInterval(id);
+  }, [autoplay, reduced, paused, active, go, items.length]);
+  React.useEffect(() => {
+    const sync = () => setPaused(document.hidden);
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
+  const swipe = React.useRef(null);
+  const onPointerDown = (e) => {
+    swipe.current = e.clientX;
+  };
+  const onPointerUp = (e) => {
+    const startX = swipe.current;
+    swipe.current = null;
+    if (startX === null)
+      return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 48)
+      go(active + (dx < 0 ? 1 : -1));
+  };
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      go(active - 1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      go(active + 1);
+    }
+  };
+  const atStart = !loop && active === 0;
+  const atEnd = !loop && active === items.length - 1;
+  const current = items[active];
+  const arrowClass = "absolute top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center " + "rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md " + "transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 " + "focus-visible:outline-offset-2 focus-visible:outline-white " + "disabled:pointer-events-none disabled:opacity-25";
+  return /* @__PURE__ */ jsx_runtime2.jsxs("section", {
+    className: "relative w-full overflow-hidden bg-black " + className,
+    style: { height },
+    role: "region",
+    "aria-roledescription": "carousel",
+    "aria-label": "Image gallery",
+    tabIndex: 0,
+    onKeyDown,
+    onPointerDown,
+    onPointerUp,
+    onMouseEnter: () => setPaused(true),
+    onMouseLeave: () => setPaused(false),
+    onFocus: () => setPaused(true),
+    onBlur: () => setPaused(false),
+    children: [
+      failed ? items.map((item, i) => /* @__PURE__ */ jsx_runtime2.jsx("img", {
+        src: item.src,
+        alt: item.alt ?? "",
+        className: "absolute inset-0 block h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none",
+        style: { maxWidth: "none", opacity: i === active ? 1 : 0 },
+        "aria-hidden": i !== active
+      }, item.src)) : /* @__PURE__ */ jsx_runtime2.jsx("canvas", {
+        ref: canvasRef,
+        className: "absolute inset-0 block h-full w-full",
+        style: {
+          opacity: ready ? 1 : 0,
+          transition: "opacity 400ms ease"
+        },
+        "aria-hidden": "true"
+      }),
+      /* @__PURE__ */ jsx_runtime2.jsx("div", {
+        className: "pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-black/65",
+        "aria-hidden": "true"
+      }),
+      arrows && items.length > 1 && /* @__PURE__ */ jsx_runtime2.jsxs(jsx_runtime2.Fragment, {
+        children: [
+          /* @__PURE__ */ jsx_runtime2.jsx("button", {
+            type: "button",
+            className: arrowClass + " left-4 sm:left-8",
+            onClick: () => go(active - 1),
+            disabled: atStart,
+            "aria-label": "Previous image",
+            children: /* @__PURE__ */ jsx_runtime2.jsx(ChevronLeft, {
+              className: "h-5 w-5",
+              strokeWidth: 2.5,
+              "aria-hidden": "true"
+            })
+          }),
+          /* @__PURE__ */ jsx_runtime2.jsx("button", {
+            type: "button",
+            className: arrowClass + " right-4 sm:right-8",
+            onClick: () => go(active + 1),
+            disabled: atEnd,
+            "aria-label": "Next image",
+            children: /* @__PURE__ */ jsx_runtime2.jsx(ChevronRight, {
+              className: "h-5 w-5",
+              strokeWidth: 2.5,
+              "aria-hidden": "true"
+            })
+          })
+        ]
+      }),
+      thumbnails && items.length > 1 && /* @__PURE__ */ jsx_runtime2.jsx("ul", {
+        className: "absolute inset-x-0 bottom-8 z-10 mx-auto flex w-max max-w-[calc(100%-2rem)] gap-2 " + "list-none overflow-x-auto scroll-smooth p-0 pb-2.5 " + "[&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:rounded [&::-webkit-scrollbar-track]:bg-white/10 " + "[&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-white/30 " + "max-sm:hidden",
+        children: items.map((item, i) => /* @__PURE__ */ jsx_runtime2.jsx("li", {
+          className: "shrink-0 list-none",
+          children: /* @__PURE__ */ jsx_runtime2.jsx("button", {
+            type: "button",
+            onClick: () => go(i),
+            "aria-current": i === active,
+            "aria-label": item.alt ? "Show " + item.alt : "Show image " + (i + 1),
+            className: "block cursor-pointer overflow-hidden rounded border-2 bg-transparent p-0 transition " + "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white " + (i === active ? "border-white opacity-100" : "border-transparent opacity-55 hover:opacity-85"),
+            children: /* @__PURE__ */ jsx_runtime2.jsx("img", {
+              src: item.thumb ?? item.src,
+              alt: "",
+              width: 80,
+              height: 50,
+              loading: "lazy",
+              decoding: "async",
+              className: "block object-cover",
+              style: { maxWidth: "none", width: 80, height: 50 }
+            })
+          })
+        }, item.src))
+      }),
+      /* @__PURE__ */ jsx_runtime2.jsxs("span", {
+        className: "sr-only",
+        "aria-live": "polite",
+        children: [
+          current ? current.alt ?? "Image " + (active + 1) : "",
+          " — ",
+          active + 1,
+          " of ",
+          items.length
+        ]
+      })
+    ]
+  });
+}
+
 // src/Scene.jsx
-var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime());
-function MenuDishesCarousel() {
-  const [windowWidth, setWindowWidth] = import_react2.useState(typeof window !== "undefined" ? window.innerWidth : 1200);
-  import_react2.useEffect(() => {
+var jsx_runtime3 = __toESM(require_jsx_runtime());
+var CAFE_MORPH_ITEMS = [
+  {
+    src: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=160&q=80",
+    alt: "Artisan Pour-Over Coffee — Single-Origin Roast"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=160&q=80",
+    alt: "Jhol Momos — Comfort Dumplings in Spiced Sesame Broth"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=160&q=80",
+    alt: "Woodfired Truffle Mushroom Pizza — Slow-Fermented Crust"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=160&q=80",
+    alt: "Smashed Avocado Sourdough Toast with Crumbled Feta"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=160&q=80",
+    alt: "Crispy Honey Chilli Potato with Sweet Sesame Glaze"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=160&q=80",
+    alt: "Kunafa & Sweet Treats with Golden Kataifi & Rose Drizzle"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=160&q=80",
+    alt: "Cold Brew Float & Iced Spanish Latte"
+  },
+  {
+    src: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=160&q=80",
+    alt: "Warm Reflections Cafe Ambience and Sunlit Seating"
+  }
+];
+function MenuDishesShowcase() {
+  const [view, setView] = import_react5.useState("morph");
+  const [windowWidth, setWindowWidth] = import_react5.useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  import_react5.useEffect(() => {
     let timeoutId;
     const handleResize = () => {
       clearTimeout(timeoutId);
@@ -19833,31 +20629,121 @@ function MenuDishesCarousel() {
       subtitle: "Fresh Hand-rolled Pasta · Garden Basil & Cherry Tomatoes"
     }
   ];
-  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-    className: "menu-carousel-wrapper",
-    children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(CircularCarousel_default, {
-      items: dishes,
-      preset: "cylinder",
-      cardWidth,
-      aspectRatio: 0.82,
-      gap,
-      speed: 10,
-      autoplay: "drift",
-      draggable: true,
-      momentum: 0.65,
-      snap: true,
-      pauseOnHover: true,
-      captions: true,
-      focusOnClick: true,
-      fadeColor: "#e9ede4",
-      cornerRadius: 14
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
+  return /* @__PURE__ */ jsx_runtime3.jsxs("div", {
+    className: "menu-showcase-container",
+    children: [
+      /* @__PURE__ */ jsx_runtime3.jsxs("div", {
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          gap: "10px",
+          marginBottom: "18px",
+          position: "relative",
+          zIndex: 5
+        },
+        children: [
+          /* @__PURE__ */ jsx_runtime3.jsxs("button", {
+            type: "button",
+            onClick: () => setView("morph"),
+            style: {
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              padding: "9px 20px",
+              borderRadius: "999px",
+              fontSize: "12.5px",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all .25s ease",
+              background: view === "morph" ? "var(--orange)" : "rgba(23,36,30,.06)",
+              color: view === "morph" ? "#17241e" : "var(--muted)",
+              border: view === "morph" ? "1px solid var(--orange)" : "1px solid var(--line)",
+              boxShadow: view === "morph" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
+            },
+            "aria-pressed": view === "morph",
+            children: [
+              /* @__PURE__ */ jsx_runtime3.jsx("span", {
+                children: "✨"
+              }),
+              " Shader Morph Gallery"
+            ]
+          }),
+          /* @__PURE__ */ jsx_runtime3.jsxs("button", {
+            type: "button",
+            onClick: () => setView("3d"),
+            style: {
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              padding: "9px 20px",
+              borderRadius: "999px",
+              fontSize: "12.5px",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all .25s ease",
+              background: view === "3d" ? "var(--orange)" : "rgba(23,36,30,.06)",
+              color: view === "3d" ? "#17241e" : "var(--muted)",
+              border: view === "3d" ? "1px solid var(--orange)" : "1px solid var(--line)",
+              boxShadow: view === "3d" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
+            },
+            "aria-pressed": view === "3d",
+            children: [
+              /* @__PURE__ */ jsx_runtime3.jsx("span", {
+                children: "\uD83D\uDD04"
+              }),
+              " 3D Circular Cylinder"
+            ]
+          })
+        ]
+      }),
+      view === "morph" ? /* @__PURE__ */ jsx_runtime3.jsx("div", {
+        style: {
+          borderRadius: "24px",
+          overflow: "hidden",
+          boxShadow: "0 22px 50px rgba(23,36,30,.12)",
+          border: "1px solid rgba(23,36,30,.12)",
+          position: "relative",
+          background: "#0a0a0a"
+        },
+        children: /* @__PURE__ */ jsx_runtime3.jsx(MorphGallery, {
+          items: CAFE_MORPH_ITEMS,
+          height: isMobile ? "380px" : "520px",
+          duration: 1400,
+          noiseScale: 3.5,
+          edge: 0.16,
+          drift: 0.45,
+          autoplay: 4500,
+          loop: true,
+          arrows: true,
+          thumbnails: !isMobile
+        })
+      }) : /* @__PURE__ */ jsx_runtime3.jsx("div", {
+        className: "menu-carousel-wrapper",
+        children: /* @__PURE__ */ jsx_runtime3.jsx(CircularCarousel_default, {
+          items: dishes,
+          preset: "cylinder",
+          cardWidth,
+          aspectRatio: 0.82,
+          gap,
+          speed: 10,
+          autoplay: "drift",
+          draggable: true,
+          momentum: 0.65,
+          snap: true,
+          pauseOnHover: true,
+          captions: true,
+          focusOnClick: true,
+          fadeColor: "#e9ede4",
+          cornerRadius: 14
+        })
+      })
+    ]
+  });
 }
 var menuContainer = document.getElementById("menu-carousel-root");
 if (menuContainer) {
-  import_client.createRoot(menuContainer).render(/* @__PURE__ */ jsx_dev_runtime2.jsxDEV(MenuDishesCarousel, {}, undefined, false, undefined, this));
+  import_client.createRoot(menuContainer).render(/* @__PURE__ */ jsx_runtime3.jsx(MenuDishesShowcase, {}));
 }
 export {
-  MenuDishesCarousel
+  MenuDishesShowcase
 };
