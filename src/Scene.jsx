@@ -25,7 +25,7 @@ export function MenuDishesCarousel() {
   const isMobile = windowWidth < 640;
   const isTablet = windowWidth >= 640 && windowWidth < 1024;
   const cardWidth = isMobile ? 175 : isTablet ? 210 : 240;
-  const gap = isMobile ? 14 : isTablet ? 18 : 22;
+  const gap = isMobile ? 32 : isTablet ? 42 : 54;
   const dishes = [
     {
       src: "./images/dishes/jhol-momos.jpg",
