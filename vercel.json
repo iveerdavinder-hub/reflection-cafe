@@ -14,6 +14,8 @@
       "destination": "/admin.html"
     },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" }
+    { "source": "/admin/", "destination": "/admin.html" },
+    { "source": "/soda", "destination": "/soda.html" },
+    { "source": "/soda/", "destination": "/soda.html" }
   ]
 }
