@@ -18775,983 +18775,13 @@ var require_jsx_runtime = __commonJS(function(exports, module) {
 });
 
 // src/Scene.jsx
-var import_react5 = __toESM(require_react());
+var import_react4 = __toESM(require_react());
 var import_client = __toESM(require_client());
-
-// src/components/CircularCarousel/CircularCarousel.jsx
-var import_react = __toESM(require_react());
-var jsx_runtime = __toESM(require_jsx_runtime());
-"use client";
-var photo = (id) => `https://images.unsplash.com/${id}?w=900&q=80&auto=format&fit=max&sat=-100`;
-var DEFAULT_ITEMS = [
-  {
-    src: photo("photo-1506744038136-46273834b3fb"),
-    alt: "Mist drifting through a mountain valley",
-    title: "Valley",
-    subtitle: "Landscape"
-  },
-  {
-    src: photo("photo-1524504388940-b1c1722653e1"),
-    alt: "A woman with long hair in soft studio light",
-    title: "Portrait",
-    subtitle: "Studio"
-  },
-  {
-    src: photo("photo-1486406146926-c627a92ad1ab"),
-    alt: "Glass towers seen from street level",
-    title: "Towers",
-    subtitle: "Architecture"
-  },
-  {
-    src: photo("photo-1502680390469-be75c86b636f"),
-    alt: "A surfer carving inside a breaking wave",
-    title: "Swell",
-    subtitle: "Ocean"
-  },
-  {
-    src: photo("photo-1487958449943-2429e8be8625"),
-    alt: "An angular white building against the sky",
-    title: "Facade",
-    subtitle: "Architecture"
-  },
-  {
-    src: photo("photo-1509631179647-0177331693ae"),
-    alt: "A model in striped trousers leaning on a wall",
-    title: "Pose",
-    subtitle: "Editorial"
-  },
-  {
-    src: photo("photo-1519681393784-d120267933ba"),
-    alt: "The Milky Way above snowy peaks",
-    title: "Night",
-    subtitle: "Sky"
-  },
-  {
-    src: photo("photo-1485968579580-b6d095142e6e"),
-    alt: "A woman in a long coat on a city street",
-    title: "Street",
-    subtitle: "Editorial"
-  },
-  {
-    src: photo("photo-1493246507139-91e8fad9978e"),
-    alt: "Mountains mirrored in a still lake",
-    title: "Mirror",
-    subtitle: "Landscape"
-  },
-  {
-    src: photo("photo-1511818966892-d7d671e672a2"),
-    alt: "A glass skyscraper under a cloudy sky",
-    title: "Glass",
-    subtitle: "Architecture"
-  }
-];
-var PRESETS = {
-  cylinder: {
-    axis: "y",
-    tilt: -5,
-    perspective: 2500,
-    curve: 0,
-    spread: 1,
-    inward: false,
-    billboard: false,
-    backfaces: false,
-    window: 0
-  },
-  orbit: {
-    axis: "y",
-    tilt: -16,
-    perspective: 1500,
-    curve: 0,
-    spread: 1.45,
-    inward: false,
-    billboard: true,
-    backfaces: false,
-    window: 0
-  },
-  wheel: {
-    axis: "x",
-    tilt: 0,
-    perspective: 1800,
-    curve: 0,
-    spread: 1,
-    inward: false,
-    billboard: false,
-    backfaces: true,
-    window: 1.7
-  },
-  panorama: {
-    axis: "y",
-    tilt: 0,
-    perspective: 0,
-    curve: 1,
-    spread: 1,
-    inward: true,
-    billboard: false,
-    backfaces: false,
-    window: 0
-  }
-};
-var INTRO_LENGTH = { assemble: 1500, rise: 1400, spin: 1800, none: 0 };
-var TILES = 8;
-var OVERLAP = 2.5;
-var DRAG_THRESHOLD = 5;
-var SPRING = 118;
-var SETTLE_SPEED = 9;
-var CAPTION_SPACE = 76;
-var SWAP_LENGTH = 700;
-var SWAP_SPREAD = 420;
-var TO_RAD = Math.PI / 180;
-var clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-var wrap = (degrees) => ((degrees + 180) % 360 + 360) % 360 - 180;
-var easeOut = (t) => 1 - Math.pow(1 - t, 4);
-var easeOutQuint = (t) => 1 - Math.pow(1 - t, 5);
-var rotateX = (p, degrees) => {
-  const r = degrees * TO_RAD;
-  const c = Math.cos(r);
-  const s = Math.sin(r);
-  return [p[0], p[1] * c - p[2] * s, p[1] * s + p[2] * c];
-};
-var rotateY = (p, degrees) => {
-  const r = degrees * TO_RAD;
-  const c = Math.cos(r);
-  const s = Math.sin(r);
-  return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c];
-};
-var Digits = ({ value }) => /* @__PURE__ */ jsx_runtime.jsx("span", {
-  className: "circular-carousel__digits",
-  children: String(value).padStart(2, "0").split("").map((digit, index) => /* @__PURE__ */ jsx_runtime.jsx("span", {
-    className: "circular-carousel__digit",
-    children: /* @__PURE__ */ jsx_runtime.jsx("span", {
-      className: "circular-carousel__reel",
-      style: { transform: `translateY(${-Number(digit) * 10}%)` },
-      children: "0123456789".split("").map((n) => /* @__PURE__ */ jsx_runtime.jsx("span", {
-        children: n
-      }, n))
-    })
-  }, index))
-});
-var usePrefersReducedMotion = () => {
-  const [reduced, setReduced] = import_react.useState(false);
-  import_react.useEffect(() => {
-    const query = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    if (!query)
-      return;
-    const update = () => setReduced(query.matches);
-    update();
-    query.addEventListener?.("change", update);
-    return () => query.removeEventListener?.("change", update);
-  }, []);
-  return reduced;
-};
-var CircularCarousel = ({
-  items = DEFAULT_ITEMS,
-  preset = "cylinder",
-  intro = "rise",
-  cardWidth = 220,
-  aspectRatio = 1,
-  gap = 25,
-  curve,
-  tilt,
-  perspective,
-  autoplay = "drift",
-  speed = 14,
-  interval = 3,
-  direction = "left",
-  draggable = true,
-  momentum = 0.6,
-  snap = true,
-  pauseOnHover = true,
-  focusOnClick = true,
-  parallax = 0.3,
-  stretch = 0.5,
-  depthFade = 0.55,
-  fadeColor = "#000000",
-  innerShade = 0.6,
-  cornerRadius = 12,
-  captions = false,
-  onChange,
-  onItemClick,
-  className = "",
-  style
-}) => {
-  const incoming = items && items.length ? items : DEFAULT_ITEMS;
-  const [list, setList] = import_react.useState(incoming);
-  const [leaving, setLeaving] = import_react.useState(null);
-  const count = list.length;
-  const shape = PRESETS[preset] ? preset : "cylinder";
-  const layout = PRESETS[shape];
-  const axis = layout.axis;
-  const tiltValue = tilt ?? layout.tilt;
-  const curveValue = layout.billboard ? 0 : clamp(curve ?? layout.curve, 0, 1);
-  const reduced = usePrefersReducedMotion();
-  const cardW = Math.max(40, cardWidth);
-  const cardH = cardW / clamp(aspectRatio, 0.2, 5);
-  const along = axis === "x" ? cardH : cardW;
-  const step = 360 / count;
-  const radius = import_react.useMemo(() => {
-    const n = Math.max(count, 3);
-    const pitch = (along + gap) * layout.spread;
-    const chord = pitch / (2 * Math.sin(Math.PI / n));
-    const arc = n * pitch / (2 * Math.PI);
-    return Math.max(chord + (arc - chord) * curveValue, along * 0.6);
-  }, [count, along, gap, curveValue, layout.spread]);
-  const tiles = import_react.useMemo(() => {
-    const total = curveValue > 0.001 ? TILES : 1;
-    const length = along / total;
-    const bend = curveValue > 0.001 ? radius / curveValue : 0;
-    return Array.from({ length: total }, (_, index) => {
-      const start = index * length - (index > 0 ? OVERLAP / 2 : 0);
-      const end = (index + 1) * length + (index < total - 1 ? OVERLAP / 2 : 0);
-      const center = (start + end) / 2 - along / 2;
-      const alpha = bend ? center / bend : 0;
-      const shift = bend ? bend * Math.sin(alpha) : center;
-      const sink = bend ? bend * (1 - Math.cos(alpha)) : 0;
-      const depth = layout.inward ? sink : -sink;
-      const turn = (layout.inward ? -alpha : alpha) * 180 / Math.PI;
-      const move = axis === "x" ? `translate3d(0px, ${shift}px, ${depth}px) rotateX(${-turn}deg)` : `translate3d(${shift}px, 0px, ${depth}px) rotateY(${turn}deg)`;
-      return { index, total, start, end, size: end - start, move };
-    });
-  }, [along, axis, curveValue, layout.inward, radius]);
-  const rootRef = import_react.useRef(null);
-  const stageRef = import_react.useRef(null);
-  const cameraRef = import_react.useRef(null);
-  const ringRef = import_react.useRef(null);
-  const cardRefs = import_react.useRef([]);
-  const wakeRef = import_react.useRef(() => {});
-  const measureRef = import_react.useRef(() => {});
-  const activeRef = import_react.useRef(0);
-  const [active, setActive] = import_react.useState(0);
-  const [ready, setReady] = import_react.useState(false);
-  const [dragging, setDragging] = import_react.useState(false);
-  const readyRef = import_react.useRef(false);
-  readyRef.current = ready;
-  const stateRef = import_react.useRef({
-    angle: 0,
-    velocity: 0,
-    target: null,
-    dir: 0,
-    press: null,
-    drag: false,
-    hover: false,
-    pointer: { inside: false, x: 0, y: 0 },
-    yaw: 0,
-    pitch: 0,
-    intro: null,
-    introDone: false,
-    holdUntil: 0,
-    stepAt: 0,
-    suppressClick: false,
-    wheelTimer: 0,
-    fit: 1,
-    shift: 0,
-    drop: 0,
-    last: 0
-  });
-  const settings = {
-    count,
-    step,
-    radius,
-    layout,
-    axis,
-    tilt: tiltValue,
-    perspective: layout.inward ? radius : perspective ?? layout.perspective,
-    cardW,
-    cardH,
-    intro: reduced ? "none" : (intro in INTRO_LENGTH) ? intro : "rise",
-    autoplay: reduced ? "off" : autoplay,
-    speed,
-    interval: Math.max(0.5, interval),
-    draggable,
-    momentum: clamp(momentum, 0, 1),
-    snap,
-    pauseOnHover,
-    parallax: reduced ? 0 : clamp(parallax, 0, 1),
-    stretch: reduced ? 0 : clamp(stretch, 0, 1),
-    depthFade: clamp(depthFade, 0, 1),
-    captions,
-    reduced
-  };
-  const settingsRef = import_react.useRef(settings);
-  settingsRef.current = settings;
-  const onChangeRef = import_react.useRef(onChange);
-  onChangeRef.current = onChange;
-  const dragSign = layout.inward ? -1 : 1;
-  const directionSign = (direction === "right" ? 1 : -1) * dragSign;
-  import_react.useEffect(() => {
-    stateRef.current.dir = directionSign;
-    wakeRef.current();
-  }, [directionSign]);
-  const incomingRef = import_react.useRef(incoming);
-  incomingRef.current = incoming;
-  const listRef = import_react.useRef(list);
-  listRef.current = list;
-  const sourcesKey = incoming.map((item) => item.src).join("|");
-  import_react.useEffect(() => {
-    let cancelled = false;
-    const next = incomingRef.current;
-    const smooth = readyRef.current && next.length === listRef.current.length;
-    if (!smooth) {
-      setReady(false);
-      setLeaving(null);
-      setList(next);
-    }
-    const sources = next.slice(0, 16).map((item) => item.src);
-    const load = (src) => new Promise((resolve) => {
-      const image = new Image;
-      image.decoding = "async";
-      image.onload = () => image.decode ? image.decode().then(resolve, resolve) : resolve();
-      image.onerror = resolve;
-      image.src = src;
-    });
-    const timeout = new Promise((resolve) => setTimeout(resolve, 2400));
-    Promise.race([Promise.all(sources.map(load)), timeout]).then(() => {
-      if (cancelled)
-        return;
-      const state = stateRef.current;
-      if (smooth) {
-        const previous = listRef.current;
-        const s = settingsRef.current;
-        if (!s.reduced && previous !== next) {
-          setLeaving((current) => ({
-            id: (current?.id || 0) + 1,
-            items: previous,
-            delays: previous.map((_, index) => Math.abs(wrap(index * s.step + state.angle)) / 180 * SWAP_SPREAD)
-          }));
-        }
-        setList(next);
-        wakeRef.current();
-        return;
-      }
-      state.introDone = false;
-      state.intro = null;
-      setReady(true);
-      wakeRef.current();
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [sourcesKey]);
-  import_react.useEffect(() => {
-    if (!leaving)
-      return;
-    const timer = setTimeout(() => setLeaving(null), SWAP_LENGTH + SWAP_SPREAD + 80);
-    return () => clearTimeout(timer);
-  }, [leaving]);
-  import_react.useLayoutEffect(() => {
-    const root = rootRef.current;
-    const stage = stageRef.current;
-    const camera = cameraRef.current;
-    const ring = ringRef.current;
-    if (!root || !stage || !camera || !ring)
-      return;
-    const state = stateRef.current;
-    let raf = 0;
-    let visible = true;
-    const nearest = (angle) => Math.round(angle / settingsRef.current.step) * settingsRef.current.step;
-    const measure = () => {
-      const s = settingsRef.current;
-      const rect = root.getBoundingClientRect();
-      if (!rect.width || !rect.height)
-        return;
-      const room = s.captions ? CAPTION_SPACE : 0;
-      const width = rect.width * 0.94;
-      const height = (rect.height - room) * 0.92;
-      const P = s.perspective;
-      let minX = Infinity;
-      let maxX = -Infinity;
-      let minY = Infinity;
-      let maxY = -Infinity;
-      if (s.layout.inward) {
-        minX = -width / 2;
-        maxX = width / 2;
-        minY = -s.cardH / 2;
-        maxY = s.cardH / 2;
-      } else {
-        const corners = [
-          [-s.cardW / 2, -s.cardH / 2],
-          [s.cardW / 2, -s.cardH / 2],
-          [-s.cardW / 2, s.cardH / 2],
-          [s.cardW / 2, s.cardH / 2]
-        ];
-        const limit = s.layout.window ? s.layout.window * s.step : 180;
-        for (let a = -limit;a <= limit; a += limit / 24) {
-          for (const [cx, cy] of corners) {
-            let p;
-            if (s.axis === "x") {
-              p = rotateY(rotateX([cx, cy, s.radius], -a), s.tilt);
-            } else if (s.layout.billboard) {
-              const c = rotateY([0, 0, s.radius], a);
-              p = rotateX([c[0] + cx, cy, c[2]], s.tilt);
-            } else {
-              p = rotateX(rotateY([cx, cy, s.radius], a), s.tilt);
-            }
-            p = [p[0], p[1], p[2] - s.radius];
-            if (p[2] >= P * 0.95)
-              continue;
-            const k = P / (P - p[2]);
-            minX = Math.min(minX, p[0] * k);
-            maxX = Math.max(maxX, p[0] * k);
-            minY = Math.min(minY, p[1] * k);
-            maxY = Math.max(maxY, p[1] * k);
-          }
-        }
-      }
-      const spanX = Math.max(maxX - minX, 1);
-      const spanY = Math.max(maxY - minY, 1);
-      const fit = Math.min(1, width / spanX, height / spanY);
-      state.fit = fit;
-      state.shift = -((minY + maxY) / 2) * fit - room / 2;
-      state.drop = s.axis === "x" ? rect.width / fit * 0.55 + s.cardW : rect.height / fit * 0.55 + s.cardH;
-      stage.style.perspective = `${P}px`;
-      stage.style.transform = `translate3d(0, ${state.shift}px, 0) scale(${fit})`;
-    };
-    measureRef.current = measure;
-    const introCard = (elapsed, landing) => {
-      if (!state.intro)
-        return { radius: 1, lift: 0 };
-      const type = state.intro.type;
-      const reach = Math.abs(wrap(landing + state.angle));
-      if (type === "assemble") {
-        const delay = reach / 180 * 420;
-        const p = easeOut(clamp((elapsed - delay) / 1080, 0, 1));
-        return { radius: 1 + 0.6 * (1 - p), lift: 0 };
-      }
-      if (type === "rise") {
-        const delay = reach / 180 * 480;
-        const p = easeOutQuint(clamp((elapsed - delay) / 900, 0, 1));
-        return { radius: 1, lift: (1 - p) * state.drop };
-      }
-      if (type === "spin") {
-        const p = easeOut(clamp(elapsed / INTRO_LENGTH.spin, 0, 1));
-        return { radius: 1 + 0.28 * (1 - p), lift: 0 };
-      }
-      return { radius: 1, lift: 0 };
-    };
-    const advance = (s, dt, now) => {
-      if (!state.introDone && readyRef.current) {
-        if (!state.intro) {
-          if (s.intro === "none")
-            state.introDone = true;
-          else
-            state.intro = { type: s.intro, start: now };
-        }
-        if (state.intro && now - state.intro.start >= INTRO_LENGTH[state.intro.type]) {
-          state.intro = null;
-          state.introDone = true;
-        }
-      }
-      const paused = s.pauseOnHover && state.hover || state.drag || now < state.holdUntil;
-      const cruise = s.autoplay === "drift" && !paused && !state.intro ? s.speed * state.dir : 0;
-      let busy = Boolean(state.intro) || state.drag;
-      if (state.drag || state.intro) {
-        state.velocity = state.drag ? state.velocity : 0;
-      } else if (state.target !== null) {
-        let remaining = dt;
-        const damping = 2 * Math.sqrt(SPRING);
-        while (remaining > 0) {
-          const h = Math.min(remaining, 1 / 240);
-          const accel = SPRING * (state.target - state.angle) - damping * state.velocity;
-          state.velocity += accel * h;
-          state.angle += state.velocity * h;
-          remaining -= h;
-        }
-        if (Math.abs(state.target - state.angle) < 0.004 && Math.abs(state.velocity) < 0.03) {
-          state.angle = state.target;
-          state.velocity = 0;
-          state.target = null;
-        }
-        busy = true;
-      } else {
-        const tau = 0.18 + s.momentum * 1.5;
-        state.velocity += (cruise - state.velocity) * (1 - Math.exp(-dt / tau));
-        state.angle += state.velocity * dt;
-        if (cruise === 0 && s.snap && Math.abs(state.velocity) < SETTLE_SPEED) {
-          state.target = nearest(state.angle);
-        }
-        busy = busy || cruise !== 0 || Math.abs(state.velocity) > 0.01 || state.target !== null;
-      }
-      if (s.autoplay === "step" && !paused && !state.intro && state.introDone) {
-        if (!state.stepAt)
-          state.stepAt = now + s.interval * 1000;
-        if (now >= state.stepAt) {
-          state.target = (state.target ?? nearest(state.angle)) + s.step * state.dir;
-          state.stepAt = now + s.interval * 1000;
-        }
-        busy = true;
-      } else {
-        state.stepAt = 0;
-      }
-      if (now < state.holdUntil)
-        busy = true;
-      const ease = 1 - Math.exp(-dt / 0.35);
-      const aimYaw = state.pointer.inside ? state.pointer.x * s.parallax * 9 : 0;
-      const aimPitch = state.pointer.inside ? -state.pointer.y * s.parallax * 6 : 0;
-      state.yaw += (aimYaw - state.yaw) * ease;
-      state.pitch += (aimPitch - state.pitch) * ease;
-      if (Math.abs(aimYaw - state.yaw) > 0.01 || Math.abs(aimPitch - state.pitch) > 0.01)
-        busy = true;
-      return busy;
-    };
-    const render = (s, now) => {
-      const elapsed = state.intro ? now - state.intro.start : 0;
-      const swell = 1 + s.stretch * 0.12 * Math.min(1, Math.abs(state.velocity) / 420);
-      let spinOffset = 0;
-      if (state.intro?.type === "spin") {
-        const p = easeOut(clamp(elapsed / INTRO_LENGTH.spin, 0, 1));
-        spinOffset = -300 * state.dir * (1 - p);
-      } else if (state.intro?.type === "assemble") {
-        const p = easeOut(clamp(elapsed / INTRO_LENGTH.assemble, 0, 1));
-        spinOffset = -32 * state.dir * (1 - p);
-      }
-      const angle = state.angle + spinOffset;
-      const R = s.radius * swell;
-      if (s.axis === "x") {
-        camera.style.transform = `translate3d(0, 0, ${-R}px) rotateY(${s.tilt + state.yaw}deg) rotateX(${state.pitch}deg)`;
-        ring.style.transform = `rotateX(${-angle}deg)`;
-      } else if (s.layout.inward) {
-        camera.style.transform = `translate3d(0, 0, ${s.perspective - 1}px) rotateX(${s.tilt + state.pitch}deg) rotateY(${state.yaw}deg)`;
-        ring.style.transform = `rotateY(${angle}deg)`;
-      } else {
-        camera.style.transform = `translate3d(0, 0, ${-R}px) rotateX(${s.tilt + state.pitch}deg) rotateY(${state.yaw}deg)`;
-        ring.style.transform = `rotateY(${angle}deg)`;
-      }
-      for (let index = 0;index < s.count; index++) {
-        const card = cardRefs.current[index];
-        if (!card)
-          continue;
-        const base = index * s.step;
-        const mod = introCard(elapsed, base);
-        const r = R * mod.radius;
-        let transform;
-        if (s.axis === "x") {
-          transform = `rotateX(${-base}deg) translateZ(${r}px)`;
-        } else if (s.layout.inward) {
-          transform = `rotateY(${base}deg) translateZ(${-r}px)`;
-        } else {
-          transform = `rotateY(${base}deg) translateZ(${r}px)`;
-          if (s.layout.billboard)
-            transform += ` rotateY(${-(base + angle)}deg)`;
-        }
-        if (mod.lift)
-          transform += s.axis === "x" ? ` translateX(${mod.lift}px)` : ` translateY(${mod.lift}px)`;
-        card.style.transform = transform;
-        const world = wrap(base + angle);
-        const facing = Math.cos(world * TO_RAD);
-        if (s.layout.inward)
-          card.style.visibility = Math.abs(world) > 86 ? "hidden" : "";
-        const fade = s.depthFade * Math.pow((1 - facing) / 2, 1.25);
-        card.style.setProperty("--cc-depth", fade.toFixed(3));
-      }
-      const index = (Math.round(-state.angle / s.step) % s.count + s.count) % s.count || 0;
-      if (index !== activeRef.current) {
-        activeRef.current = index;
-        setActive(index);
-        onChangeRef.current?.(index);
-      }
-    };
-    const frame = (now) => {
-      raf = 0;
-      const s = settingsRef.current;
-      const dt = state.last ? Math.min((now - state.last) / 1000, 0.05) : 1 / 60;
-      state.last = now;
-      const busy = advance(s, dt, now);
-      render(s, now);
-      if (busy && visible && !document.hidden)
-        raf = requestAnimationFrame(frame);
-      else
-        state.last = 0;
-    };
-    const wake = () => {
-      if (!raf && visible && !document.hidden)
-        raf = requestAnimationFrame(frame);
-    };
-    wakeRef.current = wake;
-    const onVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        state.last = 0;
-      } else
-        wake();
-    };
-    const resize = new ResizeObserver(() => {
-      measure();
-      wake();
-    });
-    resize.observe(root);
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible)
-        wake();
-      else {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        state.last = 0;
-      }
-    });
-    io.observe(root);
-    const onWheel = (event) => {
-      const s = settingsRef.current;
-      if (!s.draggable)
-        return;
-      const isShift = event.shiftKey;
-      const isHorizontalTrackpad = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.75 && Math.abs(event.deltaX) > 2;
-      const isShiftWheel = isShift && Math.abs(event.deltaY) > 2;
-      if (!isHorizontalTrackpad && !isShiftWheel)
-        return;
-      event.preventDefault();
-      const rawDelta = isShiftWheel ? event.deltaY : event.deltaX;
-      const delta = clamp(rawDelta, -80, 80);
-      const effectiveFit = Math.max(state.fit || 1, 0.45);
-      const perPixel = 180 / (Math.PI * s.radius * effectiveFit);
-      state.target = null;
-      state.angle -= delta * perPixel * (s.layout.inward ? -1 : 1);
-      state.velocity = -delta * perPixel * (s.layout.inward ? -1 : 1) * 20;
-      state.holdUntil = performance.now() + 2000;
-      clearTimeout(state.wheelTimer);
-      state.wheelTimer = setTimeout(() => {
-        if (settingsRef.current.snap)
-          state.target = nearest(state.angle + state.velocity * 0.12);
-        wake();
-      }, 140);
-      wake();
-    };
-    root.addEventListener("wheel", onWheel, { passive: false });
-    document.addEventListener("visibilitychange", onVisibility);
-    measure();
-    render(settingsRef.current, performance.now());
-    wake();
-    return () => {
-      cancelAnimationFrame(raf);
-      resize.disconnect();
-      io.disconnect();
-      clearTimeout(state.wheelTimer);
-      root.removeEventListener("wheel", onWheel);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, []);
-  import_react.useLayoutEffect(() => {
-    measureRef.current();
-    wakeRef.current();
-  }, [radius, cardW, cardH, tiltValue, perspective, preset, captions, count]);
-  import_react.useEffect(() => {
-    wakeRef.current();
-  });
-  const focusIndex = import_react.useCallback((index) => {
-    const state = stateRef.current;
-    const s = settingsRef.current;
-    let target = -index * s.step;
-    target += 360 * Math.round((state.angle - target) / 360);
-    state.target = target;
-    state.holdUntil = performance.now() + 2800;
-    wakeRef.current();
-  }, []);
-  const stepBy = import_react.useCallback((delta) => {
-    const state = stateRef.current;
-    const s = settingsRef.current;
-    const base = state.target ?? Math.round(state.angle / s.step) * s.step;
-    state.target = base - delta * s.step * (s.layout.inward ? -1 : 1);
-    state.holdUntil = performance.now() + 2800;
-    wakeRef.current();
-  }, []);
-  const updatePointer = (event) => {
-    const rect = rootRef.current.getBoundingClientRect();
-    const pointer = stateRef.current.pointer;
-    pointer.x = clamp((event.clientX - rect.left) / rect.width * 2 - 1, -1, 1);
-    pointer.y = clamp((event.clientY - rect.top) / rect.height * 2 - 1, -1, 1);
-  };
-  const handlePointerDown = (event) => {
-    const state = stateRef.current;
-    state.suppressClick = false;
-    if (!draggable || event.pointerType === "mouse" && event.button !== 0)
-      return;
-    state.press = {
-      id: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      angle: state.angle,
-      moved: false,
-      origin: 0,
-      samples: [{ time: performance.now(), angle: state.angle }]
-    };
-  };
-  const handlePointerMove = (event) => {
-    const state = stateRef.current;
-    if (event.pointerType === "mouse") {
-      state.pointer.inside = true;
-      updatePointer(event);
-    }
-    const press = state.press;
-    if (!press || press.id !== event.pointerId) {
-      wakeRef.current();
-      return;
-    }
-    const s = settingsRef.current;
-    const delta = s.axis === "x" ? event.clientY - press.y : event.clientX - press.x;
-    const cross = s.axis === "x" ? event.clientX - press.x : event.clientY - press.y;
-    if (!press.moved) {
-      const dist = Math.hypot(delta, cross);
-      if (dist < DRAG_THRESHOLD)
-        return;
-      if (Math.abs(cross) > Math.abs(delta) * 1.35 && event.pointerType !== "mouse") {
-        state.press = null;
-        return;
-      }
-      press.moved = true;
-      press.origin = delta;
-      state.drag = true;
-      state.target = null;
-      state.velocity = 0;
-      setDragging(true);
-      try {
-        rootRef.current.setPointerCapture(event.pointerId);
-      } catch {}
-    }
-    const effectiveFit = Math.max(state.fit || 1, 0.45);
-    const perPixel = 180 / (Math.PI * s.radius * effectiveFit);
-    state.angle = press.angle + (delta - press.origin) * perPixel * (s.layout.inward ? -1 : 1);
-    const now = performance.now();
-    press.samples.push({ time: now, angle: state.angle });
-    while (press.samples.length > 2 && now - press.samples[0].time > 110)
-      press.samples.shift();
-    wakeRef.current();
-  };
-  const releasePointer = (event) => {
-    const state = stateRef.current;
-    const press = state.press;
-    if (!press || press.id !== event.pointerId)
-      return;
-    state.press = null;
-    try {
-      if (rootRef.current?.hasPointerCapture?.(event.pointerId)) {
-        rootRef.current.releasePointerCapture(event.pointerId);
-      }
-    } catch {}
-    if (!press.moved)
-      return;
-    state.drag = false;
-    setDragging(false);
-    state.suppressClick = true;
-    const s = settingsRef.current;
-    const first = press.samples[0];
-    const last = press.samples[press.samples.length - 1];
-    const span = (last.time - first.time) / 1000;
-    const velocity = span > 0.008 ? clamp((last.angle - first.angle) / span, -1400, 1400) : 0;
-    state.velocity = velocity;
-    if (Math.abs(velocity) > 40)
-      state.dir = Math.sign(velocity);
-    if (s.snap) {
-      const tau = 0.22 + s.momentum * 1.2;
-      const predicted = state.angle + velocity * tau * 0.45;
-      state.target = Math.round(predicted / s.step) * s.step;
-      state.holdUntil = performance.now() + 2500;
-    }
-    wakeRef.current();
-  };
-  const handlePointerEnter = (event) => {
-    if (event.pointerType !== "mouse")
-      return;
-    stateRef.current.hover = true;
-    wakeRef.current();
-  };
-  const handlePointerLeave = (event) => {
-    const state = stateRef.current;
-    if (event.pointerType === "mouse") {
-      state.hover = false;
-      state.pointer.inside = false;
-    }
-    wakeRef.current();
-  };
-  const handleClick = (event) => {
-    const state = stateRef.current;
-    if (state.suppressClick) {
-      state.suppressClick = false;
-      return;
-    }
-    const card = event.target.closest?.("[data-cc-index]");
-    if (!card)
-      return;
-    const index = Number(card.getAttribute("data-cc-index"));
-    if (focusOnClick)
-      focusIndex(index);
-    onItemClick?.(list[index], index);
-  };
-  const handleKeyDown = (event) => {
-    const forward = axis === "x" ? "ArrowDown" : "ArrowRight";
-    const backward = axis === "x" ? "ArrowUp" : "ArrowLeft";
-    if (event.key === forward)
-      stepBy(1);
-    else if (event.key === backward)
-      stepBy(-1);
-    else if (event.key === "Home")
-      focusIndex(0);
-    else if (event.key === "End")
-      focusIndex(count - 1);
-    else if (event.key === "Enter" || event.key === " ")
-      onItemClick?.(list[activeRef.current], activeRef.current);
-    else
-      return;
-    event.preventDefault();
-  };
-  const current = list[active] || list[0];
-  const label = current ? current.title || current.alt || `Image ${active + 1}` : "";
-  const renderTile = import_react.useCallback((item, tile, back, index) => {
-    const strip = back ? tile.total - 1 - tile.index : tile.index;
-    const first = strip === 0;
-    const last = strip === tile.total - 1;
-    const r = "var(--cc-radius)";
-    const frameRadius = axis === "x" ? `${first ? r : 0} ${first ? r : 0} ${last ? r : 0} ${last ? r : 0}` : `${first ? r : 0} ${last ? r : 0} ${last ? r : 0} ${first ? r : 0}`;
-    const offset = back ? along - tile.end : tile.start;
-    const size = tile.size;
-    const box = axis === "x" ? { left: -cardW / 2, top: -size / 2, width: cardW, height: size } : { left: -size / 2, top: -cardH / 2, width: size, height: cardH };
-    const photoStyle = axis === "x" ? { left: 0, top: -offset, width: cardW, height: cardH } : { left: -offset, top: 0, width: cardW, height: cardH };
-    const flip = axis === "x" ? " rotateX(180deg)" : " rotateY(180deg)";
-    const gone = leaving?.items[index];
-    return /* @__PURE__ */ jsx_runtime.jsx("div", {
-      className: "circular-carousel__tile",
-      style: { ...box, transform: tile.move + (back ? flip : "") },
-      "aria-hidden": "true",
-      children: /* @__PURE__ */ jsx_runtime.jsxs("div", {
-        className: "circular-carousel__frame",
-        style: { height: axis === "x" ? size : cardH, borderRadius: frameRadius },
-        children: [
-          /* @__PURE__ */ jsx_runtime.jsx("img", {
-            className: "circular-carousel__photo",
-            src: item.src,
-            alt: "",
-            draggable: false,
-            decoding: "async",
-            style: photoStyle,
-            onError: (e) => {
-              if (!e.currentTarget.dataset.fallback) {
-                e.currentTarget.dataset.fallback = "1";
-                e.currentTarget.src = "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=900&q=85";
-              }
-            }
-          }),
-          gone && /* @__PURE__ */ jsx_runtime.jsx("img", {
-            className: "circular-carousel__photo circular-carousel__photo--leaving",
-            src: gone.src,
-            alt: "",
-            draggable: false,
-            decoding: "async",
-            style: { ...photoStyle, animationDelay: `${Math.round(leaving.delays[index])}ms` }
-          }, `leaving-${leaving.id}`),
-          back && /* @__PURE__ */ jsx_runtime.jsx("div", {
-            className: "circular-carousel__inner"
-          }),
-          /* @__PURE__ */ jsx_runtime.jsx("div", {
-            className: "circular-carousel__shade"
-          })
-        ]
-      })
-    }, `${back ? "b" : "f"}${tile.index}`);
-  }, [axis, cardW, cardH, along, leaving]);
-  const renderedCards = import_react.useMemo(() => {
-    return list.map((item, index) => /* @__PURE__ */ jsx_runtime.jsxs("div", {
-      ref: (element) => {
-        cardRefs.current[index] = element;
-      },
-      className: "circular-carousel__card",
-      "data-cc-index": index,
-      role: "group",
-      "aria-roledescription": "slide",
-      "aria-label": `${item.title || item.alt || `Image ${index + 1}`}, ${index + 1} of ${count}`,
-      children: [
-        tiles.map((tile) => renderTile(item, tile, false, index)),
-        layout.backfaces && tiles.map((tile) => renderTile(item, tile, true, index))
-      ]
-    }, index));
-  }, [list, tiles, layout.backfaces, count, renderTile]);
-  return /* @__PURE__ */ jsx_runtime.jsxs("div", {
-    ref: rootRef,
-    className: `circular-carousel ${className}`.trim(),
-    style: {
-      ...style,
-      "--cc-fade": fadeColor,
-      "--cc-radius": `${Math.max(0, cornerRadius)}px`,
-      "--cc-inner": (1 - clamp(innerShade, 0, 1)).toFixed(3)
-    },
-    role: "region",
-    "aria-roledescription": "carousel",
-    "aria-label": "Image carousel",
-    tabIndex: 0,
-    "data-axis": axis,
-    "data-shape": shape,
-    "data-ready": ready ? "" : undefined,
-    "data-draggable": draggable ? "" : undefined,
-    "data-dragging": dragging ? "" : undefined,
-    onPointerDown: handlePointerDown,
-    onPointerMove: handlePointerMove,
-    onPointerUp: releasePointer,
-    onPointerCancel: releasePointer,
-    onPointerEnter: handlePointerEnter,
-    onPointerLeave: handlePointerLeave,
-    onClick: handleClick,
-    onKeyDown: handleKeyDown,
-    children: [
-      /* @__PURE__ */ jsx_runtime.jsx("div", {
-        className: "circular-carousel__view",
-        children: /* @__PURE__ */ jsx_runtime.jsx("div", {
-          ref: stageRef,
-          className: "circular-carousel__stage",
-          children: /* @__PURE__ */ jsx_runtime.jsx("div", {
-            ref: cameraRef,
-            className: "circular-carousel__camera",
-            children: /* @__PURE__ */ jsx_runtime.jsx("div", {
-              ref: ringRef,
-              className: "circular-carousel__ring",
-              children: renderedCards
-            })
-          })
-        })
-      }),
-      captions && current && /* @__PURE__ */ jsx_runtime.jsxs("div", {
-        className: "circular-carousel__caption",
-        "aria-hidden": "true",
-        children: [
-          /* @__PURE__ */ jsx_runtime.jsxs("span", {
-            className: "circular-carousel__title",
-            children: [
-              current.title || current.alt,
-              current.subtitle && /* @__PURE__ */ jsx_runtime.jsx("span", {
-                className: "circular-carousel__subtitle",
-                children: current.subtitle
-              })
-            ]
-          }, active),
-          /* @__PURE__ */ jsx_runtime.jsxs("span", {
-            className: "circular-carousel__count",
-            children: [
-              /* @__PURE__ */ jsx_runtime.jsx(Digits, {
-                value: active + 1
-              }),
-              /* @__PURE__ */ jsx_runtime.jsx("span", {
-                className: "circular-carousel__slash",
-                children: "/"
-              }),
-              /* @__PURE__ */ jsx_runtime.jsx("span", {
-                children: String(count).padStart(2, "0")
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsx_runtime.jsx("div", {
-        className: "circular-carousel__live",
-        "aria-live": "polite",
-        "aria-atomic": "true",
-        children: `${label}, ${active + 1} of ${count}`
-      })
-    ]
-  });
-};
-var CircularCarousel_default = CircularCarousel;
 
 // src/components/ui/morph-gallery.tsx
 var React = __toESM(require_react());
 // node_modules/lucide-react/dist/esm/createLucideIcon.mjs
-var import_react4 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 
 // node_modules/lucide-react/dist/esm/shared/src/utils/toKebabCase.mjs
 var toKebabCase = (string) => string?.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
@@ -19795,7 +18825,7 @@ var toPascalCase = (string) => {
 };
 
 // node_modules/lucide-react/dist/esm/Icon.mjs
-var import_react3 = __toESM(require_react(), 1);
+var import_react2 = __toESM(require_react(), 1);
 
 // node_modules/lucide-react/dist/esm/shared/src/utils/mergeClasses.mjs
 var mergeClasses = (...classes) => classes.filter((className, index, array) => {
@@ -19894,14 +18924,14 @@ var hasA11yProp = (props) => {
 };
 
 // node_modules/lucide-react/dist/esm/context.mjs
-var import_react2 = __toESM(require_react(), 1);
+var import_react = __toESM(require_react(), 1);
 "use client";
-var LucideContext = import_react2.createContext({});
-var useLucideContext = () => import_react2.useContext(LucideContext);
+var LucideContext = import_react.createContext({});
+var useLucideContext = () => import_react.useContext(LucideContext);
 
 // node_modules/lucide-react/dist/esm/Icon.mjs
 "use client";
-var Icon = import_react3.forwardRef(({
+var Icon = import_react2.forwardRef(({
   color,
   size,
   width,
@@ -19939,11 +18969,11 @@ var Icon = import_react3.forwardRef(({
     hasA11yProp: hasAccessibleProp,
     attributes: rest
   });
-  return import_react3.createElement(name, {
+  return import_react2.createElement(name, {
     ref,
     ...svgAttributes
   }, [
-    ...builtIconNode.map(([tag, attrs]) => import_react3.createElement(tag, attrs)),
+    ...builtIconNode.map(([tag, attrs]) => import_react2.createElement(tag, attrs)),
     ...Array.isArray(children) ? children : [children]
   ]);
 });
@@ -19951,7 +18981,7 @@ var Icon = import_react3.forwardRef(({
 // node_modules/lucide-react/dist/esm/createLucideIcon.mjs
 function createLucideIcon(iconDataOrName, iconNode = [], aliases = []) {
   const iconData = typeof iconDataOrName === "string" ? toLucideIconData(iconDataOrName, iconNode, aliases) : iconDataOrName;
-  const Component = import_react4.forwardRef(({ className, ...props }, ref) => import_react4.createElement(Icon, {
+  const Component = import_react3.forwardRef(({ className, ...props }, ref) => import_react3.createElement(Icon, {
     ref,
     icon: iconData,
     className,
@@ -19980,7 +19010,7 @@ var __iconData2 = {
 __iconData2.node;
 var ChevronRight = createLucideIcon(__iconData2);
 // src/components/ui/morph-gallery.tsx
-var jsx_runtime2 = __toESM(require_jsx_runtime());
+var jsx_runtime = __toESM(require_jsx_runtime());
 "use client";
 var wrapIndex = (i, n, loop) => {
   if (n <= 0)
@@ -20390,7 +19420,7 @@ function MorphGallery({
   const atEnd = !loop && active === items.length - 1;
   const current = items[active];
   const arrowClass = "absolute top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center " + "rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md " + "transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 " + "focus-visible:outline-offset-2 focus-visible:outline-white " + "disabled:pointer-events-none disabled:opacity-25";
-  return /* @__PURE__ */ jsx_runtime2.jsxs("section", {
+  return /* @__PURE__ */ jsx_runtime.jsxs("section", {
     className: "relative w-full overflow-hidden bg-black " + className,
     style: { height },
     role: "region",
@@ -20405,13 +19435,13 @@ function MorphGallery({
     onFocus: () => setPaused(true),
     onBlur: () => setPaused(false),
     children: [
-      failed ? items.map((item, i) => /* @__PURE__ */ jsx_runtime2.jsx("img", {
+      failed ? items.map((item, i) => /* @__PURE__ */ jsx_runtime.jsx("img", {
         src: item.src,
         alt: item.alt ?? "",
         className: "absolute inset-0 block h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none",
         style: { maxWidth: "none", opacity: i === active ? 1 : 0 },
         "aria-hidden": i !== active
-      }, item.src)) : /* @__PURE__ */ jsx_runtime2.jsx("canvas", {
+      }, item.src)) : /* @__PURE__ */ jsx_runtime.jsx("canvas", {
         ref: canvasRef,
         className: "absolute inset-0 block h-full w-full",
         style: {
@@ -20420,31 +19450,31 @@ function MorphGallery({
         },
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx_runtime2.jsx("div", {
+      /* @__PURE__ */ jsx_runtime.jsx("div", {
         className: "pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-56 bg-gradient-to-b from-transparent to-black/65",
         "aria-hidden": "true"
       }),
-      arrows && items.length > 1 && /* @__PURE__ */ jsx_runtime2.jsxs(jsx_runtime2.Fragment, {
+      arrows && items.length > 1 && /* @__PURE__ */ jsx_runtime.jsxs(jsx_runtime.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_runtime2.jsx("button", {
+          /* @__PURE__ */ jsx_runtime.jsx("button", {
             type: "button",
             className: arrowClass + " left-4 sm:left-8",
             onClick: () => go(active - 1),
             disabled: atStart,
             "aria-label": "Previous image",
-            children: /* @__PURE__ */ jsx_runtime2.jsx(ChevronLeft, {
+            children: /* @__PURE__ */ jsx_runtime.jsx(ChevronLeft, {
               className: "h-5 w-5",
               strokeWidth: 2.5,
               "aria-hidden": "true"
             })
           }),
-          /* @__PURE__ */ jsx_runtime2.jsx("button", {
+          /* @__PURE__ */ jsx_runtime.jsx("button", {
             type: "button",
             className: arrowClass + " right-4 sm:right-8",
             onClick: () => go(active + 1),
             disabled: atEnd,
             "aria-label": "Next image",
-            children: /* @__PURE__ */ jsx_runtime2.jsx(ChevronRight, {
+            children: /* @__PURE__ */ jsx_runtime.jsx(ChevronRight, {
               className: "h-5 w-5",
               strokeWidth: 2.5,
               "aria-hidden": "true"
@@ -20452,17 +19482,17 @@ function MorphGallery({
           })
         ]
       }),
-      thumbnails && items.length > 1 && /* @__PURE__ */ jsx_runtime2.jsx("ul", {
+      thumbnails && items.length > 1 && /* @__PURE__ */ jsx_runtime.jsx("ul", {
         className: "absolute inset-x-0 bottom-8 z-10 mx-auto flex w-max max-w-[calc(100%-2rem)] gap-2 " + "list-none overflow-x-auto scroll-smooth p-0 pb-2.5 " + "[&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:rounded [&::-webkit-scrollbar-track]:bg-white/10 " + "[&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-white/30 " + "max-sm:hidden",
-        children: items.map((item, i) => /* @__PURE__ */ jsx_runtime2.jsx("li", {
+        children: items.map((item, i) => /* @__PURE__ */ jsx_runtime.jsx("li", {
           className: "shrink-0 list-none",
-          children: /* @__PURE__ */ jsx_runtime2.jsx("button", {
+          children: /* @__PURE__ */ jsx_runtime.jsx("button", {
             type: "button",
             onClick: () => go(i),
             "aria-current": i === active,
             "aria-label": item.alt ? "Show " + item.alt : "Show image " + (i + 1),
             className: "block cursor-pointer overflow-hidden rounded border-2 bg-transparent p-0 transition " + "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white " + (i === active ? "border-white opacity-100" : "border-transparent opacity-55 hover:opacity-85"),
-            children: /* @__PURE__ */ jsx_runtime2.jsx("img", {
+            children: /* @__PURE__ */ jsx_runtime.jsx("img", {
               src: item.thumb ?? item.src,
               alt: "",
               width: 80,
@@ -20475,7 +19505,7 @@ function MorphGallery({
           })
         }, item.src))
       }),
-      /* @__PURE__ */ jsx_runtime2.jsxs("span", {
+      /* @__PURE__ */ jsx_runtime.jsxs("span", {
         className: "sr-only",
         "aria-live": "polite",
         children: [
@@ -20491,7 +19521,7 @@ function MorphGallery({
 }
 
 // src/Scene.jsx
-var jsx_runtime3 = __toESM(require_jsx_runtime());
+var jsx_runtime2 = __toESM(require_jsx_runtime());
 var CAFE_MORPH_ITEMS = [
   {
     src: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80",
@@ -20535,9 +19565,8 @@ var CAFE_MORPH_ITEMS = [
   }
 ];
 function MenuDishesShowcase() {
-  const [view, setView] = import_react5.useState("morph");
-  const [windowWidth, setWindowWidth] = import_react5.useState(typeof window !== "undefined" ? window.innerWidth : 1200);
-  import_react5.useEffect(() => {
+  const [windowWidth, setWindowWidth] = import_react4.useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  import_react4.useEffect(() => {
     let timeoutId;
     const handleResize = () => {
       clearTimeout(timeoutId);
@@ -20552,197 +19581,35 @@ function MenuDishesShowcase() {
     };
   }, []);
   const isMobile = windowWidth < 640;
-  const isTablet = windowWidth >= 640 && windowWidth < 1024;
-  const cardWidth = isMobile ? 175 : isTablet ? 210 : 240;
-  const gap = isMobile ? 32 : isTablet ? 42 : 54;
-  const dishes = [
-    {
-      src: "./images/dishes/jhol-momos.jpg",
-      alt: "Jhol Momos",
-      title: "Jhol Momos",
-      subtitle: "Comfort Dumplings · Warm Spiced Sesame Broth"
-    },
-    {
-      src: "./images/dishes/honey-chilli-potato.jpg",
-      alt: "Honey Chilli Potato",
-      title: "Honey Chilli Potato",
-      subtitle: "Wok-Tossed Crispy Potatoes · Sweet Sesame Glaze"
-    },
-    {
-      src: "./images/dishes/kunafa.jpg",
-      alt: "Kunafa & Sweet Treats",
-      title: "Kunafa & Sweets",
-      subtitle: "Artisan Dessert · Golden Kataifi & Rose Drizzle"
-    },
-    {
-      src: "./images/dishes/pour-over-coffee.jpg",
-      alt: "Artisan Pour-Over Coffee",
-      title: "Pour-Over Coffee",
-      subtitle: "Specialty Brew · Single-Origin Roast"
-    },
-    {
-      src: "./images/dishes/truffle-pizza.jpg",
-      alt: "Woodfired Truffle Pizza",
-      title: "Truffle Mushroom Pizza",
-      subtitle: "Artisan Sourdough · Wild Truffle & Mozzarella"
-    },
-    {
-      src: "./images/dishes/iced-spanish-latte.jpg",
-      alt: "Iced Spanish Latte",
-      title: "Iced Spanish Latte",
-      subtitle: "Cold Bar Favorite · Velvety Espresso & Condensed Milk"
-    },
-    {
-      src: "./images/dishes/avocado-toast.jpg",
-      alt: "Smashed Avocado Sourdough",
-      title: "Smashed Avocado Toast",
-      subtitle: "Rustic Sourdough · Feta, Microgreens & Chili Flakes"
-    },
-    {
-      src: "./images/dishes/biscoff-cheesecake.jpg",
-      alt: "Lotus Biscoff Cheesecake",
-      title: "Biscoff Cheesecake",
-      subtitle: "Velvet Cream Cheese · Spiced Cookie Crust & Drizzle"
-    },
-    {
-      src: "./images/dishes/waffle-tower.jpg",
-      alt: "Nutella Belgian Waffle",
-      title: "Belgian Waffle Tower",
-      subtitle: "Golden Crisp Waffle · Warm Nutella & Strawberries"
-    },
-    {
-      src: "./images/dishes/cold-brew-float.jpg",
-      alt: "Vanilla Cold Brew Float",
-      title: "Cold Brew Float",
-      subtitle: "18-Hour Slow Brew · Madagascar Vanilla Bean Scoop"
-    },
-    {
-      src: "./images/dishes/french-toast.jpg",
-      alt: "Brioche French Toast",
-      title: "Brioche French Toast",
-      subtitle: "All-Day Brunch · Fresh Berries & Pure Maple"
-    },
-    {
-      src: "./images/dishes/pesto-penne.jpg",
-      alt: "Creamy Basil Pesto Penne",
-      title: "Walnut Pesto Penne",
-      subtitle: "Fresh Hand-rolled Pasta · Garden Basil & Cherry Tomatoes"
-    }
-  ];
-  return /* @__PURE__ */ jsx_runtime3.jsxs("div", {
+  return /* @__PURE__ */ jsx_runtime2.jsx("div", {
     className: "menu-showcase-container",
-    children: [
-      /* @__PURE__ */ jsx_runtime3.jsxs("div", {
-        style: {
-          display: "flex",
-          justifyContent: "center",
-          gap: "10px",
-          marginBottom: "18px",
-          position: "relative",
-          zIndex: 5
-        },
-        children: [
-          /* @__PURE__ */ jsx_runtime3.jsxs("button", {
-            type: "button",
-            onClick: () => setView("morph"),
-            style: {
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              padding: "9px 20px",
-              borderRadius: "999px",
-              fontSize: "12.5px",
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "all .25s ease",
-              background: view === "morph" ? "var(--orange)" : "rgba(23,36,30,.06)",
-              color: view === "morph" ? "#17241e" : "var(--muted)",
-              border: view === "morph" ? "1px solid var(--orange)" : "1px solid var(--line)",
-              boxShadow: view === "morph" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
-            },
-            "aria-pressed": view === "morph",
-            children: [
-              /* @__PURE__ */ jsx_runtime3.jsx("span", {
-                children: "✨"
-              }),
-              " Shader Morph Gallery"
-            ]
-          }),
-          /* @__PURE__ */ jsx_runtime3.jsxs("button", {
-            type: "button",
-            onClick: () => setView("3d"),
-            style: {
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "7px",
-              padding: "9px 20px",
-              borderRadius: "999px",
-              fontSize: "12.5px",
-              fontWeight: 700,
-              cursor: "pointer",
-              transition: "all .25s ease",
-              background: view === "3d" ? "var(--orange)" : "rgba(23,36,30,.06)",
-              color: view === "3d" ? "#17241e" : "var(--muted)",
-              border: view === "3d" ? "1px solid var(--orange)" : "1px solid var(--line)",
-              boxShadow: view === "3d" ? "0 4px 14px rgba(216,140,90,.35)" : "none"
-            },
-            "aria-pressed": view === "3d",
-            children: [
-              /* @__PURE__ */ jsx_runtime3.jsx("span", {
-                children: "\uD83D\uDD04"
-              }),
-              " 3D Circular Cylinder"
-            ]
-          })
-        ]
-      }),
-      view === "morph" ? /* @__PURE__ */ jsx_runtime3.jsx("div", {
-        style: {
-          borderRadius: "24px",
-          overflow: "hidden",
-          boxShadow: "0 22px 50px rgba(23,36,30,.12)",
-          border: "1px solid rgba(23,36,30,.12)",
-          position: "relative",
-          background: "#0a0a0a"
-        },
-        children: /* @__PURE__ */ jsx_runtime3.jsx(MorphGallery, {
-          items: CAFE_MORPH_ITEMS,
-          height: isMobile ? "380px" : "520px",
-          duration: 1400,
-          noiseScale: 3.5,
-          edge: 0.16,
-          drift: 0.45,
-          autoplay: 4500,
-          loop: true,
-          arrows: true,
-          thumbnails: !isMobile
-        })
-      }) : /* @__PURE__ */ jsx_runtime3.jsx("div", {
-        className: "menu-carousel-wrapper",
-        children: /* @__PURE__ */ jsx_runtime3.jsx(CircularCarousel_default, {
-          items: dishes,
-          preset: "cylinder",
-          cardWidth,
-          aspectRatio: 0.82,
-          gap,
-          speed: 10,
-          autoplay: "drift",
-          draggable: true,
-          momentum: 0.65,
-          snap: true,
-          pauseOnHover: true,
-          captions: true,
-          focusOnClick: true,
-          fadeColor: "#e9ede4",
-          cornerRadius: 14
-        })
+    children: /* @__PURE__ */ jsx_runtime2.jsx("div", {
+      style: {
+        borderRadius: "24px",
+        overflow: "hidden",
+        boxShadow: "0 22px 50px rgba(23,36,30,.12)",
+        border: "1px solid rgba(23,36,30,.12)",
+        position: "relative",
+        background: "#0a0a0a"
+      },
+      children: /* @__PURE__ */ jsx_runtime2.jsx(MorphGallery, {
+        items: CAFE_MORPH_ITEMS,
+        height: isMobile ? "380px" : "520px",
+        duration: 1400,
+        noiseScale: 3.5,
+        edge: 0.16,
+        drift: 0.45,
+        autoplay: 4500,
+        loop: true,
+        arrows: true,
+        thumbnails: !isMobile
       })
-    ]
+    })
   });
 }
 var menuContainer = document.getElementById("menu-carousel-root");
 if (menuContainer) {
-  import_client.createRoot(menuContainer).render(/* @__PURE__ */ jsx_runtime3.jsx(MenuDishesShowcase, {}));
+  import_client.createRoot(menuContainer).render(/* @__PURE__ */ jsx_runtime2.jsx(MenuDishesShowcase, {}));
 }
 export {
   MenuDishesShowcase
