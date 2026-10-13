@@ -1460,6 +1460,21 @@ input:checked + .slider-round:before {
         </div>
       </div>
 
+      <!-- Quick Vercel Domain Bar -->
+      <div class="vercel-domain-bar" style="background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-md);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#000;color:#fff;font-size:11px;font-weight:700;">▲</span>
+          <div>
+            <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);display:block;font-weight:700;">Vercel Production Domain</span>
+            <a href="https://reflection-cafe.vercel.app/admin" target="_blank" id="topVercelDomainLink" style="font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none;">https://reflection-cafe.vercel.app/admin ↗</a>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" class="btn-demo" onclick="copyDomainLink('topVercelDomainLink')" style="padding:6px 14px;font-size:11.5px;">📋 Copy Link</button>
+          <a href="https://reflection-cafe.vercel.app/admin" target="_blank" id="topVercelDomainBtn" class="status-pill status-open" style="font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">Live on Vercel ●</a>
+        </div>
+      </div>
+
       <!-- KPI METRIC CARDS -->
       <div class="metrics-grid">
         <div class="metric-card">
@@ -1665,6 +1680,82 @@ input:checked + .slider-round:before {
           <div style="display:flex;gap:12px;margin-top:24px;">
             <button class="btn-primary" id="saveSettingsBtn" style="width:auto;padding:11px 24px;">Save Operational Settings</button>
             <button class="btn-demo" id="resetDemoDataBtn">Reset Demo Sample Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERCEL DOMAIN & ADMIN ROUTING SECTION -->
+      <div class="panel-card" style="margin-top: 24px;">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>▲ Vercel Domain &amp; Admin Routing</h3>
+            <p>Live deployment URL, clean URL rewrites, and direct staff desk access</p>
+          </div>
+          <span class="status-pill status-confirmed">Production Domain Active</span>
+        </div>
+
+        <div style="padding: 28px; max-width: 760px;">
+          <div style="background:var(--cream);border:1px solid var(--line);border-radius:var(--radius-md);padding:22px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#000;color:#fff;font-size:14px;font-weight:700;">▲</span>
+                <div>
+                  <strong style="font-size:15px;display:block;color:var(--ink);">Vercel Live Domain Mapping</strong>
+                  <span style="font-size:12px;color:var(--muted);" id="detectedOriginText">Auto-linked to production deployment</span>
+                </div>
+              </div>
+              <span class="status-pill status-open" style="font-size:11px;">Clean URL Rewrite: /admin ➔ admin.html</span>
+            </div>
+
+            <div style="display:grid;gap:12px;">
+              <!-- 1. Primary Clean Route -->
+              <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+                <div style="min-width:240px;">
+                  <span style="font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.06em;text-transform:uppercase;display:block;">Clean Admin Route (Vercel Rewrite)</span>
+                  <a href="/admin" id="vercelCleanLink" target="_blank" style="font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none;word-break:break-all;">https://reflection-cafe.vercel.app/admin</a>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button type="button" class="btn-demo" onclick="copyDomainLink('vercelCleanLink')" style="padding:6px 14px;font-size:12px;">📋 Copy Link</button>
+                  <a href="/admin" id="vercelCleanBtn" target="_blank" class="btn-primary" style="padding:6px 14px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">Open /admin ↗</a>
+                </div>
+              </div>
+
+              <!-- 2. Direct File Route -->
+              <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+                <div style="min-width:240px;">
+                  <span style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;display:block;">Direct File Route</span>
+                  <a href="admin.html" id="vercelDirectLink" target="_blank" style="font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;word-break:break-all;">https://reflection-cafe.vercel.app/admin.html</a>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button type="button" class="btn-demo" onclick="copyDomainLink('vercelDirectLink')" style="padding:6px 14px;font-size:12px;">📋 Copy Link</button>
+                  <a href="admin.html" id="vercelDirectBtn" target="_blank" class="btn-secondary" style="padding:6px 14px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">Open admin.html ↗</a>
+                </div>
+              </div>
+
+              <!-- 3. Public Customer Site -->
+              <div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+                <div style="min-width:240px;">
+                  <span style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.06em;text-transform:uppercase;display:block;">Customer Homepage</span>
+                  <a href="/" id="vercelPublicLink" target="_blank" style="font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;word-break:break-all;">https://reflection-cafe.vercel.app/</a>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button type="button" class="btn-demo" onclick="copyDomainLink('vercelPublicLink')" style="padding:6px 14px;font-size:12px;">📋 Copy Link</button>
+                  <a href="/" id="vercelPublicBtn" target="_blank" class="btn-secondary" style="padding:6px 14px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">Visit Site ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Domain Override Input -->
+          <div class="modal-field">
+            <label>Custom Domain / Hostname Override (Optional)</label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <input type="text" id="settingCustomDomain" placeholder="e.g. reflection-cafe.vercel.app or cafe.reflection.com" style="flex:1;min-width:240px;">
+              <button type="button" class="btn-primary" id="saveDomainBtn" style="width:auto;padding:11px 20px;">Save Domain</button>
+            </div>
+            <small style="color:var(--muted);font-size:11.5px;margin-top:7px;display:block;">
+              All routes are governed by <code>vercel.json</code> rewrites: clean URLs work seamlessly with zero file extensions.
+            </small>
           </div>
         </div>
       </div>
@@ -2438,6 +2529,75 @@ function applySettingsUI() {
       pill.textContent = 'Service Live · Taking Bookings ↻';
     }
   }
+
+  updateVercelDomainSection();
+}
+
+function copyDomainLink(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const url = el.href || el.textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast(`Copied: ${url}`);
+    }).catch(() => {
+      prompt('Copy link:', url);
+    });
+  } else {
+    prompt('Copy link:', url);
+  }
+}
+window.copyDomainLink = copyDomainLink;
+
+function updateVercelDomainSection() {
+  const isLocal = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1');
+  const baseHost = settings.customDomain 
+    ? (settings.customDomain.startsWith('http') ? settings.customDomain : `https://${settings.customDomain}`)
+    : (isLocal ? 'https://reflection-cafe.vercel.app' : window.location.origin);
+
+  const cleanUrl = `${baseHost.replace(/\/+$/, '')}/admin`;
+  const directUrl = `${baseHost.replace(/\/+$/, '')}/admin.html`;
+  const publicUrl = `${baseHost.replace(/\/+$/, '')}/`;
+
+  const topLink = document.getElementById('topVercelDomainLink');
+  const topBtn = document.getElementById('topVercelDomainBtn');
+  if (topLink) { topLink.href = cleanUrl; topLink.textContent = `${cleanUrl} ↗`; }
+  if (topBtn) { topBtn.href = cleanUrl; }
+
+  const cleanLink = document.getElementById('vercelCleanLink');
+  const cleanBtn = document.getElementById('vercelCleanBtn');
+  const directLink = document.getElementById('vercelDirectLink');
+  const directBtn = document.getElementById('vercelDirectBtn');
+  const publicLink = document.getElementById('vercelPublicLink');
+  const publicBtn = document.getElementById('vercelPublicBtn');
+
+  if (cleanLink) { cleanLink.href = cleanUrl; cleanLink.textContent = cleanUrl; }
+  if (cleanBtn) { cleanBtn.href = cleanUrl; }
+  if (directLink) { directLink.href = directUrl; directLink.textContent = directUrl; }
+  if (directBtn) { directBtn.href = directUrl; }
+  if (publicLink) { publicLink.href = publicUrl; publicLink.textContent = publicUrl; }
+  if (publicBtn) { publicBtn.href = publicUrl; }
+
+  const customInput = document.getElementById('settingCustomDomain');
+  if (customInput && settings.customDomain) customInput.value = settings.customDomain;
+
+  const detectedText = document.getElementById('detectedOriginText');
+  if (detectedText) {
+    detectedText.textContent = isLocal
+      ? `Localhost previewing · Target production: reflection-cafe.vercel.app`
+      : `Live environment detected: ${window.location.origin}`;
+  }
+}
+
+const saveDomainBtn = document.getElementById('saveDomainBtn');
+if (saveDomainBtn) {
+  saveDomainBtn.addEventListener('click', () => {
+    const val = (document.getElementById('settingCustomDomain').value || '').trim();
+    settings.customDomain = val;
+    saveData(KEYS.SETTINGS, settings);
+    updateVercelDomainSection();
+    showToast(val ? `Domain set to ${val}` : 'Domain reset to default Vercel address');
+  });
 }
 
 // Click to cycle status on overview banner
