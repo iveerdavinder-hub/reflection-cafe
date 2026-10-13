@@ -12,6 +12,7 @@ An artisan culinary and coffee sanctuary in Sector 35C, Chandigarh. Features a m
 | **Admin & Host Desk (Clean Route)** | `/admin` | [https://reflection-cafe.vercel.app/admin](https://reflection-cafe.vercel.app/admin) |
 | **Admin Portal (Direct File)** | `/admin.html` | [https://reflection-cafe.vercel.app/admin.html](https://reflection-cafe.vercel.app/admin.html) |
 | **Custom 404 Error Page** | `/404.html` | [https://reflection-cafe.vercel.app/404.html](https://reflection-cafe.vercel.app/404.html) |
+| **▲ Vercel Deployment Dashboard** | Dashboard | [Deployment Overview `Dg4o1YSNBHdNLwiRHsTuL2euBKqc`](https://vercel.com/iveerdavinder-6196s-projects/reflection-cafe/Dg4o1YSNBHdNLwiRHsTuL2euBKqc) |
 
 ---
 
