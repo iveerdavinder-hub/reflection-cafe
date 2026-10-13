@@ -16,6 +16,8 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/admin/", "destination": "/admin.html" },
     { "source": "/soda", "destination": "/soda.html" },
-    { "source": "/soda/", "destination": "/soda.html" }
+    { "source": "/soda/", "destination": "/soda.html" },
+    { "source": "/glacier", "destination": "/glacier/dist/index.html" },
+    { "source": "/glacier/", "destination": "/glacier/dist/index.html" }
   ]
 }
