@@ -7,73 +7,43 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
  * Morph Gallery — a photo gallery whose slides dissolve into each other
  * through noise instead of cutting or cross-fading.
  *
- * The transition is one full-screen shader pass over two textures. An fbm
- * noise field gives every pixel a threshold, and the progress value sweeps
- * past those thresholds, so the outgoing frame tears away in drifting tatters
- * rather than fading uniformly. The threshold is biased by the luminance of
- * the *incoming* frame, which makes its bright areas burn through first — the
- * detail that stops it reading as a generic dissolve filter.
- *
- * Self-contained: raw WebGL, React is the only import. No gallery library, no
- * animation library, no CSS file. The canvas sizes itself from its own box.
- *
- * Textures need CORS. An image served without `Access-Control-Allow-Origin`
- * cannot be uploaded to WebGL at all, so the component detects that and falls
- * back to a plain DOM cross-fade — the gallery still works, it just stops
- * morphing. That is the difference between "no shader" and "black rectangle".
+ * Self-contained WebGL with on-demand rendering (zero idle CPU/GPU usage)
+ * and IntersectionObserver pausing for silky smooth page scrolling.
  */
 
 export type MorphItem = {
-  /** Full-size image. Must be served with CORS headers to be morphed. */
   src: string
-  /** Thumbnail for the strip. Falls back to `src`, which is wasteful. */
   thumb?: string
   alt?: string
 }
 
 export type MorphGalleryProps = {
   items: MorphItem[]
-  /** **Must be a definite length.** The canvas fills this box. */
   height?: string
-  /** Milliseconds of dissolve. */
   duration?: number
-  /** fbm frequency. Higher tears into finer shreds. */
   noiseScale?: number
-  /** Width of the dissolve front, in threshold units. 0 is a hard edge. */
   edge?: number
-  /** How far the frames slide against each other while dissolving. */
   drift?: number
-  /** Wrap past the ends. */
   loop?: boolean
-  /** Milliseconds between automatic advances. 0 (default) is off. */
   autoplay?: number
   arrows?: boolean
   thumbnails?: boolean
-  /** Controlled index. Omit for uncontrolled. */
   index?: number
   defaultIndex?: number
   onIndexChange?: (index: number) => void
   className?: string
 }
 
-// #region gallery
-/** Wrap past the ends when looping, clamp at them when not. */
 export const wrapIndex = (i: number, n: number, loop: boolean): number => {
   if (n <= 0) return 0
   return loop ? ((i % n) + n) % n : Math.min(Math.max(i, 0), n - 1)
 }
 
-/** Quintic in-out: the dissolve starts and ends still, and hurries the middle. */
 export const easeInOutQuint = (t: number): number => {
   const x = Math.min(Math.max(t, 0), 1)
   return x < 0.5 ? 16 * x ** 5 : 1 - (-2 * x + 2) ** 5 / 2
 }
 
-/**
- * `object-fit: cover` expressed as a UV scale about the centre. Both factors
- * are <= 1: the sampled window shrinks, so the image crops rather than
- * stretching, whichever way the box is out of proportion.
- */
 export const coverScale = (
   canvasAspect: number,
   imgAspect: number,
@@ -81,7 +51,6 @@ export const coverScale = (
   canvasAspect > imgAspect
     ? [1, imgAspect / canvasAspect]
     : [canvasAspect / imgAspect, 1]
-// #endregion
 
 const VERT = `
 attribute vec2 a_position;
@@ -93,7 +62,11 @@ void main() {
 `
 
 const FRAG = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 
 uniform sampler2D u_from;
 uniform sampler2D u_to;
@@ -153,10 +126,6 @@ float fbm(vec2 v) {
   return value;
 }
 
-// The drift below pushes UVs past the edge of the image, and CLAMP_TO_EDGE
-// answers that by smearing the last row of pixels into long vertical streaks.
-// Reflecting instead keeps real picture there. Done in the shader because
-// MIRRORED_REPEAT is illegal on the non-power-of-two textures photos produce.
 vec2 mirror(vec2 uv) {
   return 1.0 - abs(1.0 - mod(uv, 2.0));
 }
@@ -170,13 +139,8 @@ vec2 coverUV(vec2 uv, float imgAspect) {
 }
 
 void main() {
-  // Widen the sweep by one edge at each end, so progress 0 and 1 are fully
-  // one image or the other rather than already half-dissolved.
   float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
-
   float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
-  // Bias the threshold by how bright the incoming frame is here: its lit areas
-  // cross the front first, so the new image appears to burn through the old.
   noise = smoothstep(
     0.0,
     2.0,
@@ -185,8 +149,6 @@ void main() {
 
   float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
 
-  // Both frames slide, by different amounts and in opposite directions, so the
-  // tatters have parallax against each other instead of sitting in one plane.
   vec2 fromUV = coverUV(
     v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction),
     u_fromAspect
@@ -221,8 +183,6 @@ const link = (gl: WebGLRenderingContext, vertSrc: string, fragSrc: string) => {
   gl.attachShader(program, vert)
   gl.attachShader(program, frag)
   gl.linkProgram(program)
-  // The shaders are owned by the program once attached; drop our references
-  // now so they are freed with it rather than leaking per mount.
   gl.deleteShader(vert)
   gl.deleteShader(frag)
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
@@ -236,9 +196,6 @@ const link = (gl: WebGLRenderingContext, vertSrc: string, fragSrc: string) => {
 const loadImage = (src: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image()
-    // Without this the texture upload throws and the whole gallery goes black.
-    // With it, a host that sends no CORS header fails here instead — which we
-    // can see, and fall back from.
     img.crossOrigin = "anonymous"
     img.decoding = "async"
     img.onload = () => resolve(img)
@@ -263,6 +220,9 @@ export default function MorphGallery({
   className = "",
 }: MorphGalleryProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
+  const containerRef = React.useRef<HTMLElement | null>(null)
+  const wakeRef = React.useRef<(() => void) | null>(null)
+
   const [uncontrolled, setUncontrolled] = React.useState(() =>
     wrapIndex(defaultIndex, items.length, loop),
   )
@@ -291,21 +251,18 @@ export default function MorphGallery({
     [index, items.length, loop, onIndexChange],
   )
 
-  // The render loop reads live values through refs, so retuning the dissolve
-  // never tears down the GL context.
   const tuning = React.useRef({ duration, noiseScale, edge, drift, reduced })
   tuning.current = { duration, noiseScale, edge, drift, reduced }
 
-  // A transition is requested by index changes and consumed by the loop.
   const request = React.useRef<{ from: number; to: number } | null>(null)
   const previous = React.useRef(active)
   React.useEffect(() => {
     if (previous.current === active) return
     request.current = { from: previous.current, to: active }
     previous.current = active
+    wakeRef.current?.()
   }, [active])
 
-  // Rebuilding on the source list is the point: new images, new textures.
   const sources = items.map((i) => i.src).join("\n")
 
   React.useEffect(() => {
@@ -313,7 +270,7 @@ export default function MorphGallery({
     if (!canvas || items.length === 0) return
 
     const gl =
-      canvas.getContext("webgl", { alpha: false, antialias: false }) ??
+      canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" }) ??
       (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null)
     if (!gl) {
       setFailed(true)
@@ -322,14 +279,12 @@ export default function MorphGallery({
 
     let program: WebGLProgram | null = null
     let buffer: WebGLBuffer | null = null
-    // Indexed by item, with holes: an image that has not arrived yet — or
-    // never will — leaves a null behind rather than shifting its neighbours.
     const textures: (WebGLTexture | null)[] = items.map(() => null)
     const aspects: number[] = items.map(() => 1)
     let raf = 0
     let disposed = false
+    let inView = true
 
-    // Dissolve state, in the loop rather than in React: it changes every frame.
     let from = active
     let to = active
     let progress = 1
@@ -339,29 +294,13 @@ export default function MorphGallery({
     const onLost = (e: Event) => {
       e.preventDefault()
       cancelAnimationFrame(raf)
+      raf = 0
     }
-    // A restored context has nothing in it — every object above is gone, so
-    // the only honest response is to build the whole thing again.
     const onRestored = () => setGeneration((g) => g + 1)
     canvas.addEventListener("webglcontextlost", onLost)
     canvas.addEventListener("webglcontextrestored", onRestored)
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const w = Math.round(canvas.clientWidth * dpr)
-      const h = Math.round(canvas.clientHeight * dpr)
-      if (w === 0 || h === 0 || (canvas.width === w && canvas.height === h)) return
-      canvas.width = w
-      canvas.height = h
-      gl.viewport(0, 0, w, h)
-    }
-    const observer = new ResizeObserver(resize)
-    observer.observe(canvas)
-
     let uniforms: Record<string, WebGLUniformLocation | null> = {}
-
-    // Until every image is in, `from` or `to` can point at a hole. Showing the
-    // nearest texture that does exist beats binding null, which draws black.
     const pick = (i: number) => textures[i] ?? textures.find((t) => t) ?? null
 
     const draw = () => {
@@ -376,8 +315,6 @@ export default function MorphGallery({
           to = pending.to
           progress = 0
           startedAt = performance.now()
-          // Direction follows the shortest way round, so a wrap from the last
-          // slide to the first drifts forward like every other step.
           const n = items.length
           const forward = loop
             ? ((pending.to - pending.from + n) % n) * 2 <= n
@@ -387,8 +324,6 @@ export default function MorphGallery({
       }
 
       if (progress < 1) {
-        // Reduced motion keeps the gallery but drops the animation: the slide
-        // is simply there on the next frame.
         const span = t.reduced ? 0 : Math.max(t.duration, 1)
         const elapsed = performance.now() - startedAt
         progress = span === 0 ? 1 : easeInOutQuint(Math.min(elapsed / span, 1))
@@ -400,26 +335,64 @@ export default function MorphGallery({
 
       gl.activeTexture(gl.TEXTURE0)
       gl.bindTexture(gl.TEXTURE_2D, fromTex)
-      gl.uniform1i(uniforms.from, 0)
+      if (uniforms.from) gl.uniform1i(uniforms.from, 0)
       gl.activeTexture(gl.TEXTURE1)
       gl.bindTexture(gl.TEXTURE_2D, toTex)
-      gl.uniform1i(uniforms.to, 1)
+      if (uniforms.to) gl.uniform1i(uniforms.to, 1)
 
-      gl.uniform1f(uniforms.progress, progress)
-      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height)
-      gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1)
-      gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1)
-      gl.uniform1f(uniforms.scale, t.noiseScale)
-      gl.uniform1f(uniforms.direction, direction)
-      gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001))
-      gl.uniform1f(uniforms.drift, t.drift)
+      if (uniforms.progress) gl.uniform1f(uniforms.progress, progress)
+      if (uniforms.resolution) gl.uniform2f(uniforms.resolution, canvas.width, canvas.height)
+      if (uniforms.fromAspect) gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1)
+      if (uniforms.toAspect) gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1)
+      if (uniforms.scale) gl.uniform1f(uniforms.scale, t.noiseScale)
+      if (uniforms.direction) gl.uniform1f(uniforms.direction, direction)
+      if (uniforms.edge) gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001))
+      if (uniforms.drift) gl.uniform1f(uniforms.drift, t.drift)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     }
 
     const frame = () => {
+      if (disposed) return
       draw()
-      raf = requestAnimationFrame(frame)
+      if (inView && (progress < 1 || request.current)) {
+        raf = requestAnimationFrame(frame)
+      } else {
+        raf = 0
+      }
     }
+
+    const wake = () => {
+      if (inView && !raf && !disposed) {
+        raf = requestAnimationFrame(frame)
+      }
+    }
+    wakeRef.current = wake
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const w = Math.round(canvas.clientWidth * dpr)
+      const h = Math.round(canvas.clientHeight * dpr)
+      if (w === 0 || h === 0 || (canvas.width === w && canvas.height === h)) return
+      canvas.width = w
+      canvas.height = h
+      gl.viewport(0, 0, w, h)
+      draw()
+    }
+
+    const resizeObserver = new ResizeObserver(resize)
+    resizeObserver.observe(canvas)
+
+    // Sleep render loop when scrolled offscreen to guarantee 120 FPS page scrolling
+    const viewObserver = new IntersectionObserver(([entry]) => {
+      inView = entry?.isIntersecting ?? true
+      if (inView) {
+        wake()
+      } else if (raf) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      }
+    }, { threshold: 0.05 })
+    viewObserver.observe(canvas)
 
     const start = async () => {
       try {
@@ -446,10 +419,6 @@ export default function MorphGallery({
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
 
-        // Each image is uploaded the moment it arrives and the loop starts on
-        // the first one. Waiting for all of them means a black rectangle for
-        // as long as the slowest image takes, which on a real connection is
-        // the whole first impression.
         let running = false
         let refused = 0
         await Promise.all(
@@ -460,9 +429,6 @@ export default function MorphGallery({
                 const tex = gl.createTexture()
                 gl.bindTexture(gl.TEXTURE_2D, tex)
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
-                // Photos are not powers of two, so mipmaps and repeat are both
-                // off the table in WebGL1 — clamp and linear are the only
-                // legal pair, and the wrong one renders black with no error.
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
@@ -473,12 +439,11 @@ export default function MorphGallery({
                   running = true
                   resize()
                   setReady(true)
-                  raf = requestAnimationFrame(frame)
+                  draw()
+                  wake()
                 }
               },
               () => {
-                // One broken URL should cost one slide, not the effect. Only
-                // when nothing at all loads is there no gallery to shade.
                 refused += 1
                 if (refused === items.length && !disposed) setFailed(true)
               },
@@ -486,8 +451,6 @@ export default function MorphGallery({
           ),
         )
       } catch {
-        // No WebGL, or a driver that refused the program. Either way: show the
-        // pictures without the morph rather than showing nothing.
         if (!disposed) setFailed(true)
       }
     }
@@ -495,8 +458,10 @@ export default function MorphGallery({
 
     return () => {
       disposed = true
-      cancelAnimationFrame(raf)
-      observer.disconnect()
+      wakeRef.current = null
+      if (raf) cancelAnimationFrame(raf)
+      resizeObserver.disconnect()
+      viewObserver.disconnect()
       canvas.removeEventListener("webglcontextlost", onLost)
       canvas.removeEventListener("webglcontextrestored", onRestored)
       for (const tex of textures) if (tex) gl.deleteTexture(tex)
@@ -504,9 +469,6 @@ export default function MorphGallery({
       if (program) gl.deleteProgram(program)
       textures.fill(null)
     }
-    // `active` is read once to seed the first frame; changes arrive through
-    // `request` instead, which is why it is deliberately not a dependency.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sources, generation, items.length, loop])
 
   // ---- autoplay ------------------------------------------------------------
@@ -517,23 +479,26 @@ export default function MorphGallery({
   }, [autoplay, reduced, paused, active, go, items.length])
 
   React.useEffect(() => {
-    // A tab in the background should not silently burn through the gallery.
     const sync = () => setPaused(document.hidden)
     document.addEventListener("visibilitychange", sync)
     return () => document.removeEventListener("visibilitychange", sync)
   }, [])
 
   // ---- pointer and keyboard ------------------------------------------------
-  const swipe = React.useRef<number | null>(null)
+  const swipe = React.useRef<{ x: number; y: number } | null>(null)
   const onPointerDown = (e: React.PointerEvent) => {
-    swipe.current = e.clientX
+    swipe.current = { x: e.clientX, y: e.clientY }
   }
   const onPointerUp = (e: React.PointerEvent) => {
-    const startX = swipe.current
+    const start = swipe.current
     swipe.current = null
-    if (startX === null) return
-    const dx = e.clientX - startX
-    if (Math.abs(dx) > 48) go(active + (dx < 0 ? 1 : -1))
+    if (!start) return
+    const dx = e.clientX - start.x
+    const dy = e.clientY - start.y
+    // Only swipe if horizontal motion exceeds vertical motion
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
+      go(active + (dx < 0 ? 1 : -1))
+    }
   }
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
@@ -558,8 +523,9 @@ export default function MorphGallery({
 
   return (
     <section
-      className={"relative w-full overflow-hidden bg-black " + className}
-      style={{ height }}
+      ref={containerRef}
+      className={"relative w-full overflow-hidden bg-black select-none touch-pan-y " + className}
+      style={{ height, touchAction: "pan-y" }}
       role="region"
       aria-roledescription="carousel"
       aria-label="Image gallery"
@@ -573,7 +539,6 @@ export default function MorphGallery({
       onBlur={() => setPaused(false)}
     >
       {failed ? (
-        // The same gallery without the shader: stacked images, opacity only.
         items.map((item, i) => (
           <img
             key={item.src}
@@ -589,8 +554,6 @@ export default function MorphGallery({
           ref={canvasRef}
           className="absolute inset-0 block h-full w-full"
           style={{
-            // Nothing is on the canvas until the textures land; fading it in
-            // avoids a black flash on a slow connection.
             opacity: ready ? 1 : 0,
             transition: "opacity 400ms ease",
           }}
@@ -659,8 +622,6 @@ export default function MorphGallery({
                   loading="lazy"
                   decoding="async"
                   className="block object-cover"
-                  // Preflight's img { max-width: 100% } would otherwise shrink
-                  // these inside the scroller and break the strip's rhythm.
                   style={{ maxWidth: "none", width: 80, height: 50 }}
                 />
               </button>

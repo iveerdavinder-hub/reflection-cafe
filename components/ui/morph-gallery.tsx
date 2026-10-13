@@ -54,7 +54,11 @@ void main() {
 `
 
 const FRAG = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 
 uniform sampler2D u_from;
 uniform sampler2D u_to;
@@ -208,6 +212,9 @@ export default function MorphGallery({
   className = "",
 }: MorphGalleryProps) {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
+  const containerRef = React.useRef<HTMLElement | null>(null)
+  const wakeRef = React.useRef<(() => void) | null>(null)
+
   const [uncontrolled, setUncontrolled] = React.useState(() =>
     wrapIndex(defaultIndex, items.length, loop),
   )
@@ -245,6 +252,7 @@ export default function MorphGallery({
     if (previous.current === active) return
     request.current = { from: previous.current, to: active }
     previous.current = active
+    wakeRef.current?.()
   }, [active])
 
   const sources = items.map((i) => i.src).join("\n")
@@ -254,7 +262,7 @@ export default function MorphGallery({
     if (!canvas || items.length === 0) return
 
     const gl =
-      canvas.getContext("webgl", { alpha: false, antialias: false }) ??
+      canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" }) ??
       (canvas.getContext("experimental-webgl") as WebGLRenderingContext | null)
     if (!gl) {
       setFailed(true)
@@ -267,6 +275,7 @@ export default function MorphGallery({
     const aspects: number[] = items.map(() => 1)
     let raf = 0
     let disposed = false
+    let inView = true
 
     let from = active
     let to = active
@@ -277,22 +286,11 @@ export default function MorphGallery({
     const onLost = (e: Event) => {
       e.preventDefault()
       cancelAnimationFrame(raf)
+      raf = 0
     }
     const onRestored = () => setGeneration((g) => g + 1)
     canvas.addEventListener("webglcontextlost", onLost)
     canvas.addEventListener("webglcontextrestored", onRestored)
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
-      const w = Math.round(canvas.clientWidth * dpr)
-      const h = Math.round(canvas.clientHeight * dpr)
-      if (w === 0 || h === 0 || (canvas.width === w && canvas.height === h)) return
-      canvas.width = w
-      canvas.height = h
-      gl.viewport(0, 0, w, h)
-    }
-    const observer = new ResizeObserver(resize)
-    observer.observe(canvas)
 
     let uniforms: Record<string, WebGLUniformLocation | null> = {}
     const pick = (i: number) => textures[i] ?? textures.find((t) => t) ?? null
@@ -329,26 +327,63 @@ export default function MorphGallery({
 
       gl.activeTexture(gl.TEXTURE0)
       gl.bindTexture(gl.TEXTURE_2D, fromTex)
-      gl.uniform1i(uniforms.from, 0)
+      if (uniforms.from) gl.uniform1i(uniforms.from, 0)
       gl.activeTexture(gl.TEXTURE1)
       gl.bindTexture(gl.TEXTURE_2D, toTex)
-      gl.uniform1i(uniforms.to, 1)
+      if (uniforms.to) gl.uniform1i(uniforms.to, 1)
 
-      gl.uniform1f(uniforms.progress, progress)
-      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height)
-      gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1)
-      gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1)
-      gl.uniform1f(uniforms.scale, t.noiseScale)
-      gl.uniform1f(uniforms.direction, direction)
-      gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001))
-      gl.uniform1f(uniforms.drift, t.drift)
+      if (uniforms.progress) gl.uniform1f(uniforms.progress, progress)
+      if (uniforms.resolution) gl.uniform2f(uniforms.resolution, canvas.width, canvas.height)
+      if (uniforms.fromAspect) gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1)
+      if (uniforms.toAspect) gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1)
+      if (uniforms.scale) gl.uniform1f(uniforms.scale, t.noiseScale)
+      if (uniforms.direction) gl.uniform1f(uniforms.direction, direction)
+      if (uniforms.edge) gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001))
+      if (uniforms.drift) gl.uniform1f(uniforms.drift, t.drift)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     }
 
     const frame = () => {
+      if (disposed) return
       draw()
-      raf = requestAnimationFrame(frame)
+      if (inView && (progress < 1 || request.current)) {
+        raf = requestAnimationFrame(frame)
+      } else {
+        raf = 0
+      }
     }
+
+    const wake = () => {
+      if (inView && !raf && !disposed) {
+        raf = requestAnimationFrame(frame)
+      }
+    }
+    wakeRef.current = wake
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const w = Math.round(canvas.clientWidth * dpr)
+      const h = Math.round(canvas.clientHeight * dpr)
+      if (w === 0 || h === 0 || (canvas.width === w && canvas.height === h)) return
+      canvas.width = w
+      canvas.height = h
+      gl.viewport(0, 0, w, h)
+      draw()
+    }
+
+    const resizeObserver = new ResizeObserver(resize)
+    resizeObserver.observe(canvas)
+
+    const viewObserver = new IntersectionObserver(([entry]) => {
+      inView = entry?.isIntersecting ?? true
+      if (inView) {
+        wake()
+      } else if (raf) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      }
+    }, { threshold: 0.05 })
+    viewObserver.observe(canvas)
 
     const start = async () => {
       try {
@@ -395,7 +430,8 @@ export default function MorphGallery({
                   running = true
                   resize()
                   setReady(true)
-                  raf = requestAnimationFrame(frame)
+                  draw()
+                  wake()
                 }
               },
               () => {
@@ -413,8 +449,10 @@ export default function MorphGallery({
 
     return () => {
       disposed = true
-      cancelAnimationFrame(raf)
-      observer.disconnect()
+      wakeRef.current = null
+      if (raf) cancelAnimationFrame(raf)
+      resizeObserver.disconnect()
+      viewObserver.disconnect()
       canvas.removeEventListener("webglcontextlost", onLost)
       canvas.removeEventListener("webglcontextrestored", onRestored)
       for (const tex of textures) if (tex) gl.deleteTexture(tex)
@@ -436,16 +474,19 @@ export default function MorphGallery({
     return () => document.removeEventListener("visibilitychange", sync)
   }, [])
 
-  const swipe = React.useRef<number | null>(null)
+  const swipe = React.useRef<{ x: number; y: number } | null>(null)
   const onPointerDown = (e: React.PointerEvent) => {
-    swipe.current = e.clientX
+    swipe.current = { x: e.clientX, y: e.clientY }
   }
   const onPointerUp = (e: React.PointerEvent) => {
-    const startX = swipe.current
+    const start = swipe.current
     swipe.current = null
-    if (startX === null) return
-    const dx = e.clientX - startX
-    if (Math.abs(dx) > 48) go(active + (dx < 0 ? 1 : -1))
+    if (!start) return
+    const dx = e.clientX - start.x
+    const dy = e.clientY - start.y
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
+      go(active + (dx < 0 ? 1 : -1))
+    }
   }
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
@@ -470,8 +511,9 @@ export default function MorphGallery({
 
   return (
     <section
-      className={"relative w-full overflow-hidden bg-black " + className}
-      style={{ height }}
+      ref={containerRef}
+      className={"relative w-full overflow-hidden bg-black select-none touch-pan-y " + className}
+      style={{ height, touchAction: "pan-y" }}
       role="region"
       aria-roledescription="carousel"
       aria-label="Image gallery"

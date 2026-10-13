@@ -19030,7 +19030,11 @@ void main() {
 }
 `;
 var FRAG = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#else
+precision mediump float;
+#endif
 
 uniform sampler2D u_from;
 uniform sampler2D u_to;
@@ -19090,10 +19094,6 @@ float fbm(vec2 v) {
   return value;
 }
 
-// The drift below pushes UVs past the edge of the image, and CLAMP_TO_EDGE
-// answers that by smearing the last row of pixels into long vertical streaks.
-// Reflecting instead keeps real picture there. Done in the shader because
-// MIRRORED_REPEAT is illegal on the non-power-of-two textures photos produce.
 vec2 mirror(vec2 uv) {
   return 1.0 - abs(1.0 - mod(uv, 2.0));
 }
@@ -19107,13 +19107,8 @@ vec2 coverUV(vec2 uv, float imgAspect) {
 }
 
 void main() {
-  // Widen the sweep by one edge at each end, so progress 0 and 1 are fully
-  // one image or the other rather than already half-dissolved.
   float adjusted = u_progress * (1.0 + 2.0 * u_edge) - u_edge;
-
   float noise = fbm(v_uv * u_scale + vec2(0.0, u_progress * u_direction)) * 0.5 + 0.5;
-  // Bias the threshold by how bright the incoming frame is here: its lit areas
-  // cross the front first, so the new image appears to burn through the old.
   noise = smoothstep(
     0.0,
     2.0,
@@ -19122,8 +19117,6 @@ void main() {
 
   float mixFactor = 1.0 - smoothstep(adjusted - u_edge, adjusted + u_edge, noise);
 
-  // Both frames slide, by different amounts and in opposite directions, so the
-  // tatters have parallax against each other instead of sitting in one plane.
   vec2 fromUV = coverUV(
     v_uv + vec2(0.0, noise * u_progress * u_drift * u_direction),
     u_fromAspect
@@ -19192,6 +19185,8 @@ function MorphGallery({
   className = ""
 }) {
   const canvasRef = React.useRef(null);
+  const containerRef = React.useRef(null);
+  const wakeRef = React.useRef(null);
   const [uncontrolled, setUncontrolled] = React.useState(() => wrapIndex(defaultIndex, items.length, loop));
   const active = index === undefined ? uncontrolled : wrapIndex(index, items.length, loop);
   const [failed, setFailed] = React.useState(false);
@@ -19221,6 +19216,7 @@ function MorphGallery({
       return;
     request.current = { from: previous.current, to: active };
     previous.current = active;
+    wakeRef.current?.();
   }, [active]);
   const sources = items.map((i) => i.src).join(`
 `);
@@ -19228,7 +19224,7 @@ function MorphGallery({
     const canvas = canvasRef.current;
     if (!canvas || items.length === 0)
       return;
-    const gl = canvas.getContext("webgl", { alpha: false, antialias: false }) ?? canvas.getContext("experimental-webgl");
+    const gl = canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" }) ?? canvas.getContext("experimental-webgl");
     if (!gl) {
       setFailed(true);
       return;
@@ -19239,6 +19235,7 @@ function MorphGallery({
     const aspects = items.map(() => 1);
     let raf = 0;
     let disposed = false;
+    let inView = true;
     let from = active;
     let to = active;
     let progress = 1;
@@ -19247,22 +19244,11 @@ function MorphGallery({
     const onLost = (e) => {
       e.preventDefault();
       cancelAnimationFrame(raf);
+      raf = 0;
     };
     const onRestored = () => setGeneration((g) => g + 1);
     canvas.addEventListener("webglcontextlost", onLost);
     canvas.addEventListener("webglcontextrestored", onRestored);
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = Math.round(canvas.clientWidth * dpr);
-      const h = Math.round(canvas.clientHeight * dpr);
-      if (w === 0 || h === 0 || canvas.width === w && canvas.height === h)
-        return;
-      canvas.width = w;
-      canvas.height = h;
-      gl.viewport(0, 0, w, h);
-    };
-    const observer = new ResizeObserver(resize);
-    observer.observe(canvas);
     let uniforms = {};
     const pick = (i) => textures[i] ?? textures.find((t) => t) ?? null;
     const draw = () => {
@@ -19293,24 +19279,69 @@ function MorphGallery({
         return;
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, fromTex);
-      gl.uniform1i(uniforms.from, 0);
+      if (uniforms.from)
+        gl.uniform1i(uniforms.from, 0);
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, toTex);
-      gl.uniform1i(uniforms.to, 1);
-      gl.uniform1f(uniforms.progress, progress);
-      gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
-      gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1);
-      gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1);
-      gl.uniform1f(uniforms.scale, t.noiseScale);
-      gl.uniform1f(uniforms.direction, direction);
-      gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001));
-      gl.uniform1f(uniforms.drift, t.drift);
+      if (uniforms.to)
+        gl.uniform1i(uniforms.to, 1);
+      if (uniforms.progress)
+        gl.uniform1f(uniforms.progress, progress);
+      if (uniforms.resolution)
+        gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
+      if (uniforms.fromAspect)
+        gl.uniform1f(uniforms.fromAspect, aspects[from] ?? 1);
+      if (uniforms.toAspect)
+        gl.uniform1f(uniforms.toAspect, aspects[to] ?? 1);
+      if (uniforms.scale)
+        gl.uniform1f(uniforms.scale, t.noiseScale);
+      if (uniforms.direction)
+        gl.uniform1f(uniforms.direction, direction);
+      if (uniforms.edge)
+        gl.uniform1f(uniforms.edge, Math.max(t.edge, 0.001));
+      if (uniforms.drift)
+        gl.uniform1f(uniforms.drift, t.drift);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     const frame = () => {
+      if (disposed)
+        return;
       draw();
-      raf = requestAnimationFrame(frame);
+      if (inView && (progress < 1 || request.current)) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        raf = 0;
+      }
     };
+    const wake = () => {
+      if (inView && !raf && !disposed) {
+        raf = requestAnimationFrame(frame);
+      }
+    };
+    wakeRef.current = wake;
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      if (w === 0 || h === 0 || canvas.width === w && canvas.height === h)
+        return;
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      draw();
+    };
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(canvas);
+    const viewObserver = new IntersectionObserver(([entry]) => {
+      inView = entry?.isIntersecting ?? true;
+      if (inView) {
+        wake();
+      } else if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    }, { threshold: 0.05 });
+    viewObserver.observe(canvas);
     const start = async () => {
       try {
         program = link(gl, VERT, FRAG);
@@ -19354,7 +19385,8 @@ function MorphGallery({
             running = true;
             resize();
             setReady(true);
-            raf = requestAnimationFrame(frame);
+            draw();
+            wake();
           }
         }, () => {
           refused += 1;
@@ -19369,8 +19401,11 @@ function MorphGallery({
     start();
     return () => {
       disposed = true;
-      cancelAnimationFrame(raf);
-      observer.disconnect();
+      wakeRef.current = null;
+      if (raf)
+        cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      viewObserver.disconnect();
       canvas.removeEventListener("webglcontextlost", onLost);
       canvas.removeEventListener("webglcontextrestored", onRestored);
       for (const tex of textures)
@@ -19396,16 +19431,18 @@ function MorphGallery({
   }, []);
   const swipe = React.useRef(null);
   const onPointerDown = (e) => {
-    swipe.current = e.clientX;
+    swipe.current = { x: e.clientX, y: e.clientY };
   };
   const onPointerUp = (e) => {
-    const startX = swipe.current;
+    const start = swipe.current;
     swipe.current = null;
-    if (startX === null)
+    if (!start)
       return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 48)
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)) {
       go(active + (dx < 0 ? 1 : -1));
+    }
   };
   const onKeyDown = (e) => {
     if (e.key === "ArrowLeft") {
@@ -19421,8 +19458,9 @@ function MorphGallery({
   const current = items[active];
   const arrowClass = "absolute top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center " + "rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md " + "transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 " + "focus-visible:outline-offset-2 focus-visible:outline-white " + "disabled:pointer-events-none disabled:opacity-25";
   return /* @__PURE__ */ jsx_runtime.jsxs("section", {
-    className: "relative w-full overflow-hidden bg-black " + className,
-    style: { height },
+    ref: containerRef,
+    className: "relative w-full overflow-hidden bg-black select-none touch-pan-y " + className,
+    style: { height, touchAction: "pan-y" },
     role: "region",
     "aria-roledescription": "carousel",
     "aria-label": "Image gallery",
