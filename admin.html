@@ -595,6 +595,61 @@ body {
   box-shadow: 0 6px 16px rgba(216, 140, 90, 0.35);
 }
 
+.btn-danger {
+  background: var(--red);
+  border: 1px solid var(--red);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(211, 78, 54, 0.25);
+  transition: all 0.25s;
+}
+
+.btn-danger:hover {
+  background: #b93822;
+  border-color: #b93822;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(211, 78, 54, 0.35);
+}
+
+.btn-danger-outline {
+  background: transparent;
+  border: 1px solid rgba(211, 78, 54, 0.4);
+  color: var(--red);
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-danger-outline:hover {
+  background: var(--red-pale);
+  border-color: var(--red);
+  color: var(--red);
+  transform: translateY(-1px);
+}
+
+.metric-card.interactive {
+  cursor: pointer;
+}
+
+.metric-card.interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(23, 36, 30, 0.12);
+  border-color: var(--orange);
+}
+
 /* Page Containers */
 .page-container {
   padding: 32px;
@@ -1443,6 +1498,7 @@ input:checked + .slider-round:before {
           <span id="currentTime">Chandigarh · 11:00 AM</span>
         </div>
         <a href="index.html" target="_blank" class="btn-secondary" title="View live customer website">Live Website ↗</a>
+        <button type="button" class="btn-danger-outline" id="topbarClearDataBtn" title="Clear or manage cafe records">🗑️ Clear Data</button>
         <button class="btn-accent" id="quickNewBookingBtn">+ New Booking</button>
       </div>
     </header>
@@ -1456,7 +1512,7 @@ input:checked + .slider-round:before {
           <p>Open daily until 11:00 PM · 18 Indoor Atrium &amp; Lounge Tables · Active Host Desk</p>
         </div>
         <div class="ops-controls">
-          <button type="button" class="status-pill status-open" id="opsStatusPill" style="cursor:pointer;border:none;outline:none;font-family:inherit;" title="Click to cycle status: Open -> Busy -> Closed">Service Live · Taking Bookings ↻</button>
+          <button type="button" class="status-pill status-open" id="opsStatusPill" style="cursor:pointer;border:none;outline:none;font-family:inherit;" title="Click to cycle status: Open &rarr; Busy &rarr; Closed">Service Live · Taking Bookings ↻</button>
         </div>
       </div>
 
@@ -1470,7 +1526,7 @@ input:checked + .slider-round:before {
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <button type="button" class="btn-demo" onclick="copyDomainLink('topVercelDomainLink')" style="padding:6px 14px;font-size:11.5px;">📋 Copy Link</button>
+          <button type="button" class="btn-demo" onclick="copyDomainLink('topVercelDomainLink', this)" style="padding:6px 14px;font-size:11.5px;">📋 Copy Link</button>
           <a href="https://reflection-cafe.vercel.app/admin" target="_blank" id="topVercelDomainBtn" class="status-pill status-open" style="font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">Live on Vercel ●</a>
           <a href="https://vercel.com/iveerdavinder-6196s-projects/reflection-cafe/Dg4o1YSNBHdNLwiRHsTuL2euBKqc" target="_blank" class="btn-demo" style="padding:6px 14px;font-size:11.5px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;" title="View Vercel Deployment Overview">▲ Vercel Project ↗</a>
         </div>
@@ -1478,9 +1534,9 @@ input:checked + .slider-round:before {
 
       <!-- KPI METRIC CARDS -->
       <div class="metrics-grid">
-        <div class="metric-card">
+        <div class="metric-card interactive" onclick="switchTab('reservations')" title="Click to view Table Reservations">
           <div class="metric-header">
-            <span class="metric-title">Today's Bookings</span>
+            <span class="metric-title">Today's Bookings ↗</span>
             <div class="metric-icon-wrap icon-orange">☕</div>
           </div>
           <div class="metric-val" id="metricBookingsCount">0</div>
@@ -1489,27 +1545,27 @@ input:checked + .slider-round:before {
           </div>
         </div>
 
-        <div class="metric-card">
+        <div class="metric-card interactive" onclick="switchTab('reservations')" title="Click to view Table Reservations">
           <div class="metric-header">
-            <span class="metric-title">Expected Guests</span>
+            <span class="metric-title">Expected Guests ↗</span>
             <div class="metric-icon-wrap icon-green">👥</div>
           </div>
           <div class="metric-val" id="metricTotalGuests">0</div>
           <div class="metric-desc">Covers across confirmed tables</div>
         </div>
 
-        <div class="metric-card">
+        <div class="metric-card interactive" onclick="switchTab('menu')" title="Click to view Menu & Dishes">
           <div class="metric-header">
-            <span class="metric-title">Active Menu Items</span>
+            <span class="metric-title">Active Menu Items ↗</span>
             <div class="metric-icon-wrap icon-amber">🍕</div>
           </div>
           <div class="metric-val" id="metricDishesCount">12</div>
           <div class="metric-desc"><strong id="metricSoldOutCount">0</strong> currently sold out</div>
         </div>
 
-        <div class="metric-card">
+        <div class="metric-card interactive" onclick="switchTab('inquiries')" title="Click to view Guest Enquiries">
           <div class="metric-header">
-            <span class="metric-title">Guest Enquiries</span>
+            <span class="metric-title">Guest Enquiries ↗</span>
             <div class="metric-icon-wrap icon-blue">💬</div>
           </div>
           <div class="metric-val" id="metricInquiriesCount">0</div>
@@ -1569,6 +1625,7 @@ input:checked + .slider-round:before {
               <option value="Cancelled">Cancelled</option>
             </select>
             <button class="btn-secondary" id="exportCsvBtn" title="Download guest roster as CSV file">📥 Export CSV</button>
+            <button class="btn-danger-outline" id="clearAllReservationsBtn" title="Clear all reservation records">🗑️ Clear Bookings</button>
             <button class="btn-accent" id="addReservationBtn">+ Add Walk-in / Phone</button>
           </div>
         </div>
@@ -1625,6 +1682,9 @@ input:checked + .slider-round:before {
             <h3>Guest Messages &amp; Enquiries</h3>
             <p>Notes sent via website contact form</p>
           </div>
+          <div class="panel-filters">
+            <button class="btn-danger-outline" id="clearAllInquiriesBtn" title="Clear all received messages">🗑️ Clear All Messages</button>
+          </div>
         </div>
 
         <div class="table-responsive">
@@ -1678,9 +1738,70 @@ input:checked + .slider-round:before {
             <label>Today's Host Notice / Announcement</label>
             <textarea id="settingNotice" placeholder="e.g. Special Single-Origin Pour-over batch available today.">Woodfired sourdough pizzas and specialty single-origin pourover coffee pouring daily until 11:00 PM.</textarea>
           </div>
-          <div style="display:flex;gap:12px;margin-top:24px;">
+          <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;align-items:center;">
             <button class="btn-primary" id="saveSettingsBtn" style="width:auto;padding:11px 24px;">Save Operational Settings</button>
+            <button type="button" class="btn-danger" id="settingsClearDataBtn" style="width:auto;padding:11px 22px;">🗑️ Clear All Cafe Data</button>
             <button class="btn-demo" id="resetDemoDataBtn">Reset Demo Sample Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA MANAGEMENT & CLEAR ALL DATA SECTION -->
+      <div class="panel-card" style="margin-top: 24px; border: 1px solid rgba(211, 78, 54, 0.35);">
+        <div class="panel-header" style="background: rgba(211, 78, 54, 0.05);">
+          <div class="panel-title-wrap">
+            <h3 style="color: var(--red); display: flex; align-items: center; gap: 8px;">
+              <span>⚠️</span> Data Management &amp; Storage Controls
+            </h3>
+            <p>Clear booking records, wipe stored messages, export JSON backup, or restore sample defaults</p>
+          </div>
+          <span class="status-pill status-closed" style="background: var(--red-pale); color: var(--red); border-color: rgba(211,78,54,0.3);">Host Desk Storage</span>
+        </div>
+
+        <div style="padding: 28px; max-width: 760px;">
+          <!-- Storage Stats Overview -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 22px;">
+            <div style="background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; font-weight: 700;">Stored Bookings</span>
+              <strong style="font-size: 22px; color: var(--ink);" id="storageStatBookings">0</strong>
+            </div>
+            <div style="background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; font-weight: 700;">Stored Inquiries</span>
+              <strong style="font-size: 22px; color: var(--ink);" id="storageStatInquiries">0</strong>
+            </div>
+            <div style="background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: block; font-weight: 700;">Menu Dishes</span>
+              <strong style="font-size: 22px; color: var(--ink);" id="storageStatDishes">0</strong>
+            </div>
+          </div>
+
+          <!-- Primary Actions -->
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 22px;">
+            <button type="button" class="btn-danger" id="clearAllDataBtn" style="font-size: 13px; padding: 12px 24px;">
+              🗑️ Clear All Data (Wipe Records)
+            </button>
+            <button type="button" class="btn-secondary" id="clearOnlyBookingsBtn">
+              🧹 Clear Bookings Only
+            </button>
+            <button type="button" class="btn-secondary" id="clearOnlyInquiriesBtn">
+              ✉️ Clear Inquiries Only
+            </button>
+            <button type="button" class="btn-demo" id="restoreSampleDataBtn" title="Reset sample demo bookings & dishes">
+              🔄 Reset Sample Demo Data
+            </button>
+          </div>
+
+          <!-- Backup & Restore -->
+          <div style="background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+            <div>
+              <strong style="font-size: 13px; display: block; color: var(--ink);">Data Backup &amp; Portability</strong>
+              <span style="font-size: 11.5px; color: var(--muted);">Export your bookings, messages &amp; menu to a JSON file or restore from a backup.</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="exportBackupJsonBtn" style="font-size: 12px; padding: 8px 14px;">💾 Export JSON</button>
+              <button type="button" class="btn-secondary" id="triggerImportJsonBtn" style="font-size: 12px; padding: 8px 14px;">📂 Import JSON</button>
+              <input type="file" id="importJsonFileInput" accept=".json" style="display: none;">
+            </div>
           </div>
         </div>
       </div>
@@ -1874,6 +1995,54 @@ input:checked + .slider-round:before {
         <button type="submit" class="btn-primary" style="width:auto;padding:11px 24px;">Save Dish</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- MODAL: CONFIRM CLEAR CAFE DATA -->
+<div class="modal-overlay" id="clearConfirmModal">
+  <div class="modal-dialog" style="max-width: 490px;">
+    <div class="modal-header" style="background: var(--red-pale); border-bottom-color: rgba(211, 78, 54, 0.25);">
+      <h3 style="color: var(--red); display: flex; align-items: center; gap: 8px;">
+        <span>⚠️</span> Clear Cafe Data Records
+      </h3>
+      <button class="modal-close-btn" onclick="closeModal('clearConfirmModal')">×</button>
+    </div>
+    <div class="modal-body" style="padding: 24px;">
+      <p style="font-size: 13.5px; line-height: 1.6; margin-bottom: 18px; color: var(--ink);">
+        Please select the data records you wish to clear from this browser session:
+      </p>
+
+      <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); cursor: pointer; background: var(--paper); transition: border-color 0.2s;">
+          <input type="radio" name="clearScopeOption" value="bookings_inquiries" checked style="margin-top: 3px; accent-color: var(--red);">
+          <div>
+            <strong style="display: block; font-size: 13px; color: var(--ink);">Clear Bookings &amp; Guest Inquiries Only (Recommended)</strong>
+            <span style="font-size: 12px; color: var(--muted); line-height: 1.4; display: block; margin-top: 3px;">
+              Wipes all table reservations and customer messages to 0. Preserves your 12 menu dishes and cafe settings intact.
+            </span>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 1.5px solid rgba(211, 78, 54, 0.35); border-radius: var(--radius-sm); cursor: pointer; background: var(--red-pale); transition: border-color 0.2s;">
+          <input type="radio" name="clearScopeOption" value="all" style="margin-top: 3px; accent-color: var(--red);">
+          <div>
+            <strong style="display: block; font-size: 13px; color: var(--red);">Full Reset: Wipe All Data Completely</strong>
+            <span style="font-size: 12px; color: var(--muted); line-height: 1.4; display: block; margin-top: 3px;">
+              Permanently clears everything: all reservations, inquiries, and dishes to 0.
+            </span>
+          </div>
+        </label>
+      </div>
+
+      <div style="font-size: 12px; color: var(--muted); background: var(--cream); border: 1px solid var(--line); padding: 11px 14px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px;">
+        <span>💡</span>
+        <span>You can restore initial sample bookings &amp; dishes anytime with <strong>"Reset Demo Sample Data"</strong>.</span>
+      </div>
+    </div>
+    <div class="modal-footer" style="background: rgba(253, 238, 233, 0.35);">
+      <button type="button" class="btn-secondary" onclick="closeModal('clearConfirmModal')">Cancel</button>
+      <button type="button" class="btn-danger" id="executeClearDataModalBtn" style="padding: 10px 22px;">Confirm &amp; Clear 🗑️</button>
+    </div>
   </div>
 </div>
 
@@ -2122,6 +2291,13 @@ function updateMetrics() {
 
   document.getElementById('pendingCountBadge').textContent = pending;
   document.getElementById('inquiriesCountBadge').textContent = unreadInq;
+
+  const statBookings = document.getElementById('storageStatBookings');
+  const statInquiries = document.getElementById('storageStatInquiries');
+  const statDishes = document.getElementById('storageStatDishes');
+  if (statBookings) statBookings.textContent = reservations.length;
+  if (statInquiries) statInquiries.textContent = inquiries.length;
+  if (statDishes) statDishes.textContent = dishes.length;
 }
 
 // Render Overview Quick Table
@@ -2131,7 +2307,14 @@ function renderOverviewReservations() {
 
   const recents = reservations.slice(0, 5);
   if (recents.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">No reservations recorded yet.</td></tr>';
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center;color:var(--muted);padding:36px 20px;">
+          <div style="font-size:26px;margin-bottom:6px;">🛎️</div>
+          <strong style="color:var(--ink);display:block;margin-bottom:4px;">No table reservations found</strong>
+          <small style="color:var(--muted);">All records are cleared. Click <strong>"+ New Booking"</strong> to add guests, or <strong>"Reset Demo Data"</strong> in Settings to load samples.</small>
+        </td>
+      </tr>`;
     return;
   }
 
@@ -2153,10 +2336,10 @@ function renderOverviewReservations() {
       <td><span class="badge-status badge-${r.status.toLowerCase()}">${r.status}</span></td>
       <td>
         <div class="table-actions">
-          ${r.status === 'Pending' ? `<button class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm ✓</button>` : ''}
-          ${r.status === 'Confirmed' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat Table 🪑</button>` : ''}
-          ${r.status === 'Seated' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Complete ✓</button>` : ''}
-          <button class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️</button>
+          ${r.status === 'Pending' ? `<button type="button" class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm ✓</button>` : ''}
+          ${r.status === 'Confirmed' ? `<button type="button" class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat Table 🪑</button>` : ''}
+          ${r.status === 'Seated' ? `<button type="button" class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Complete ✓</button>` : ''}
+          <button type="button" class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️</button>
         </div>
       </td>
     `;
@@ -2181,7 +2364,18 @@ function renderReservationsTable() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px;">No matching reservations found.</td></tr>';
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;color:var(--muted);padding:44px 20px;">
+          <div style="font-size:32px;margin-bottom:8px;">📭</div>
+          <strong style="font-size:15px;color:var(--ink);display:block;margin-bottom:4px;">No reservations found</strong>
+          <span style="font-size:12.5px;color:var(--muted);">All booking records are currently clear or no guests match your filter.</span>
+          <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <button type="button" class="btn-accent" onclick="document.getElementById('quickNewBookingBtn').click()">+ Add New Booking</button>
+            <button type="button" class="btn-demo" onclick="restoreSampleData()">Restore Sample Data</button>
+          </div>
+        </td>
+      </tr>`;
     return;
   }
 
@@ -2204,12 +2398,12 @@ function renderReservationsTable() {
       <td><span class="badge-status badge-${r.status.toLowerCase()}">${r.status}</span></td>
       <td>
         <div class="table-actions">
-          ${r.status === 'Pending' ? `<button class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm</button>` : ''}
-          ${r.status === 'Confirmed' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat</button>` : ''}
-          ${r.status === 'Seated' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Finish</button>` : ''}
-          ${r.status !== 'Cancelled' && r.status !== 'Completed' ? `<button class="btn-table-action danger" onclick="updateReservationStatus('${r.id}', 'Cancelled')">Cancel</button>` : ''}
-          <button class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️ Edit</button>
-          <button class="btn-table-action" onclick="deleteReservation('${r.id}')" title="Delete record">🗑️</button>
+          ${r.status === 'Pending' ? `<button type="button" class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm</button>` : ''}
+          ${r.status === 'Confirmed' ? `<button type="button" class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat</button>` : ''}
+          ${r.status === 'Seated' ? `<button type="button" class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Finish</button>` : ''}
+          ${r.status !== 'Cancelled' && r.status !== 'Completed' ? `<button type="button" class="btn-table-action danger" onclick="updateReservationStatus('${r.id}', 'Cancelled')">Cancel</button>` : ''}
+          <button type="button" class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️ Edit</button>
+          <button type="button" class="btn-table-action danger" onclick="deleteReservation('${r.id}')" title="Delete record">🗑️</button>
         </div>
       </td>
     `;
@@ -2224,6 +2418,20 @@ function renderMenuGrid() {
 
   const searchVal = document.getElementById('menuSearch').value.toLowerCase().trim();
   const filtered = dishes.filter(d => d.title.toLowerCase().includes(searchVal) || d.subtitle.toLowerCase().includes(searchVal));
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:44px 20px; text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">🍽️</div>
+        <strong style="font-size:16px;color:var(--ink);display:block;margin-bottom:6px;">No menu dishes found</strong>
+        <p style="font-size:13px;color:var(--muted);max-width:400px;margin:0 auto 16px;">The catalog is empty or matches no search filters.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <button type="button" class="btn-accent" onclick="document.getElementById('addNewDishBtn').click()">+ Add Dish</button>
+          <button type="button" class="btn-demo" onclick="restoreDefaultDishes()">Restore Default Dishes</button>
+        </div>
+      </div>`;
+    return;
+  }
 
   filtered.forEach(d => {
     const card = document.createElement('div');
@@ -2250,8 +2458,8 @@ function renderMenuGrid() {
             <span>Available</span>
           </label>
           <div style="display:flex;gap:6px;">
-            <button class="btn-table-action" onclick="editDish('${d.id}')">Edit</button>
-            <button class="btn-table-action danger" onclick="deleteDish('${d.id}')">×</button>
+            <button type="button" class="btn-table-action" onclick="editDish('${d.id}')">Edit</button>
+            <button type="button" class="btn-table-action danger" onclick="deleteDish('${d.id}')">×</button>
           </div>
         </div>
       </div>
@@ -2266,7 +2474,17 @@ function renderInquiriesTable() {
   tbody.innerHTML = '';
 
   if (inquiries.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">No inquiries received yet.</td></tr>';
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center;color:var(--muted);padding:44px 20px;">
+          <div style="font-size:32px;margin-bottom:8px;">✉️</div>
+          <strong style="font-size:15px;color:var(--ink);display:block;margin-bottom:4px;">No guest inquiries found</strong>
+          <span style="font-size:12.5px;color:var(--muted);">Inbox is completely clear. Messages submitted from the website will appear here in real time.</span>
+          <div style="margin-top:16px;">
+            <button type="button" class="btn-demo" onclick="restoreSampleData()">Restore Sample Messages</button>
+          </div>
+        </td>
+      </tr>`;
     return;
   }
 
@@ -2285,8 +2503,11 @@ function renderInquiriesTable() {
       </td>
       <td>
         <div class="table-actions">
-          ${inq.status === 'Unread' ? `<button class="btn-table-action confirm" onclick="markInquiryResolved('${inq.id}')">Mark Replied ✓</button>` : ''}
-          <a href="tel:${escapeHtml(inq.phone || '')}" class="btn-table-action">Call 📞</a>
+          ${inq.status === 'Unread' 
+            ? `<button type="button" class="btn-table-action confirm" onclick="toggleInquiryStatus('${inq.id}')">Mark Replied ✓</button>` 
+            : `<button type="button" class="btn-table-action" onclick="toggleInquiryStatus('${inq.id}')">Mark Unread</button>`}
+          ${inq.phone ? `<a href="tel:${escapeHtml(inq.phone)}" class="btn-table-action" title="Call guest">📞 Call</a>` : ''}
+          <button type="button" class="btn-table-action danger" onclick="deleteInquiry('${inq.id}')" title="Delete message">🗑️</button>
         </div>
       </td>
     `;
@@ -2542,16 +2763,20 @@ function applySettingsUI() {
   updateVercelDomainSection();
 }
 
-function copyDomainLink(elementId) {
+function copyDomainLink(elementId, btnElement) {
   const el = document.getElementById(elementId);
   if (!el) return;
   const url = el.href || el.textContent;
+  const showFeedback = () => {
+    showToast(`Copied: ${url}`);
+    if (btnElement) {
+      const orig = btnElement.textContent;
+      btnElement.textContent = '✓ Copied!';
+      setTimeout(() => { btnElement.textContent = orig; }, 1600);
+    }
+  };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(() => {
-      showToast(`Copied: ${url}`);
-    }).catch(() => {
-      prompt('Copy link:', url);
-    });
+    navigator.clipboard.writeText(url).then(showFeedback).catch(() => prompt('Copy link:', url));
   } else {
     prompt('Copy link:', url);
   }
@@ -2631,15 +2856,111 @@ document.getElementById('saveSettingsBtn').addEventListener('click', () => {
   showToast('Operational settings saved successfully');
 });
 
-document.getElementById('resetDemoDataBtn').addEventListener('click', () => {
-  if (confirm('Reset to standard initial demo bookings and dishes?')) {
+// =============================================================================
+// DATA CLEARING, RESET & BACKUP CONTROLS
+// =============================================================================
+window.deleteInquiry = function(id) {
+  if (confirm(`Remove guest inquiry ${id}?`)) {
+    inquiries = inquiries.filter(i => i.id !== id);
+    saveData(KEYS.INQUIRIES, inquiries);
+    refreshAll();
+    showToast(`Inquiry ${id} removed`);
+  }
+};
+
+window.toggleInquiryStatus = function(id) {
+  const inq = inquiries.find(i => i.id === id);
+  if (inq) {
+    inq.status = inq.status === 'Unread' ? 'Replied' : 'Unread';
+    saveData(KEYS.INQUIRIES, inquiries);
+    refreshAll();
+    showToast(`Inquiry marked as ${inq.status}`);
+  }
+};
+
+// Open Clear Confirm Modal
+window.openClearModal = function() {
+  openModal('clearConfirmModal');
+};
+
+const topbarClearDataBtn = document.getElementById('topbarClearDataBtn');
+if (topbarClearDataBtn) topbarClearDataBtn.addEventListener('click', window.openClearModal);
+
+const settingsClearDataBtn = document.getElementById('settingsClearDataBtn');
+if (settingsClearDataBtn) settingsClearDataBtn.addEventListener('click', window.openClearModal);
+
+const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+if (clearAllDataBtn) clearAllDataBtn.addEventListener('click', window.openClearModal);
+
+// Modal Execution
+const executeClearDataModalBtn = document.getElementById('executeClearDataModalBtn');
+if (executeClearDataModalBtn) {
+  executeClearDataModalBtn.addEventListener('click', () => {
+    const selectedScope = document.querySelector('input[name="clearScopeOption"]:checked')?.value || 'bookings_inquiries';
+    if (selectedScope === 'all') {
+      // Full reset of all records
+      reservations = [];
+      inquiries = [];
+      dishes = [];
+      saveData(KEYS.RESERVATIONS, []);
+      saveData(KEYS.INQUIRIES, []);
+      saveData(KEYS.DISHES, []);
+      showToast('All cafe records (bookings, inquiries, dishes) cleared to 0!');
+    } else {
+      // Clear bookings & inquiries only, preserve menu
+      reservations = [];
+      inquiries = [];
+      saveData(KEYS.RESERVATIONS, []);
+      saveData(KEYS.INQUIRIES, []);
+      showToast('All reservations & guest inquiries cleared successfully!');
+    }
+    closeModal('clearConfirmModal');
+    refreshAll();
+  });
+}
+
+// Clear Bookings Only
+window.clearOnlyBookings = function() {
+  if (confirm('Clear all table reservations? (This will set bookings count to 0)')) {
+    reservations = [];
+    saveData(KEYS.RESERVATIONS, []);
+    refreshAll();
+    showToast('All table reservations cleared');
+  }
+};
+
+const clearOnlyBookingsBtn = document.getElementById('clearOnlyBookingsBtn');
+if (clearOnlyBookingsBtn) clearOnlyBookingsBtn.addEventListener('click', window.clearOnlyBookings);
+
+const clearAllReservationsBtn = document.getElementById('clearAllReservationsBtn');
+if (clearAllReservationsBtn) clearAllReservationsBtn.addEventListener('click', window.clearOnlyBookings);
+
+// Clear Inquiries Only
+window.clearOnlyInquiries = function() {
+  if (confirm('Clear all guest inquiries and feedback messages?')) {
+    inquiries = [];
+    saveData(KEYS.INQUIRIES, []);
+    refreshAll();
+    showToast('All guest inquiries cleared');
+  }
+};
+
+const clearOnlyInquiriesBtn = document.getElementById('clearOnlyInquiriesBtn');
+if (clearOnlyInquiriesBtn) clearOnlyInquiriesBtn.addEventListener('click', window.clearOnlyInquiries);
+
+const clearAllInquiriesBtn = document.getElementById('clearAllInquiriesBtn');
+if (clearAllInquiriesBtn) clearAllInquiriesBtn.addEventListener('click', window.clearOnlyInquiries);
+
+// Restore Sample Demo Data
+window.restoreSampleData = function() {
+  if (confirm('Restore sample demo bookings, dishes, and messages?')) {
     localStorage.removeItem(KEYS.RESERVATIONS);
     localStorage.removeItem(KEYS.DISHES);
     localStorage.removeItem(KEYS.INQUIRIES);
     localStorage.removeItem(KEYS.SETTINGS);
-    reservations = [...DEFAULT_RESERVATIONS];
-    dishes = [...DEFAULT_DISHES];
-    inquiries = [...DEFAULT_INQUIRIES];
+    reservations = JSON.parse(JSON.stringify(DEFAULT_RESERVATIONS));
+    dishes = JSON.parse(JSON.stringify(DEFAULT_DISHES));
+    inquiries = JSON.parse(JSON.stringify(DEFAULT_INQUIRIES));
     settings = { ...DEFAULT_SETTINGS };
     saveData(KEYS.RESERVATIONS, reservations);
     saveData(KEYS.DISHES, dishes);
@@ -2647,7 +2968,101 @@ document.getElementById('resetDemoDataBtn').addEventListener('click', () => {
     saveData(KEYS.SETTINGS, settings);
     applySettingsUI();
     refreshAll();
-    showToast('Reset to default demo data');
+    showToast('Restored sample demo data successfully!');
+  }
+};
+
+window.restoreDefaultDishes = function() {
+  dishes = JSON.parse(JSON.stringify(DEFAULT_DISHES));
+  saveData(KEYS.DISHES, dishes);
+  refreshAll();
+  showToast('Default menu dishes restored');
+};
+
+const resetDemoDataBtn = document.getElementById('resetDemoDataBtn');
+if (resetDemoDataBtn) resetDemoDataBtn.addEventListener('click', window.restoreSampleData);
+
+const restoreSampleDataBtn = document.getElementById('restoreSampleDataBtn');
+if (restoreSampleDataBtn) restoreSampleDataBtn.addEventListener('click', window.restoreSampleData);
+
+// Backup & Export JSON
+const exportBackupJsonBtn = document.getElementById('exportBackupJsonBtn');
+if (exportBackupJsonBtn) {
+  exportBackupJsonBtn.addEventListener('click', () => {
+    const backupObj = {
+      exportedAt: new Date().toISOString(),
+      cafe: 'Reflections Cafe · Chandigarh Sector 35C',
+      reservations,
+      inquiries,
+      dishes,
+      settings
+    };
+    const blob = new Blob([JSON.stringify(backupObj, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `reflections-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Exported cafe JSON backup file');
+  });
+}
+
+// Import JSON
+const triggerImportJsonBtn = document.getElementById('triggerImportJsonBtn');
+const importJsonFileInput = document.getElementById('importJsonFileInput');
+if (triggerImportJsonBtn && importJsonFileInput) {
+  triggerImportJsonBtn.addEventListener('click', () => importJsonFileInput.click());
+  importJsonFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const parsed = JSON.parse(evt.target.result);
+        if (Array.isArray(parsed.reservations)) {
+          reservations = parsed.reservations;
+          saveData(KEYS.RESERVATIONS, reservations);
+        }
+        if (Array.isArray(parsed.inquiries)) {
+          inquiries = parsed.inquiries;
+          saveData(KEYS.INQUIRIES, inquiries);
+        }
+        if (Array.isArray(parsed.dishes)) {
+          dishes = parsed.dishes;
+          saveData(KEYS.DISHES, dishes);
+        }
+        if (parsed.settings && typeof parsed.settings === 'object') {
+          settings = Object.assign(settings, parsed.settings);
+          saveData(KEYS.SETTINGS, settings);
+          applySettingsUI();
+        }
+        refreshAll();
+        showToast('Backup restored successfully!');
+      } catch (err) {
+        alert('Invalid JSON backup file format.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+}
+
+// Close modals when clicking backdrop
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+    }
+  });
+});
+
+// Close modals on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
   }
 });
 
