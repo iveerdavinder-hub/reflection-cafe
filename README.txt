@@ -1,17 +1,19 @@
-REFLECTIONS CAFE WEBSITE
+REFLECTIONS CAFE WEBSITE & HOST DESK PORTAL
 
-Files
-- index.html: complete responsive single-page website (HTML, CSS, and JavaScript are embedded).
+Files & Direct GitHub Links:
+- index.html: Complete responsive single-page customer website.
+- admin.html: Complete Host Desk & Admin operations panel.
+- admin/index.html: Route directory fallback for /admin.
+- README.md: Full markdown documentation, Vercel deployment links, and credentials.
 
-Preview
-Open index.html in a modern browser. The site uses Google Fonts and Unsplash-hosted photography, so those assets need an internet connection.
+Live Vercel Production Links:
+- Customer Website: https://reflection-cafe.vercel.app/
+- Admin Portal: https://reflection-cafe.vercel.app/admin (or /admin.html)
 
-Before publishing
-- Confirm business name spelling (provided listing says "Refections Cafe"; this site uses "Reflections Cafe").
-- Confirm opening hours, phone number, menu items, social profiles, and address.
-- The contact form is a front-end demo and does not send messages until connected to a backend/form provider.
-- Replace illustrative testimonial copy with approved, verified customer testimonials.
-- Images are illustrative stock photography; replace with licensed cafe photography for best results.
+Staff Login:
+- Username: admin
+- Password: reflections2026
 
-Deployment
-Upload index.html to any static host such as Netlify, Vercel, GitHub Pages, or your web hosting provider.
+Deployment:
+Pre-configured with vercel.json for automatic clean URL routing.
+GitHub Repository: https://github.com/iveerdavinder-hub/reflection-cafe

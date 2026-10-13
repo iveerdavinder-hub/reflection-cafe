@@ -4,7 +4,18 @@ An artisan culinary and coffee sanctuary in Sector 35C, Chandigarh. Features a m
 
 ---
 
-## 🌐 Live Vercel Domain & Quick Links
+## 📂 Core Project Files in this GitHub Repository
+
+| File in Repository | Description | Direct GitHub File Link |
+| :--- | :--- | :--- |
+| [`admin.html`](./admin.html) | **Host Desk & Admin Operations Portal** | [**`admin.html` (View in Repo)**](https://github.com/iveerdavinder-hub/reflection-cafe/blob/main/admin.html) |
+| [`admin/index.html`](./admin/index.html) | **`/admin` Route Fallback Directory** | [**`admin/index.html` (View in Repo)**](https://github.com/iveerdavinder-hub/reflection-cafe/blob/main/admin/index.html) |
+| [`index.html`](./index.html) | **Public Customer Website** | [**`index.html` (View in Repo)**](https://github.com/iveerdavinder-hub/reflection-cafe/blob/main/index.html) |
+| [`vercel.json`](./vercel.json) | **Clean URL Routing & Rewrites** | [**`vercel.json` (View in Repo)**](https://github.com/iveerdavinder-hub/reflection-cafe/blob/main/vercel.json) |
+
+---
+
+## 🌐 Live Vercel Production Domain & Quick Links
 
 | Destination | Route | Live Vercel Production Link |
 | :--- | :--- | :--- |
