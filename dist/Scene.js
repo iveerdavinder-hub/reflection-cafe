@@ -18839,11 +18839,11 @@ var PRESETS = {
     axis: "y",
     tilt: -5,
     perspective: 2500,
-    curve: 1,
+    curve: 0,
     spread: 1,
     inward: false,
     billboard: false,
-    backfaces: true,
+    backfaces: false,
     window: 0
   },
   orbit: {
@@ -19383,15 +19383,20 @@ var CircularCarousel = ({
       const s = settingsRef.current;
       if (!s.draggable)
         return;
-      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : 0;
-      if (!delta)
+      const isShift = event.shiftKey;
+      const isHorizontalTrackpad = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.75 && Math.abs(event.deltaX) > 2;
+      const isShiftWheel = isShift && Math.abs(event.deltaY) > 2;
+      if (!isHorizontalTrackpad && !isShiftWheel)
         return;
       event.preventDefault();
-      const perPixel = 180 / (Math.PI * s.radius * state.fit);
+      const rawDelta = isShiftWheel ? event.deltaY : event.deltaX;
+      const delta = clamp(rawDelta, -80, 80);
+      const effectiveFit = Math.max(state.fit || 1, 0.45);
+      const perPixel = 180 / (Math.PI * s.radius * effectiveFit);
       state.target = null;
       state.angle -= delta * perPixel * (s.layout.inward ? -1 : 1);
-      state.velocity = -delta * perPixel * (s.layout.inward ? -1 : 1) * 30;
-      state.holdUntil = performance.now() + 1600;
+      state.velocity = -delta * perPixel * (s.layout.inward ? -1 : 1) * 20;
+      state.holdUntil = performance.now() + 2000;
       clearTimeout(state.wheelTimer);
       state.wheelTimer = setTimeout(() => {
         if (settingsRef.current.snap)
@@ -19447,7 +19452,7 @@ var CircularCarousel = ({
   const handlePointerDown = (event) => {
     const state = stateRef.current;
     state.suppressClick = false;
-    if (!draggable || event.button !== 0)
+    if (!draggable || event.pointerType === "mouse" && event.button !== 0)
       return;
     state.press = {
       id: event.pointerId,
@@ -19474,9 +19479,10 @@ var CircularCarousel = ({
     const delta = s.axis === "x" ? event.clientY - press.y : event.clientX - press.x;
     const cross = s.axis === "x" ? event.clientX - press.x : event.clientY - press.y;
     if (!press.moved) {
-      if (Math.abs(delta) < DRAG_THRESHOLD)
+      const dist = Math.hypot(delta, cross);
+      if (dist < DRAG_THRESHOLD)
         return;
-      if (Math.abs(cross) > Math.abs(delta) * 1.2 && event.pointerType !== "mouse") {
+      if (Math.abs(cross) > Math.abs(delta) * 1.35 && event.pointerType !== "mouse") {
         state.press = null;
         return;
       }
@@ -19490,7 +19496,8 @@ var CircularCarousel = ({
         rootRef.current.setPointerCapture(event.pointerId);
       } catch {}
     }
-    const perPixel = 180 / (Math.PI * s.radius * state.fit);
+    const effectiveFit = Math.max(state.fit || 1, 0.45);
+    const perPixel = 180 / (Math.PI * s.radius * effectiveFit);
     state.angle = press.angle + (delta - press.origin) * perPixel * (s.layout.inward ? -1 : 1);
     const now = performance.now();
     press.samples.push({ time: now, angle: state.angle });
@@ -19504,6 +19511,11 @@ var CircularCarousel = ({
     if (!press || press.id !== event.pointerId)
       return;
     state.press = null;
+    try {
+      if (rootRef.current?.hasPointerCapture?.(event.pointerId)) {
+        rootRef.current.releasePointerCapture(event.pointerId);
+      }
+    } catch {}
     if (!press.moved)
       return;
     state.drag = false;
@@ -19515,12 +19527,13 @@ var CircularCarousel = ({
     const span = (last.time - first.time) / 1000;
     const velocity = span > 0.008 ? clamp((last.angle - first.angle) / span, -1400, 1400) : 0;
     state.velocity = velocity;
-    if (Math.abs(velocity) > 60)
+    if (Math.abs(velocity) > 40)
       state.dir = Math.sign(velocity);
-    const coasting = s.autoplay === "drift" && !(s.pauseOnHover && state.hover && event.pointerType === "mouse");
-    if (s.snap && !coasting) {
-      const tau = 0.18 + s.momentum * 1.5;
-      state.target = Math.round((state.angle + velocity * tau * 0.55) / s.step) * s.step;
+    if (s.snap) {
+      const tau = 0.22 + s.momentum * 1.2;
+      const predicted = state.angle + velocity * tau * 0.45;
+      state.target = Math.round(predicted / s.step) * s.step;
+      state.holdUntil = performance.now() + 2500;
     }
     wakeRef.current();
   };
@@ -19571,7 +19584,7 @@ var CircularCarousel = ({
   };
   const current = list[active] || list[0];
   const label = current ? current.title || current.alt || `Image ${active + 1}` : "";
-  const renderTile = (item, tile, back, index) => {
+  const renderTile = import_react.useCallback((item, tile, back, index) => {
     const strip = back ? tile.total - 1 - tile.index : tile.index;
     const first = strip === 0;
     const last = strip === tile.total - 1;
@@ -19622,7 +19635,23 @@ var CircularCarousel = ({
         ]
       }, undefined, true, undefined, this)
     }, `${back ? "b" : "f"}${tile.index}`, false, undefined, this);
-  };
+  }, [axis, cardW, cardH, along, leaving]);
+  const renderedCards = import_react.useMemo(() => {
+    return list.map((item, index) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+      ref: (element) => {
+        cardRefs.current[index] = element;
+      },
+      className: "circular-carousel__card",
+      "data-cc-index": index,
+      role: "group",
+      "aria-roledescription": "slide",
+      "aria-label": `${item.title || item.alt || `Image ${index + 1}`}, ${index + 1} of ${count}`,
+      children: [
+        tiles.map((tile) => renderTile(item, tile, false, index)),
+        layout.backfaces && tiles.map((tile) => renderTile(item, tile, true, index))
+      ]
+    }, index, true, undefined, this));
+  }, [list, tiles, layout.backfaces, count, renderTile]);
   return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
     ref: rootRef,
     className: `circular-carousel ${className}`.trim(),
@@ -19661,20 +19690,7 @@ var CircularCarousel = ({
             children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
               ref: ringRef,
               className: "circular-carousel__ring",
-              children: list.map((item, index) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                ref: (element) => {
-                  cardRefs.current[index] = element;
-                },
-                className: "circular-carousel__card",
-                "data-cc-index": index,
-                role: "group",
-                "aria-roledescription": "slide",
-                "aria-label": `${item.title || item.alt || `Image ${index + 1}`}, ${index + 1} of ${count}`,
-                children: [
-                  tiles.map((tile) => renderTile(item, tile, false, index)),
-                  layout.backfaces && tiles.map((tile) => renderTile(item, tile, true, index))
-                ]
-              }, index, true, undefined, this))
+              children: renderedCards
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
@@ -19724,6 +19740,25 @@ var CircularCarousel_default = CircularCarousel;
 // src/Scene.jsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime());
 function MenuDishesCarousel() {
+  const [windowWidth, setWindowWidth] = import_react2.useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  import_react2.useEffect(() => {
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setWindowWidth(window.innerWidth);
+      }, 100);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  const isMobile = windowWidth < 640;
+  const isTablet = windowWidth >= 640 && windowWidth < 1024;
+  const cardWidth = isMobile ? 175 : isTablet ? 210 : 240;
+  const gap = isMobile ? 14 : isTablet ? 18 : 22;
   const dishes = [
     {
       src: "./images/dishes/jhol-momos.jpg",
@@ -19803,9 +19838,9 @@ function MenuDishesCarousel() {
     children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(CircularCarousel_default, {
       items: dishes,
       preset: "cylinder",
-      cardWidth: 240,
+      cardWidth,
       aspectRatio: 0.82,
-      gap: 22,
+      gap,
       speed: 10,
       autoplay: "drift",
       draggable: true,

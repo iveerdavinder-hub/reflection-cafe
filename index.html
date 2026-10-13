@@ -31,13 +31,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./dist/Scene.css?v=2">
+<link rel="stylesheet" href="./dist/Scene.css?v=3">
 <style>
 .threeui-background{position:relative;isolation:isolate;background:#030304}.threeui-background>canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 :root{--ink:#17241e;--green:#233d32;--sage:#c5d2b8;--cream:#f7f5ef;--paper:#fffdf8;--orange:#d88c5a;--orange-light:#e5a174;--muted:#69746d;--line:rgba(23,36,30,.13);--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",Arial,sans-serif;--grain:url(https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/40b7fef3-410d-4ef3-bd67-0a2fc7ee5a1d.svg);--card-red:#ef5d44;--card-yellow:#fcdd71;--card-blue:#9fd5f7;--card-dark:#151515;--card-cream:#f9f6f1}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:88px;-webkit-overflow-scrolling:touch}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{scroll-behavior:smooth;scroll-padding-top:88px;-webkit-overflow-scrolling:touch;-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;touch-action:pan-y;overscroll-behavior-y:none}
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit}
 button,a{-webkit-tap-highlight-color:transparent}
@@ -45,7 +45,7 @@ img{display:block;max-width:100%;object-fit:cover}
 ::selection{background:var(--sage);color:var(--ink)}
 :focus-visible{outline:2px solid var(--orange);outline-offset:3px}
 
-.menu-carousel-wrapper{position:relative;width:100%;height:520px;margin:24px 0 16px;overflow:hidden;border-radius:22px;background:radial-gradient(circle at center,rgba(255,255,255,.9) 0%,rgba(233,237,228,.95) 100%);border:1px solid rgba(23,36,30,.09);box-shadow:0 18px 45px rgba(35,61,50,.07)}
+.menu-carousel-wrapper{position:relative;width:100%;height:520px;margin:24px 0 16px;overflow:hidden;border-radius:22px;background:radial-gradient(circle at center,rgba(255,255,255,.9) 0%,rgba(233,237,228,.95) 100%);border:1px solid rgba(23,36,30,.09);box-shadow:0 18px 45px rgba(35,61,50,.07);touch-action:pan-y;contain:paint}
 .menu-carousel-hint{display:flex;justify-content:center;align-items:center;gap:8px;margin:6px 0 35px;color:var(--muted);font-size:11px;letter-spacing:.07em;text-transform:uppercase}
 .atmosphere-section{background:var(--paper);padding:110px 7.5%;position:relative;contain:content}
 .atmosphere-showcase{display:grid;grid-template-columns:1fr 1.12fr;gap:48px;align-items:center;margin:35px 0 55px;background:radial-gradient(circle at 75% 50%,rgba(216,140,90,.07),transparent 70%),var(--cream);border:1px solid var(--line);border-radius:26px;padding:48px 52px;overflow:hidden;box-shadow:0 20px 48px rgba(23,36,30,.05)}
@@ -99,8 +99,8 @@ img{display:block;max-width:100%;object-fit:cover}
 .footer-map-frame iframe{display:block;width:100%;height:290px;border:0}
 
 .cursor-glow{position:fixed;width:260px;height:260px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(216,140,90,.10),transparent 70%);z-index:0;transform:translate3d(-50%,-50%,0);opacity:.8;will-change:transform}
-.nav{position:fixed;z-index:40;top:0;left:0;width:100%;padding:20px 5.5%;display:flex;align-items:center;justify-content:space-between;transition:background .35s,padding .35s,box-shadow .35s;color:white}
-.nav.scrolled{padding-top:12px;padding-bottom:12px;background:rgba(247,245,239,.94);color:var(--ink);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+.nav{position:fixed;z-index:40;top:0;left:0;width:100%;padding:16px 5.5%;display:flex;align-items:center;justify-content:space-between;transition:background .3s cubic-bezier(.16,1,.3,1),box-shadow .3s cubic-bezier(.16,1,.3,1),color .3s ease;color:white;transform:translateZ(0);backface-visibility:hidden;will-change:background,box-shadow}
+.nav.scrolled{background:rgba(247,245,239,.94);color:var(--ink);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
 .brand{display:flex;gap:11px;align-items:center;font-weight:700;letter-spacing:.02em}
 .brand-mark{width:38px;height:38px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:21px}
 .brand small{display:block;font-size:9px;letter-spacing:.23em;text-transform:uppercase;opacity:.72;margin-top:3px}
@@ -115,6 +115,9 @@ img{display:block;max-width:100%;object-fit:cover}
 .nav-links a:active{transform:translateY(0) scale(.93)}
 .nav-links a.active{opacity:1!important;color:#17241e!important;background:var(--orange)!important;font-weight:700;box-shadow:0 4px 16px rgba(216,140,90,.45);transform:translateY(-1px)}
 .nav-links a.active::after{display:none}
+.nav-links a.nav-admin-link{border:1px solid rgba(216,140,90,.4)!important;background:rgba(216,140,90,.15)!important;color:#fff!important;font-weight:600}
+.nav.scrolled .nav-links a.nav-admin-link{color:var(--ink)!important;border-color:rgba(216,140,90,.5)!important}
+.nav-links a.nav-admin-link:hover{background:var(--orange)!important;color:#17241e!important;border-color:var(--orange)!important}
 .nav-cta,.btn{border:0;border-radius:999px;background:var(--orange);color:#1d271f;padding:14px 21px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:12px;transition:transform .25s,box-shadow .25s,background .25s;cursor:pointer}
 .nav-cta:hover,.btn:hover{transform:translateY(-3px);box-shadow:0 12px 26px #0002;background:#e5a174}
 .menu-toggle{display:none;background:none;border:1px solid currentColor;color:inherit;border-radius:50%;width:42px;height:42px;font-size:20px;cursor:pointer;transition:transform .2s ease}
@@ -203,8 +206,9 @@ img{display:block;max-width:100%;object-fit:cover}
 .dot.active{width:22px;border-radius:9px;background:var(--orange);transition:width .25s}
 
 .cta{padding:95px 7.5%;background:#d9e0d1;position:relative;overflow:hidden}
-.cta:before,.cta:after{content:"";position:absolute;border:1px solid #233d3218;border-radius:50%;width:470px;height:470px;right:-100px;top:-240px;animation:orbit 20s linear infinite}
+.cta:before,.cta:after{content:"";position:absolute;border:1px solid #233d3218;border-radius:50%;width:470px;height:470px;right:-100px;top:-240px;animation:orbit 20s linear infinite;animation-play-state:paused;will-change:transform;transform:translateZ(0)}
 .cta:after{width:330px;height:330px;right:15px;top:-160px;animation-direction:reverse}
+.cta.in-view:before,.cta.in-view:after{animation-play-state:running}
 .cta-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:35px}
 .cta h2{font:500 clamp(36px,5vw,62px)/1.08 var(--serif);letter-spacing:-.04em;max-width:700px;margin:14px 0}
 .cta p{font-size:13px;color:#536057}
@@ -233,7 +237,7 @@ img{display:block;max-width:100%;object-fit:cover}
 .success-phone-btn:hover{background:var(--orange);color:#17241e;transform:translateY(-1px)}
 
 /* Fixed Floating Action Button (FAB) */
-.fab-container{position:fixed;bottom:26px;right:26px;z-index:95;display:flex;flex-direction:column;align-items:flex-end;gap:12px;opacity:0;transform:translateY(20px) scale(.92);pointer-events:none;transition:opacity .35s cubic-bezier(.2,.8,.2,1),transform .35s cubic-bezier(.2,.8,.2,1)}
+.fab-container{position:fixed;bottom:26px;right:26px;z-index:95;display:flex;flex-direction:column;align-items:flex-end;gap:12px;opacity:0;transform:translateY(20px) scale(.92);pointer-events:none;transition:opacity .35s cubic-bezier(.2,.8,.2,1),transform .35s cubic-bezier(.2,.8,.2,1);will-change:transform,opacity}
 .fab-container.visible{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
 .fab-menu{display:flex;flex-direction:column;align-items:flex-end;gap:10px;opacity:0;transform:translateY(12px) scale(.95);pointer-events:none;transition:all .28s cubic-bezier(.2,.8,.2,1)}
 .fab-container.open .fab-menu{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
@@ -261,12 +265,12 @@ footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}
 .socials a:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-2px);background:rgba(216,140,90,.15)}
 .footer-bottom{border-top:1px solid #ffffff20;padding-top:22px;display:flex;justify-content:space-between;gap:20px;color:#8d9b90;font-size:10px}
 
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.delay-1{transition-delay:.1s}
-.delay-2{transition-delay:.2s}
-.delay-3{transition-delay:.3s}
-@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translate3d(0,22px,0);transition:opacity .65s ease,transform .65s cubic-bezier(.16,1,.3,1);will-change:opacity,transform;backface-visibility:hidden}
+.reveal.visible{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+.delay-1{transition-delay:.08s}
+.delay-2{transition-delay:.16s}
+.delay-3{transition-delay:.24s}
+@keyframes rise{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
 @keyframes heroZoom{to{transform:scale(1)}}
 @keyframes orbit{to{transform:rotate(360deg)}}
 
@@ -337,16 +341,21 @@ footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}
   .mosaic-col{width:calc((100% - 16px)/3)}
   .mosaic-cell{width:100%;height:155px}
   .atmosphere-showcase{padding:24px 16px}
+  .menu-carousel-wrapper{height:460px;margin:18px 0 12px}
 }
 @media(max-width:600px){
+  .menu-carousel-wrapper{height:410px;margin:14px 0 10px;border-radius:18px}
   .fab-container{bottom:20px;right:18px}
   .fab-main-btn{padding:0 16px;height:48px}
   .fab-badge-text{display:none}
 }
 @media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-  .reveal{opacity:1;transform:none}
-  .hero-bg{transform:none}
+  .reveal{opacity:1!important;transform:none!important;will-change:auto!important}
+  .hero-bg{transform:none!important}
+  .mosaic-col{animation:none!important}
+  .cta:before,.cta:after{animation:none!important}
 }
 </style>
 </head>
@@ -355,10 +364,11 @@ footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}
 <header class="nav" id="navbar">
   <a class="brand" href="#home" aria-label="Reflections Cafe home"><span class="brand-mark">R</span><span>REFLECTIONS<small>CAFE · CHANDIGARH</small></span></a>
   <nav class="nav-links" id="navLinks" aria-label="Main navigation">
-    <a href="#home">Home</a><a href="#story">Our Story</a><a href="#menu">Menu Highlights</a><a href="#experience">The Experience</a><a href="#moments">Atmosphere</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a>
+    <a href="#home">Home</a><a href="#story">Our Story</a><a href="#menu">Menu Highlights</a><a href="#experience">The Experience</a><a href="#moments">Atmosphere</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a><a href="admin.html" class="nav-admin-link" title="Host Desk & Admin Panel">Host Desk ↗</a>
     <div class="mobile-drawer-cta">
       <a class="btn" href="#contact">Plan Your Visit <span>↗</span></a>
       <a class="mobile-drawer-phone" href="tel:+919518408629">📞 +91 95184 08629</a>
+      <a href="admin.html" style="font-size:11px;font-weight:700;color:var(--orange);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:6px 12px;border:1px solid rgba(216,140,90,.3);border-radius:999px;">🔐 Host / Admin Portal ↗</a>
     </div>
   </nav>
   <a class="nav-cta" href="#contact">Plan Your Visit <span>↗</span></a>
@@ -777,6 +787,10 @@ footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}
 <!-- Fixed Floating Action Button (FAB) -->
 <aside class="fab-container" id="quickFab" aria-label="Quick Actions">
   <div class="fab-menu" id="fabMenu" aria-hidden="true">
+    <a href="admin.html" class="fab-item" aria-label="Staff Host Desk & Admin Portal">
+      <span class="fab-item-label">Host Desk</span>
+      <span class="fab-icon">🔐</span>
+    </a>
     <a href="tel:+919518408629" class="fab-item" aria-label="Call Reflections Cafe">
       <span class="fab-item-label">Call Cafe</span>
       <span class="fab-icon">📞</span>
@@ -836,6 +850,7 @@ footer{background:#14231c;color:#e7ece5;padding:65px 7.5% 25px}
     <a href="#contact">Contact &amp; location</a>
     <a href="#contact">Plan your visit</a>
     <a href="tel:+919518408629">Call the cafe</a>
+    <a href="admin.html">Host / Admin Desk ↗</a>
     <a href="404.html">Custom 404 page ↗</a>
   </div>
   <div class="footer-col">
@@ -925,26 +940,11 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Active Navigation Highlighting
+// High-Performance Active Navigation Highlighting (Zero Layout Thrashing on Scroll)
 const sectionIds = ['home', 'story', 'menu', 'experience', 'moments', 'reviews', 'contact'];
 const navLinksArray = Array.from(navLinks.querySelectorAll('a[href^="#"]'));
 
-function updateActiveNav() {
-  const scrollPos = window.scrollY + 140;
-  let activeId = sectionIds[0];
-  for (let i = 0; i < sectionIds.length; i++) {
-    const el = document.getElementById(sectionIds[i]);
-    if (el) {
-      const top = el.offsetTop;
-      const height = el.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
-        activeId = sectionIds[i];
-      }
-    }
-  }
-  if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60)) {
-    activeId = 'contact';
-  }
+function setActiveNavLink(activeId) {
   navLinksArray.forEach(link => {
     const href = link.getAttribute('href');
     if (href === '#' + activeId) {
@@ -955,11 +955,56 @@ function updateActiveNav() {
   });
 }
 
+if ('IntersectionObserver' in window) {
+  const visibleSections = new Map();
+  const navSectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        visibleSections.set(entry.target.id, entry.intersectionRatio);
+      } else {
+        visibleSections.delete(entry.target.id);
+      }
+    });
+
+    if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60)) {
+      setActiveNavLink('contact');
+      return;
+    }
+
+    if (visibleSections.size > 0) {
+      for (const id of sectionIds) {
+        if (visibleSections.has(id)) {
+          setActiveNavLink(id);
+          break;
+        }
+      }
+    }
+  }, {
+    rootMargin: '-20% 0px -55% 0px',
+    threshold: [0, 0.15, 0.5]
+  });
+
+  sectionIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) navSectionObserver.observe(el);
+  });
+}
+
+// 60fps / 120fps Hardware-Synced Scroll Handler using requestAnimationFrame
+let scrollTicking = false;
 window.addEventListener('scroll', () => {
-  onWindowScroll();
-  updateActiveNav();
+  if (!scrollTicking) {
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      onWindowScroll();
+      // Handle page bottom edge case for contact nav link
+      if ((window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60)) {
+        setActiveNavLink('contact');
+      }
+      scrollTicking = false;
+    });
+  }
 }, { passive: true });
-updateActiveNav();
 
 navLinksArray.forEach(a => a.addEventListener('click', () => {
   closeNav();
@@ -1013,6 +1058,15 @@ if (mosaicSection && mosaicCols.length && 'IntersectionObserver' in window) {
     mosaicCols.forEach(col => { col.style.animationPlayState = state; });
   }, { threshold: 0.05 });
   mosaicObserver.observe(mosaicSection);
+}
+
+// Performance Optimization: Pause CTA background orbits when out of viewport
+const ctaSection = document.querySelector('.cta');
+if (ctaSection && 'IntersectionObserver' in window) {
+  const ctaObserver = new IntersectionObserver(([entry]) => {
+    ctaSection.classList.toggle('in-view', entry.isIntersecting);
+  }, { threshold: 0.05 });
+  ctaObserver.observe(ctaSection);
 }
 
 // Duplicate mosaic cells for seamless vertical loop (guard against double duplication)
@@ -1128,11 +1182,54 @@ if (contactForm) {
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const nameVal = document.getElementById('name')?.value.trim() || 'Guest';
+    const emailVal = document.getElementById('email')?.value.trim() || '';
+    const phoneVal = document.getElementById('phone')?.value.trim() || '';
+    const reasonVal = document.getElementById('reason')?.value.trim() || 'Reserve a table';
+    const messageVal = document.getElementById('message')?.value.trim() || '';
     
     // Animate button to sending state
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Sending request...';
+    }
+
+    // Save to LocalStorage for Admin / Host Desk
+    try {
+      const isBooking = reasonVal.toLowerCase().includes('reserve') || reasonVal.toLowerCase().includes('celebration');
+      if (isBooking) {
+        const existingRes = JSON.parse(localStorage.getItem('reflections_reservations') || '[]');
+        const newRes = {
+          id: 'RC-' + Math.floor(100 + Math.random() * 900),
+          name: nameVal,
+          email: emailVal,
+          phone: phoneVal,
+          party: 2,
+          date: new Date().toISOString().split('T')[0],
+          time: '19:30',
+          reason: reasonVal,
+          notes: messageVal,
+          status: 'Pending',
+          createdAt: new Date().toISOString()
+        };
+        existingRes.unshift(newRes);
+        localStorage.setItem('reflections_reservations', JSON.stringify(existingRes));
+      } else {
+        const existingInq = JSON.parse(localStorage.getItem('reflections_inquiries') || '[]');
+        const newInq = {
+          id: 'INQ-' + Date.now().toString().slice(-4),
+          name: nameVal,
+          email: emailVal,
+          phone: phoneVal,
+          reason: reasonVal,
+          message: messageVal,
+          date: new Date().toISOString(),
+          status: 'Unread'
+        };
+        existingInq.unshift(newInq);
+        localStorage.setItem('reflections_inquiries', JSON.stringify(existingInq));
+      }
+    } catch (err) {
+      console.warn('Storage sync', err);
     }
 
     setTimeout(() => {
@@ -1281,6 +1378,6 @@ if (arcContainer && arcCanvas && typeof createPredictiveArcRenderer === 'functio
   }
 }
 </script>
-<script type="module" src="./dist/Scene.js?v=2"></script>
+<script type="module" src="./dist/Scene.js?v=3"></script>
 </body>
 </html>

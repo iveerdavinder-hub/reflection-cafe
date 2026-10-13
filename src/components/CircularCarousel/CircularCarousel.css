@@ -11,6 +11,8 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .circular-carousel[data-axis='x'] {
@@ -32,6 +34,7 @@
 .circular-carousel__view {
   position: absolute;
   inset: 0;
+  contain: layout paint size;
 }
 
 .circular-carousel[data-shape='wheel'] .circular-carousel__view {
@@ -52,6 +55,8 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.45s ease;
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
 .circular-carousel[data-ready] .circular-carousel__stage {
@@ -64,6 +69,8 @@
   width: 0;
   height: 0;
   transform-style: preserve-3d;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .circular-carousel__camera {
@@ -77,11 +84,18 @@
   top: 0;
 }
 
+.circular-carousel__card {
+  cursor: pointer;
+}
+
 .circular-carousel__tile {
   position: absolute;
   outline: 1px solid transparent;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .circular-carousel__frame {
@@ -90,6 +104,8 @@
   top: 0;
   width: 100%;
   overflow: hidden;
+  box-shadow: 0 16px 36px rgba(23, 36, 30, 0.16);
+  transform: translateZ(0);
 }
 
 .circular-carousel__photo {
@@ -100,6 +116,8 @@
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .circular-carousel__photo--leaving {

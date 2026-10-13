@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import CircularCarousel from "./components/CircularCarousel/CircularCarousel";
 
 export function MenuDishesCarousel() {
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+
+  useEffect(() => {
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setWindowWidth(window.innerWidth);
+      }, 100);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const isMobile = windowWidth < 640;
+  const isTablet = windowWidth >= 640 && windowWidth < 1024;
+  const cardWidth = isMobile ? 175 : isTablet ? 210 : 240;
+  const gap = isMobile ? 14 : isTablet ? 18 : 22;
   const dishes = [
     {
       src: "./images/dishes/jhol-momos.jpg",
@@ -83,9 +106,9 @@ export function MenuDishesCarousel() {
       <CircularCarousel
         items={dishes}
         preset="cylinder"
-        cardWidth={240}
+        cardWidth={cardWidth}
         aspectRatio={0.82}
-        gap={22}
+        gap={gap}
         speed={10}
         autoplay="drift"
         draggable={true}

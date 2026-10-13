@@ -1,0 +1,2538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14251f">
+<title>Admin &amp; Host Desk · Reflections Cafe, Chandigarh</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2317241e'/><text x='50' y='65' font-size='48' text-anchor='middle' fill='%23d88c5a' font-family='Georgia,serif'>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,500..700;1,500..700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink: #17241e;
+  --dark-ink: #0e1814;
+  --green: #233d32;
+  --green-dark: #14231c;
+  --green-light: #2c4c3e;
+  --sage: #c5d2b8;
+  --sage-light: #eef3e8;
+  --cream: #f7f5ef;
+  --paper: #fffdf8;
+  --orange: #d88c5a;
+  --orange-light: #e5a174;
+  --orange-pale: #faede4;
+  --red: #d34e36;
+  --red-pale: #fdeee9;
+  --amber: #d97706;
+  --amber-pale: #fef3c7;
+  --blue: #2563eb;
+  --blue-pale: #eff6ff;
+  --muted: #69746d;
+  --muted-light: #94a39b;
+  --line: rgba(23, 36, 30, 0.12);
+  --line-strong: rgba(23, 36, 30, 0.22);
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 8px rgba(23, 36, 30, 0.05);
+  --shadow-md: 0 8px 24px rgba(23, 36, 30, 0.08);
+  --shadow-lg: 0 16px 40px rgba(23, 36, 30, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  touch-action: pan-y;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   AUTHENTICATION SCREEN (MODAL OVERLAY)
+   ========================================================================== */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 24, 20, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 1;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.auth-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  padding: 44px 38px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: authRise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+@keyframes authRise {
+  from { opacity: 0; transform: translate3d(0, 22px, 0) scale(0.96); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.auth-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--green), var(--orange), var(--sage));
+}
+
+.auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.auth-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-full);
+  background: var(--green);
+  color: var(--orange);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(35, 61, 50, 0.25);
+}
+
+.auth-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.auth-field {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.auth-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.auth-field input {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+
+.auth-field input:focus {
+  outline: none;
+  border-color: var(--orange);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(216, 140, 90, 0.18);
+}
+
+.auth-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px 20px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(35, 61, 50, 0.2);
+}
+
+.btn-primary:hover {
+  background: var(--orange);
+  color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(216, 140, 90, 0.35);
+}
+
+.btn-demo {
+  background: none;
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+  padding: 11px 16px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-demo:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(216, 140, 90, 0.06);
+}
+
+.auth-error {
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: var(--red-pale);
+  border: 1px solid rgba(211, 78, 54, 0.25);
+  color: var(--red);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  display: none;
+}
+
+.auth-error.show { display: block; }
+
+/* ==========================================================================
+   ADMIN LAYOUT: SIDEBAR + MAIN CONTENT
+   ========================================================================== */
+.admin-shell {
+  display: flex;
+  width: 100%;
+  min-height: 100svh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 270px;
+  background: var(--green-dark);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 40;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 26px 22px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.sidebar-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background: var(--green);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--orange);
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.sidebar-brand-text {
+  line-height: 1.15;
+}
+
+.sidebar-brand-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  display: block;
+}
+
+.sidebar-brand-sub {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--orange);
+  font-weight: 600;
+  display: block;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.nav-category {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 700;
+  padding: 12px 12px 6px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  background: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebar-nav-item.active {
+  background: var(--orange);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(216, 140, 90, 0.35);
+}
+
+.sidebar-nav-item .icon {
+  font-size: 16px;
+  width: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.sidebar-nav-item .badge {
+  margin-left: auto;
+  padding: 2px 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.sidebar-nav-item.active .badge {
+  background: var(--ink);
+  color: #fff;
+}
+
+.sidebar-footer {
+  padding: 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(14, 24, 20, 0.4);
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--green);
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.user-info {
+  line-height: 1.25;
+}
+
+.user-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+}
+
+.user-role {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
+}
+
+.btn-icon-logout {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon-logout:hover {
+  background: var(--red-pale);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* Main Content Area */
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-y: auto;
+  max-height: 100svh;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* Top App Bar */
+.topbar {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(12px);
+  gap: 16px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.topbar-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.topbar-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--cream);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--line);
+}
+
+.live-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseLive 2s infinite;
+}
+
+@keyframes pulseLive {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-secondary {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  padding: 9px 16px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--paper);
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background: var(--orange);
+  border: 1px solid var(--orange);
+  color: var(--ink);
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(216, 140, 90, 0.25);
+  transition: all 0.25s;
+}
+
+.btn-accent:hover {
+  background: #e5a174;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(216, 140, 90, 0.35);
+}
+
+/* Page Containers */
+.page-container {
+  padding: 32px;
+  display: none;
+  animation: fadeInView 0.3s ease both;
+}
+
+.page-container.active { display: block; }
+
+@keyframes fadeInView {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Operational Status Bar Banner */
+.ops-banner {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.ops-banner::after {
+  content: "REFLECTIONS";
+  position: absolute;
+  right: -20px;
+  bottom: -15px;
+  font-family: var(--serif);
+  font-size: 64px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.04);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.ops-info h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ops-info p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.ops-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+.status-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-open {
+  background: rgba(16, 185, 129, 0.22);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.status-busy {
+  background: rgba(217, 119, 6, 0.22);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.status-closed {
+  background: rgba(211, 78, 54, 0.22);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+/* Metric KPI Cards */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.metric-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.metric-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.icon-orange { background: var(--orange-pale); color: var(--orange); }
+.icon-green { background: var(--sage-light); color: var(--green); }
+.icon-amber { background: var(--amber-pale); color: var(--amber); }
+.icon-blue { background: var(--blue-pale); color: var(--blue); }
+
+.metric-val {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.metric-desc {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metric-desc strong {
+  color: #10b981;
+  font-weight: 700;
+}
+
+/* Section Card Container */
+.panel-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.panel-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: rgba(247, 245, 239, 0.4);
+}
+
+.panel-title-wrap h3 {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.panel-title-wrap p {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.panel-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-input-wrap {
+  position: relative;
+}
+
+.search-input-wrap input {
+  padding: 8px 14px 8px 34px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  font-size: 12.5px;
+  font-family: var(--sans);
+  color: var(--ink);
+  width: 220px;
+  transition: all 0.2s;
+}
+
+.search-input-wrap input:focus {
+  outline: none;
+  border-color: var(--orange);
+  width: 260px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.filter-select {
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  font-size: 12.5px;
+  font-family: var(--sans);
+  color: var(--ink);
+  cursor: pointer;
+  outline: none;
+}
+
+/* Modern Data Table */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.data-table th {
+  padding: 14px 22px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(247, 245, 239, 0.6);
+  border-bottom: 1px solid var(--line);
+}
+
+.data-table td {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.data-table tr:hover td {
+  background: rgba(216, 140, 90, 0.03);
+}
+
+.guest-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guest-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--sage);
+  color: var(--green);
+  font-weight: 700;
+  font-size: 13px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.guest-name {
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+}
+
+.guest-contact {
+  font-size: 11.5px;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+}
+
+/* Badge states */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-pending { background: var(--amber-pale); color: var(--amber); border: 1px solid rgba(217, 119, 6, 0.25); }
+.badge-confirmed { background: var(--sage-light); color: var(--green); border: 1px solid rgba(35, 61, 50, 0.2); }
+.badge-seated { background: var(--blue-pale); color: var(--blue); border: 1px solid rgba(37, 99, 235, 0.2); }
+.badge-completed { background: rgba(105, 116, 109, 0.12); color: var(--muted); border: 1px solid var(--line); }
+.badge-cancelled { background: var(--red-pale); color: var(--red); border: 1px solid rgba(211, 78, 54, 0.2); }
+
+/* Table Action Buttons */
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-table-action {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-table-action:hover {
+  background: var(--cream);
+  border-color: var(--ink);
+}
+
+.btn-table-action.confirm:hover {
+  background: var(--sage);
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.btn-table-action.danger:hover {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red);
+}
+
+/* ==========================================================================
+   MENU MANAGER GRID
+   ========================================================================== */
+.menu-grid-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+  padding: 26px;
+}
+
+.dish-card-admin {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+}
+
+.dish-card-admin:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.dish-card-thumb {
+  height: 180px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #17241e;
+}
+
+.dish-card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.dish-card-admin:hover .dish-card-thumb img {
+  transform: scale(1.05);
+}
+
+.dish-status-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.tag-available {
+  background: rgba(16, 185, 129, 0.9);
+  color: #fff;
+}
+
+.tag-soldout {
+  background: rgba(211, 78, 54, 0.9);
+  color: #fff;
+}
+
+.dish-card-body {
+  padding: 18px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.dish-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.dish-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.dish-price {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.dish-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.dish-card-footer {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.switch-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch-toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.switch-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider-round {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider-round:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider-round {
+  background-color: #10b981;
+}
+
+input:checked + .slider-round:before {
+  transform: translateX(16px);
+}
+
+/* ==========================================================================
+   MODAL DIALOGUES (RESERVATION / DISH)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 24, 20, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 540px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: modalRise 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes modalRise {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.97); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.modal-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cream);
+}
+
+.modal-header h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-body {
+  padding: 28px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-field {
+  margin-bottom: 16px;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus {
+  outline: none;
+  border-color: var(--orange);
+  background: #fff;
+}
+
+.modal-field textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.modal-footer {
+  padding: 18px 28px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: rgba(247, 245, 239, 0.4);
+}
+
+/* Toast Notifications */
+.toast-shelf {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--green-dark);
+  color: #fff;
+  border-left: 4px solid var(--orange);
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  min-width: 280px;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.95); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .sidebar { width: 240px; }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -270px;
+    top: 0; bottom: 0;
+    width: 260px;
+  }
+  .sidebar.open {
+    left: 0;
+    transform: none;
+  }
+  .mobile-menu-btn { display: inline-flex; }
+  .page-container { padding: 20px 16px; }
+  .topbar { padding: 14px 18px; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .form-grid-2 { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, .admin-main, .table-responsive {
+    scroll-behavior: auto !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTHENTICATION OVERLAY -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="auth-mark">R</div>
+      <div style="text-align:left;">
+        <strong style="font-family:var(--serif);font-size:16px;display:block;">REFLECTIONS CAFE</strong>
+        <span style="font-size:10px;letter-spacing:0.18em;color:var(--orange);font-weight:700;">SECTOR 35C · HOST DESK</span>
+      </div>
+    </div>
+    <h2 class="auth-title">Host Desk Access</h2>
+    <p class="auth-subtitle">Sign in to manage live table reservations, dining floor seating, and kitchen dish availability.</p>
+
+    <form id="authForm">
+      <div class="auth-field">
+        <label for="adminUsername">Username</label>
+        <input type="text" id="adminUsername" placeholder="e.g. admin" required autocomplete="username">
+      </div>
+      <div class="auth-field">
+        <label for="adminPassword">Password / Pin</label>
+        <input type="password" id="adminPassword" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <div class="auth-error" id="authError">Invalid host credentials. Please check and try again.</div>
+
+      <div class="auth-actions">
+        <button type="submit" class="btn-primary">Authenticate &amp; Enter <span>→</span></button>
+        <button type="button" class="btn-demo" id="fillDemoBtn">Use 1-Click Demo Fill (admin / reflections2026)</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MAIN ADMIN SHELL -->
+<div class="admin-shell">
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="sidebar-brand" title="View Public Website">
+        <div class="sidebar-brand-mark">R</div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-title">REFLECTIONS</span>
+          <span class="sidebar-brand-sub">ADMIN PORTAL</span>
+        </div>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-category">Floor &amp; Ops</div>
+      <button class="sidebar-nav-item active" data-tab="overview">
+        <span class="icon">📊</span>
+        <span>Dashboard Overview</span>
+      </button>
+      <button class="sidebar-nav-item" data-tab="reservations">
+        <span class="icon">🛎️</span>
+        <span>Table Reservations</span>
+        <span class="badge" id="pendingCountBadge">0</span>
+      </button>
+
+      <div class="nav-category">Menu &amp; Catalog</div>
+      <button class="sidebar-nav-item" data-tab="menu">
+        <span class="icon">🍽️</span>
+        <span>Dishes &amp; Specials</span>
+      </button>
+
+      <div class="nav-category">Guest Feedback</div>
+      <button class="sidebar-nav-item" data-tab="inquiries">
+        <span class="icon">✉️</span>
+        <span>Messages &amp; Notes</span>
+        <span class="badge" id="inquiriesCountBadge">0</span>
+      </button>
+
+      <div class="nav-category">Settings</div>
+      <button class="sidebar-nav-item" data-tab="settings">
+        <span class="icon">⚙️</span>
+        <span>Cafe Operations</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-badge">
+        <div class="user-avatar">H</div>
+        <div class="user-info">
+          <span class="user-name">Host Desk</span>
+          <span class="user-role">Manager Access</span>
+        </div>
+      </div>
+      <button class="btn-icon-logout" id="logoutBtn" title="Lock &amp; Logout" aria-label="Logout">⏻</button>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="admin-main">
+    <!-- TOP APP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">☰</button>
+        <h1 class="topbar-title" id="pageTitle">Host Desk Overview</h1>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="topbar-time">
+          <span class="live-pulse"></span>
+          <span id="currentTime">Chandigarh · 11:00 AM</span>
+        </div>
+        <a href="index.html" target="_blank" class="btn-secondary" title="View live customer website">Live Website ↗</a>
+        <button class="btn-accent" id="quickNewBookingBtn">+ New Booking</button>
+      </div>
+    </header>
+
+    <!-- TAB 1: OVERVIEW DASHBOARD -->
+    <div class="page-container active" id="tab-overview">
+      <!-- Operational Status Banner -->
+      <div class="ops-banner">
+        <div class="ops-info">
+          <h3><span class="live-pulse"></span> Reflections Cafe · Sector 35C Dining Floor</h3>
+          <p>Open daily until 11:00 PM · 18 Indoor Atrium &amp; Lounge Tables · Active Host Desk</p>
+        </div>
+        <div class="ops-controls">
+          <button type="button" class="status-pill status-open" id="opsStatusPill" style="cursor:pointer;border:none;outline:none;font-family:inherit;" title="Click to cycle status: Open -> Busy -> Closed">Service Live · Taking Bookings ↻</button>
+        </div>
+      </div>
+
+      <!-- KPI METRIC CARDS -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Today's Bookings</span>
+            <div class="metric-icon-wrap icon-orange">☕</div>
+          </div>
+          <div class="metric-val" id="metricBookingsCount">0</div>
+          <div class="metric-desc">
+            <span id="metricPendingNotice">0 pending confirmation</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Expected Guests</span>
+            <div class="metric-icon-wrap icon-green">👥</div>
+          </div>
+          <div class="metric-val" id="metricTotalGuests">0</div>
+          <div class="metric-desc">Covers across confirmed tables</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Active Menu Items</span>
+            <div class="metric-icon-wrap icon-amber">🍕</div>
+          </div>
+          <div class="metric-val" id="metricDishesCount">12</div>
+          <div class="metric-desc"><strong id="metricSoldOutCount">0</strong> currently sold out</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <span class="metric-title">Guest Enquiries</span>
+            <div class="metric-icon-wrap icon-blue">💬</div>
+          </div>
+          <div class="metric-val" id="metricInquiriesCount">0</div>
+          <div class="metric-desc">Web requests received</div>
+        </div>
+      </div>
+
+      <!-- RECENT RESERVATIONS PANEL -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>Recent Table Reservations</h3>
+            <p>Real-time booking requests submitted from website &amp; desk</p>
+          </div>
+          <button class="btn-secondary" onclick="switchTab('reservations')">View All Tables →</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Guest</th>
+                <th>Party &amp; Seating</th>
+                <th>Requested Time</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="overviewReservationsBody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TABLE RESERVATIONS -->
+    <div class="page-container" id="tab-reservations">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>Floor Reservations &amp; Seating</h3>
+            <p>Filter, confirm, and update guest dining status</p>
+          </div>
+          <div class="panel-filters">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="reservationSearch" placeholder="Search guest name or phone...">
+            </div>
+            <select class="filter-select" id="reservationStatusFilter">
+              <option value="all">All Statuses</option>
+              <option value="Pending">Pending Only</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Seated">Currently Seated</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+            <button class="btn-secondary" id="exportCsvBtn" title="Download guest roster as CSV file">📥 Export CSV</button>
+            <button class="btn-accent" id="addReservationBtn">+ Add Walk-in / Phone</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest Details</th>
+                <th>Party</th>
+                <th>Date &amp; Time</th>
+                <th>Special Notes</th>
+                <th>Status</th>
+                <th>Manage</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: MENU & DISHES -->
+    <div class="page-container" id="tab-menu">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>Dishes &amp; Culinary Catalog</h3>
+            <p>Live inventory control and specials for Reflections Cafe</p>
+          </div>
+          <div class="panel-filters">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="menuSearch" placeholder="Filter dishes...">
+            </div>
+            <button class="btn-accent" id="addNewDishBtn">+ Add Dish</button>
+          </div>
+        </div>
+
+        <div class="menu-grid-admin" id="menuGridContainer">
+          <!-- Dynamically populated dish cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: INQUIRIES & MESSAGES -->
+    <div class="page-container" id="tab-inquiries">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>Guest Messages &amp; Enquiries</h3>
+            <p>Notes sent via website contact form</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sender</th>
+                <th>Topic / Reason</th>
+                <th>Message Excerpt</th>
+                <th>Received</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="inquiriesTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: CAFE OPERATIONS & SETTINGS -->
+    <div class="page-container" id="tab-settings">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h3>Cafe Floor Configuration</h3>
+            <p>Operating schedule, capacity, and data tools</p>
+          </div>
+        </div>
+
+        <div style="padding: 28px; max-width: 680px;">
+          <div class="modal-field">
+            <label>Cafe Name &amp; Branch</label>
+            <input type="text" value="Reflections Cafe · Sector 35C Chandigarh" disabled style="background:#e9ede4;">
+          </div>
+          <div class="modal-field">
+            <label>Floor Seating Capacity</label>
+            <input type="number" id="settingCapacity" value="54" style="max-width:180px;">
+          </div>
+          <div class="modal-field">
+            <label>Current Floor &amp; Service Status</label>
+            <select id="settingServiceStatus">
+              <option value="open">Service Live · Taking Bookings</option>
+              <option value="busy">Dining Floor Full · Waitlist Only</option>
+              <option value="closed">Service Closed · Reopening Tomorrow</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Today's Host Notice / Announcement</label>
+            <textarea id="settingNotice" placeholder="e.g. Special Single-Origin Pour-over batch available today.">Woodfired sourdough pizzas and specialty single-origin pourover coffee pouring daily until 11:00 PM.</textarea>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:24px;">
+            <button class="btn-primary" id="saveSettingsBtn" style="width:auto;padding:11px 24px;">Save Operational Settings</button>
+            <button class="btn-demo" id="resetDemoDataBtn">Reset Demo Sample Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL: ADD / EDIT RESERVATION -->
+<div class="modal-overlay" id="reservationModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 id="resModalTitle">New Table Reservation</h3>
+      <button class="modal-close-btn" onclick="closeModal('reservationModal')">×</button>
+    </div>
+    <form id="reservationForm">
+      <div class="modal-body">
+        <input type="hidden" id="modalResId">
+        <div class="form-grid-2">
+          <div class="modal-field">
+            <label>Guest Name *</label>
+            <input type="text" id="modalResName" required placeholder="Full Name">
+          </div>
+          <div class="modal-field">
+            <label>Party Size (Guests) *</label>
+            <input type="number" id="modalResParty" min="1" max="25" value="2" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="modal-field">
+            <label>Phone Number *</label>
+            <input type="tel" id="modalResPhone" required placeholder="+91 98765 43210">
+          </div>
+          <div class="modal-field">
+            <label>Email Address</label>
+            <input type="email" id="modalResEmail" placeholder="guest@example.com">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="modal-field">
+            <label>Date *</label>
+            <input type="date" id="modalResDate" required>
+          </div>
+          <div class="modal-field">
+            <label>Time Slot *</label>
+            <input type="time" id="modalResTime" value="19:30" required>
+          </div>
+        </div>
+
+        <div class="modal-field">
+          <label>Occasion / Seating Request</label>
+          <select id="modalResReason">
+            <option value="Reserve a table">Standard Table</option>
+            <option value="Group visit & celebrations">Celebration / Birthday</option>
+            <option value="Window / Sunlit Atrium">Window / Sunlit Atrium</option>
+            <option value="Quiet Corner / Work">Quiet Corner / Work Friendly</option>
+          </select>
+        </div>
+
+        <div class="modal-field">
+          <label>Special Instructions &amp; Dietary Requests</label>
+          <textarea id="modalResNotes" placeholder="e.g. Window booth preferred, vegan options, high chair needed..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeModal('reservationModal')">Cancel</button>
+        <button type="submit" class="btn-primary" style="width:auto;padding:11px 24px;">Save Reservation</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: ADD / EDIT DISH -->
+<div class="modal-overlay" id="dishModal">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 id="dishModalTitle">Add Menu Dish</h3>
+      <button class="modal-close-btn" onclick="closeModal('dishModal')">×</button>
+    </div>
+    <form id="dishForm">
+      <div class="modal-body">
+        <input type="hidden" id="modalDishId">
+        <div class="form-grid-2">
+          <div class="modal-field">
+            <label>Dish Name *</label>
+            <input type="text" id="modalDishTitle" required placeholder="e.g. Truffle Mushroom Pizza">
+          </div>
+          <div class="modal-field">
+            <label>Price (₹) *</label>
+            <input type="number" id="modalDishPrice" required placeholder="395">
+          </div>
+        </div>
+
+        <div class="modal-field">
+          <label>Subtitle / Description *</label>
+          <textarea id="modalDishSubtitle" required placeholder="Artisan Sourdough · Wild Truffle & Mozzarella"></textarea>
+        </div>
+
+        <div class="modal-field">
+          <label>Image URL / Path</label>
+          <input type="text" id="modalDishSrc" placeholder="./images/dishes/truffle-pizza.jpg">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeModal('dishModal')">Cancel</button>
+        <button type="submit" class="btn-primary" style="width:auto;padding:11px 24px;">Save Dish</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TOAST SHELF -->
+<div class="toast-shelf" id="toastShelf"></div>
+
+<script>
+// =============================================================================
+// STORAGE KEYS & INITIAL SEED DATA
+// =============================================================================
+const KEYS = {
+  AUTH: 'reflections_admin_auth',
+  RESERVATIONS: 'reflections_reservations',
+  DISHES: 'reflections_dishes',
+  INQUIRIES: 'reflections_inquiries',
+  SETTINGS: 'reflections_settings'
+};
+
+const DEFAULT_DISHES = [
+  { id: 'd1', title: 'Jhol Momos', price: 285, subtitle: 'Comfort Dumplings · Warm Spiced Sesame Broth', src: './images/dishes/jhol-momos.jpg', available: true },
+  { id: 'd2', title: 'Honey Chilli Potato', price: 265, subtitle: 'Wok-Tossed Crispy Potatoes · Sweet Sesame Glaze', src: './images/dishes/honey-chilli-potato.jpg', available: true },
+  { id: 'd3', title: 'Kunafa & Sweets', price: 345, subtitle: 'Artisan Dessert · Golden Kataifi & Rose Drizzle', src: './images/dishes/kunafa.jpg', available: true },
+  { id: 'd4', title: 'Pour-Over Coffee', price: 240, subtitle: 'Specialty Brew · Single-Origin Roast', src: './images/dishes/pour-over-coffee.jpg', available: true },
+  { id: 'd5', title: 'Truffle Mushroom Pizza', price: 465, subtitle: 'Artisan Sourdough · Wild Truffle & Mozzarella', src: './images/dishes/truffle-pizza.jpg', available: true },
+  { id: 'd6', title: 'Iced Spanish Latte', price: 260, subtitle: 'Cold Bar Favorite · Velvety Espresso & Condensed Milk', src: './images/dishes/iced-spanish-latte.jpg', available: true },
+  { id: 'd7', title: 'Smashed Avocado Toast', price: 320, subtitle: 'Rustic Sourdough · Feta, Microgreens & Chili Flakes', src: './images/dishes/avocado-toast.jpg', available: true },
+  { id: 'd8', title: 'Lotus Biscoff Cheesecake', price: 295, subtitle: 'Velvet Cream Cheese · Spiced Cookie Crust & Drizzle', src: './images/dishes/biscoff-cheesecake.jpg', available: true },
+  { id: 'd9', title: 'Belgian Waffle Tower', price: 310, subtitle: 'Golden Crisp Waffle · Warm Nutella & Strawberries', src: './images/dishes/waffle-tower.jpg', available: true },
+  { id: 'd10', title: 'Vanilla Cold Brew Float', price: 275, subtitle: '18-Hour Slow Brew · Madagascar Vanilla Bean Scoop', src: './images/dishes/cold-brew-float.jpg', available: true },
+  { id: 'd11', title: 'Brioche French Toast', price: 290, subtitle: 'All-Day Brunch · Fresh Berries & Pure Maple', src: './images/dishes/french-toast.jpg', available: true },
+  { id: 'd12', title: 'Walnut Pesto Penne', price: 380, subtitle: 'Fresh Hand-rolled Pasta · Garden Basil & Cherry Tomatoes', src: './images/dishes/pesto-penne.jpg', available: true }
+];
+
+const DEFAULT_RESERVATIONS = [
+  {
+    id: 'RC-101',
+    name: 'Aryan Sharma',
+    phone: '+91 98141 23456',
+    email: 'aryan.s@example.com',
+    party: 4,
+    date: new Date().toISOString().split('T')[0],
+    time: '19:30',
+    reason: 'Group visit & celebrations',
+    notes: 'Anniversary table · Window booth preferred',
+    status: 'Confirmed',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'RC-102',
+    name: 'Simranjit Kaur',
+    phone: '+91 98882 34567',
+    email: 'simran.k@example.com',
+    party: 2,
+    date: new Date().toISOString().split('T')[0],
+    time: '20:15',
+    reason: 'Reserve a table',
+    notes: 'Quiet atrium table for coffee & desserts',
+    status: 'Pending',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'RC-103',
+    name: 'Rohan Mehra',
+    phone: '+91 97790 45678',
+    email: 'rohan.m@example.com',
+    party: 6,
+    date: new Date().toISOString().split('T')[0],
+    time: '20:45',
+    reason: 'Group visit & celebrations',
+    notes: 'Pre-order Truffle Pizzas and Kunafa',
+    status: 'Confirmed',
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'RC-104',
+    name: 'Dr. Neha Verma',
+    phone: '+91 94170 56789',
+    email: 'neha.v@example.com',
+    party: 2,
+    date: new Date().toISOString().split('T')[0],
+    time: '18:00',
+    reason: 'Specialty coffee & menu question',
+    notes: 'Requested oat milk pour-over & seating near sockets',
+    status: 'Seated',
+    createdAt: new Date().toISOString()
+  }
+];
+
+const DEFAULT_INQUIRIES = [
+  {
+    id: 'INQ-1',
+    name: 'Jaspreet Singh',
+    email: 'jaspreet@example.com',
+    phone: '+91 98150 11223',
+    reason: 'Group visit & celebrations',
+    message: 'Looking to host an intimate gathering of 12 people for Sunday brunch around 11:30 AM. Do you have a set brunch menu?',
+    date: new Date().toISOString(),
+    status: 'Unread'
+  },
+  {
+    id: 'INQ-2',
+    name: 'Mehak Gill',
+    email: 'mehak.gill@example.com',
+    phone: '+91 98720 33445',
+    reason: 'Specialty coffee & menu question',
+    message: 'Hi, are your single-origin beans available for take-home bags? Loved the Ethiopian pour-over yesterday!',
+    date: new Date(Date.now() - 3600000 * 5).toISOString(),
+    status: 'Replied'
+  }
+];
+
+// Load / Init Data
+function loadData(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function saveData(key, val) {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) {
+    console.error('Storage error', e);
+  }
+}
+
+let reservations = loadData(KEYS.RESERVATIONS, DEFAULT_RESERVATIONS);
+let dishes = loadData(KEYS.DISHES, DEFAULT_DISHES);
+let inquiries = loadData(KEYS.INQUIRIES, DEFAULT_INQUIRIES);
+
+if (!localStorage.getItem(KEYS.RESERVATIONS)) saveData(KEYS.RESERVATIONS, reservations);
+if (!localStorage.getItem(KEYS.DISHES)) saveData(KEYS.DISHES, dishes);
+if (!localStorage.getItem(KEYS.INQUIRIES)) saveData(KEYS.INQUIRIES, inquiries);
+
+// =============================================================================
+// AUTHENTICATION LOGIC
+// =============================================================================
+const authOverlay = document.getElementById('authOverlay');
+const authForm = document.getElementById('authForm');
+const authError = document.getElementById('authError');
+const fillDemoBtn = document.getElementById('fillDemoBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+
+function checkAuth() {
+  const isAuth = sessionStorage.getItem(KEYS.AUTH) === 'true';
+  if (isAuth) {
+    authOverlay.classList.add('hidden');
+  } else {
+    authOverlay.classList.remove('hidden');
+  }
+}
+
+authForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const u = document.getElementById('adminUsername').value.trim();
+  const p = document.getElementById('adminPassword').value.trim();
+
+  if ((u === 'admin' || u === 'host') && (p === 'reflections2026' || p === 'admin' || p === '1234')) {
+    sessionStorage.setItem(KEYS.AUTH, 'true');
+    authError.classList.remove('show');
+    authOverlay.classList.add('hidden');
+    showToast('Signed in to Reflections Host Desk');
+  } else {
+    authError.classList.add('show');
+  }
+});
+
+fillDemoBtn.addEventListener('click', () => {
+  document.getElementById('adminUsername').value = 'admin';
+  document.getElementById('adminPassword').value = 'reflections2026';
+  authError.classList.remove('show');
+});
+
+logoutBtn.addEventListener('click', () => {
+  sessionStorage.removeItem(KEYS.AUTH);
+  authOverlay.classList.remove('hidden');
+  showToast('Logged out of Host Desk');
+});
+
+// =============================================================================
+// NAVIGATION & TABS
+// =============================================================================
+const navItems = document.querySelectorAll('.sidebar-nav-item');
+const pageContainers = document.querySelectorAll('.page-container');
+const pageTitle = document.getElementById('pageTitle');
+const sidebar = document.getElementById('sidebar');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+const TAB_TITLES = {
+  overview: 'Host Desk Overview',
+  reservations: 'Table Reservations & Floor Seating',
+  menu: 'Dishes & Culinary Catalog',
+  inquiries: 'Guest Messages & Feedback',
+  settings: 'Cafe Floor & Operational Settings'
+};
+
+function switchTab(tabId) {
+  navItems.forEach(item => {
+    item.classList.toggle('active', item.dataset.tab === tabId);
+  });
+  pageContainers.forEach(container => {
+    container.classList.toggle('active', container.id === `tab-${tabId}`);
+  });
+  if (pageTitle && TAB_TITLES[tabId]) {
+    pageTitle.textContent = TAB_TITLES[tabId];
+  }
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove('open');
+  }
+}
+
+navItems.forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+mobileMenuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+});
+
+// Close sidebar on outside click on mobile
+document.addEventListener('click', (e) => {
+  if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
+
+// =============================================================================
+// RENDERERS & DATA UPDATERS
+// =============================================================================
+function updateMetrics() {
+  const pending = reservations.filter(r => r.status === 'Pending').length;
+  const confirmed = reservations.filter(r => r.status === 'Confirmed' || r.status === 'Seated').length;
+  const totalGuests = reservations.filter(r => r.status !== 'Cancelled').reduce((acc, cur) => acc + Number(cur.party || 2), 0);
+  const soldOut = dishes.filter(d => !d.available).length;
+  const unreadInq = inquiries.filter(i => i.status === 'Unread').length;
+
+  document.getElementById('metricBookingsCount').textContent = reservations.length;
+  document.getElementById('metricPendingNotice').textContent = `${pending} pending confirmation`;
+  document.getElementById('metricTotalGuests').textContent = totalGuests;
+  document.getElementById('metricDishesCount').textContent = dishes.length;
+  document.getElementById('metricSoldOutCount').textContent = soldOut;
+  document.getElementById('metricInquiriesCount').textContent = inquiries.length;
+
+  document.getElementById('pendingCountBadge').textContent = pending;
+  document.getElementById('inquiriesCountBadge').textContent = unreadInq;
+}
+
+// Render Overview Quick Table
+function renderOverviewReservations() {
+  const tbody = document.getElementById('overviewReservationsBody');
+  tbody.innerHTML = '';
+
+  const recents = reservations.slice(0, 5);
+  if (recents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">No reservations recorded yet.</td></tr>';
+    return;
+  }
+
+  recents.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="guest-info">
+          <div class="guest-avatar">${r.name.charAt(0).toUpperCase()}</div>
+          <div>
+            <span class="guest-name">${escapeHtml(r.name)}</span>
+            <span class="guest-contact">${escapeHtml(r.phone || 'No phone')}</span>
+          </div>
+        </div>
+      </td>
+      <td><strong>${r.party} Guests</strong><br><small style="color:var(--muted);">${escapeHtml(r.notes ? r.notes.slice(0, 32) + '...' : 'General')}</small></td>
+      <td><strong>${r.time || '19:00'}</strong><br><small style="color:var(--muted);">${r.date || 'Today'}</small></td>
+      <td><span style="font-size:12px;color:var(--muted);">${escapeHtml(r.reason || 'Dining')}</span></td>
+      <td><span class="badge-status badge-${r.status.toLowerCase()}">${r.status}</span></td>
+      <td>
+        <div class="table-actions">
+          ${r.status === 'Pending' ? `<button class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm ✓</button>` : ''}
+          ${r.status === 'Confirmed' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat Table 🪑</button>` : ''}
+          ${r.status === 'Seated' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Complete ✓</button>` : ''}
+          <button class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Render Full Reservations Table
+function renderReservationsTable() {
+  const tbody = document.getElementById('reservationsTableBody');
+  tbody.innerHTML = '';
+
+  const searchVal = document.getElementById('reservationSearch').value.toLowerCase().trim();
+  const statusFilter = document.getElementById('reservationStatusFilter').value;
+
+  const filtered = reservations.filter(r => {
+    const matchSearch = r.name.toLowerCase().includes(searchVal) || 
+                        (r.phone && r.phone.toLowerCase().includes(searchVal)) ||
+                        (r.notes && r.notes.toLowerCase().includes(searchVal));
+    const matchStatus = statusFilter === 'all' || r.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:32px;">No matching reservations found.</td></tr>';
+    return;
+  }
+
+  filtered.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><code style="font-size:11px;background:var(--cream);padding:3px 6px;border-radius:4px;border:1px solid var(--line);">${r.id}</code></td>
+      <td>
+        <div class="guest-info">
+          <div class="guest-avatar">${r.name.charAt(0).toUpperCase()}</div>
+          <div>
+            <span class="guest-name">${escapeHtml(r.name)}</span>
+            <span class="guest-contact">${escapeHtml(r.phone)} · ${escapeHtml(r.email || '')}</span>
+          </div>
+        </div>
+      </td>
+      <td><strong>${r.party} Guests</strong></td>
+      <td><strong>${r.date || 'Today'}</strong> at <strong>${r.time || '19:30'}</strong></td>
+      <td style="max-width:220px;font-size:12px;color:var(--muted);line-height:1.4;">${escapeHtml(r.notes || 'None')}</td>
+      <td><span class="badge-status badge-${r.status.toLowerCase()}">${r.status}</span></td>
+      <td>
+        <div class="table-actions">
+          ${r.status === 'Pending' ? `<button class="btn-table-action confirm" onclick="updateReservationStatus('${r.id}', 'Confirmed')">Confirm</button>` : ''}
+          ${r.status === 'Confirmed' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Seated')">Seat</button>` : ''}
+          ${r.status === 'Seated' ? `<button class="btn-table-action" onclick="updateReservationStatus('${r.id}', 'Completed')">Finish</button>` : ''}
+          ${r.status !== 'Cancelled' && r.status !== 'Completed' ? `<button class="btn-table-action danger" onclick="updateReservationStatus('${r.id}', 'Cancelled')">Cancel</button>` : ''}
+          <button class="btn-table-action" onclick="editReservation('${r.id}')" title="Edit booking details">✏️ Edit</button>
+          <button class="btn-table-action" onclick="deleteReservation('${r.id}')" title="Delete record">🗑️</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Render Menu Cards
+function renderMenuGrid() {
+  const container = document.getElementById('menuGridContainer');
+  container.innerHTML = '';
+
+  const searchVal = document.getElementById('menuSearch').value.toLowerCase().trim();
+  const filtered = dishes.filter(d => d.title.toLowerCase().includes(searchVal) || d.subtitle.toLowerCase().includes(searchVal));
+
+  filtered.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'dish-card-admin';
+    card.innerHTML = `
+      <div class="dish-card-thumb">
+        <img src="${escapeHtml(d.src)}" alt="${escapeHtml(d.title)}" onerror="this.src='./images/dishes/pour-over-coffee.jpg'">
+        <span class="dish-status-tag ${d.available ? 'tag-available' : 'tag-soldout'}">
+          ${d.available ? 'In Stock' : 'Sold Out'}
+        </span>
+      </div>
+      <div class="dish-card-body">
+        <div class="dish-header-row">
+          <h4 class="dish-title">${escapeHtml(d.title)}</h4>
+          <span class="dish-price">₹${d.price}</span>
+        </div>
+        <p class="dish-desc">${escapeHtml(d.subtitle)}</p>
+        <div class="dish-card-footer">
+          <label class="switch-wrap">
+            <span class="switch-toggle">
+              <input type="checkbox" ${d.available ? 'checked' : ''} onchange="toggleDishAvailability('${d.id}')">
+              <span class="slider-round"></span>
+            </span>
+            <span>Available</span>
+          </label>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-table-action" onclick="editDish('${d.id}')">Edit</button>
+            <button class="btn-table-action danger" onclick="deleteDish('${d.id}')">×</button>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Render Inquiries Table
+function renderInquiriesTable() {
+  const tbody = document.getElementById('inquiriesTableBody');
+  tbody.innerHTML = '';
+
+  if (inquiries.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px;">No inquiries received yet.</td></tr>';
+    return;
+  }
+
+  inquiries.forEach(inq => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <span class="guest-name">${escapeHtml(inq.name)}</span>
+        <span class="guest-contact">${escapeHtml(inq.phone || inq.email)}</span>
+      </td>
+      <td><strong>${escapeHtml(inq.reason || 'General')}</strong></td>
+      <td style="max-width:320px;font-size:12px;color:var(--ink);line-height:1.4;">${escapeHtml(inq.message)}</td>
+      <td style="color:var(--muted);font-size:12px;">${new Date(inq.date).toLocaleDateString('en-IN', { month:'short', day:'numeric' })}</td>
+      <td>
+        <span class="badge-status ${inq.status === 'Unread' ? 'badge-pending' : 'badge-completed'}">${inq.status}</span>
+      </td>
+      <td>
+        <div class="table-actions">
+          ${inq.status === 'Unread' ? `<button class="btn-table-action confirm" onclick="markInquiryResolved('${inq.id}')">Mark Replied ✓</button>` : ''}
+          <a href="tel:${escapeHtml(inq.phone || '')}" class="btn-table-action">Call 📞</a>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// =============================================================================
+// ACTIONS & HANDLERS
+// =============================================================================
+window.updateReservationStatus = function(id, newStatus) {
+  const target = reservations.find(r => r.id === id);
+  if (target) {
+    target.status = newStatus;
+    saveData(KEYS.RESERVATIONS, reservations);
+    refreshAll();
+    showToast(`Booking ${id} marked as ${newStatus}`);
+  }
+};
+
+window.deleteReservation = function(id) {
+  if (confirm(`Remove reservation ${id}?`)) {
+    reservations = reservations.filter(r => r.id !== id);
+    saveData(KEYS.RESERVATIONS, reservations);
+    refreshAll();
+    showToast(`Reservation ${id} removed`);
+  }
+};
+
+window.toggleDishAvailability = function(id) {
+  const target = dishes.find(d => d.id === id);
+  if (target) {
+    target.available = !target.available;
+    saveData(KEYS.DISHES, dishes);
+    refreshAll();
+    showToast(`${target.title} is now ${target.available ? 'In Stock' : 'Sold Out'}`);
+  }
+};
+
+window.deleteDish = function(id) {
+  if (confirm('Delete this menu item?')) {
+    dishes = dishes.filter(d => d.id !== id);
+    saveData(KEYS.DISHES, dishes);
+    refreshAll();
+    showToast('Dish removed from catalog');
+  }
+};
+
+window.markInquiryResolved = function(id) {
+  const target = inquiries.find(i => i.id === id);
+  if (target) {
+    target.status = 'Replied';
+    saveData(KEYS.INQUIRIES, inquiries);
+    refreshAll();
+    showToast('Inquiry marked as replied');
+  }
+};
+
+// Modals
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+document.getElementById('quickNewBookingBtn').addEventListener('click', () => {
+  document.getElementById('resModalTitle').textContent = 'New Table Reservation';
+  document.getElementById('reservationForm').reset();
+  document.getElementById('modalResId').value = '';
+  document.getElementById('modalResDate').value = new Date().toISOString().split('T')[0];
+  openModal('reservationModal');
+});
+
+document.getElementById('addReservationBtn').addEventListener('click', () => {
+  document.getElementById('quickNewBookingBtn').click();
+});
+
+document.getElementById('addNewDishBtn').addEventListener('click', () => {
+  document.getElementById('dishModalTitle').textContent = 'Add Menu Dish';
+  document.getElementById('dishForm').reset();
+  document.getElementById('modalDishId').value = '';
+  openModal('dishModal');
+});
+
+window.editDish = function(id) {
+  const d = dishes.find(item => item.id === id);
+  if (!d) return;
+  document.getElementById('dishModalTitle').textContent = 'Edit Menu Dish';
+  document.getElementById('modalDishId').value = d.id;
+  document.getElementById('modalDishTitle').value = d.title;
+  document.getElementById('modalDishPrice').value = d.price;
+  document.getElementById('modalDishSubtitle').value = d.subtitle;
+  document.getElementById('modalDishSrc').value = d.src;
+  openModal('dishModal');
+};
+
+window.editReservation = function(id) {
+  const r = reservations.find(item => item.id === id);
+  if (!r) return;
+  document.getElementById('resModalTitle').textContent = `Edit Reservation · ${r.id}`;
+  document.getElementById('modalResId').value = r.id;
+  document.getElementById('modalResName').value = r.name || '';
+  document.getElementById('modalResParty').value = r.party || 2;
+  document.getElementById('modalResPhone').value = r.phone || '';
+  document.getElementById('modalResEmail').value = r.email || '';
+  document.getElementById('modalResDate').value = r.date || new Date().toISOString().split('T')[0];
+  document.getElementById('modalResTime').value = r.time || '19:30';
+  document.getElementById('modalResReason').value = r.reason || 'Reserve a table';
+  document.getElementById('modalResNotes').value = r.notes || '';
+  openModal('reservationModal');
+};
+
+// Form Submissions
+document.getElementById('reservationForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const idVal = document.getElementById('modalResId').value;
+  const name = document.getElementById('modalResName').value.trim();
+  const party = Number(document.getElementById('modalResParty').value);
+  const phone = document.getElementById('modalResPhone').value.trim();
+  const email = document.getElementById('modalResEmail').value.trim();
+  const date = document.getElementById('modalResDate').value;
+  const time = document.getElementById('modalResTime').value;
+  const reason = document.getElementById('modalResReason').value;
+  const notes = document.getElementById('modalResNotes').value.trim();
+
+  if (idVal) {
+    const existing = reservations.find(r => r.id === idVal);
+    if (existing) {
+      Object.assign(existing, { name, party, phone, email, date, time, reason, notes });
+      showToast(`Updated reservation ${idVal}`);
+    }
+  } else {
+    const newId = `RC-${Math.floor(100 + Math.random() * 900)}`;
+    reservations.unshift({
+      id: newId,
+      name, party, phone, email, date, time, reason, notes,
+      status: 'Confirmed',
+      createdAt: new Date().toISOString()
+    });
+    showToast(`Added new booking ${newId} for ${name}`);
+  }
+
+  saveData(KEYS.RESERVATIONS, reservations);
+  closeModal('reservationModal');
+  refreshAll();
+});
+
+document.getElementById('dishForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const idVal = document.getElementById('modalDishId').value;
+  const title = document.getElementById('modalDishTitle').value.trim();
+  const price = Number(document.getElementById('modalDishPrice').value);
+  const subtitle = document.getElementById('modalDishSubtitle').value.trim();
+  const src = document.getElementById('modalDishSrc').value.trim() || './images/dishes/pour-over-coffee.jpg';
+
+  if (idVal) {
+    const existing = dishes.find(d => d.id === idVal);
+    if (existing) {
+      Object.assign(existing, { title, price, subtitle, src });
+      showToast(`Updated ${title}`);
+    }
+  } else {
+    const newId = `d${Date.now()}`;
+    dishes.push({ id: newId, title, price, subtitle, src, available: true });
+    showToast(`Added ${title} to menu catalog`);
+  }
+
+  saveData(KEYS.DISHES, dishes);
+  closeModal('dishModal');
+  refreshAll();
+});
+
+// Search & Filter listeners
+document.getElementById('reservationSearch').addEventListener('input', renderReservationsTable);
+document.getElementById('reservationStatusFilter').addEventListener('change', renderReservationsTable);
+document.getElementById('menuSearch').addEventListener('input', renderMenuGrid);
+
+// CSV Export for Guest Reservations Roster
+window.exportReservationsCSV = function() {
+  if (!reservations || reservations.length === 0) {
+    showToast('No reservations to export');
+    return;
+  }
+  const headers = ['Booking ID', 'Guest Name', 'Party Size', 'Phone', 'Email', 'Date', 'Time', 'Category/Reason', 'Special Notes', 'Status', 'Created At'];
+  const rows = reservations.map(r => [
+    `"${(r.id || '').replace(/"/g, '""')}"`,
+    `"${(r.name || '').replace(/"/g, '""')}"`,
+    r.party || 1,
+    `"${(r.phone || '').replace(/"/g, '""')}"`,
+    `"${(r.email || '').replace(/"/g, '""')}"`,
+    `"${(r.date || '').replace(/"/g, '""')}"`,
+    `"${(r.time || '').replace(/"/g, '""')}"`,
+    `"${(r.reason || '').replace(/"/g, '""')}"`,
+    `"${(r.notes || '').replace(/"/g, '""')}"`,
+    `"${(r.status || '').replace(/"/g, '""')}"`,
+    `"${(r.createdAt || '').replace(/"/g, '""')}"`
+  ]);
+  const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `reflections-reservations-${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showToast('Downloaded guest reservations CSV');
+};
+
+const exportCsvBtn = document.getElementById('exportCsvBtn');
+if (exportCsvBtn) {
+  exportCsvBtn.addEventListener('click', window.exportReservationsCSV);
+}
+
+// Operational Settings & Floor Status
+const DEFAULT_SETTINGS = {
+  capacity: 54,
+  status: 'open',
+  notice: 'Woodfired sourdough pizzas and specialty single-origin pourover coffee pouring daily until 11:00 PM.'
+};
+
+let settings = loadData(KEYS.SETTINGS, DEFAULT_SETTINGS);
+
+function applySettingsUI() {
+  if (document.getElementById('settingCapacity')) {
+    document.getElementById('settingCapacity').value = settings.capacity || 54;
+  }
+  if (document.getElementById('settingNotice')) {
+    document.getElementById('settingNotice').value = settings.notice || '';
+  }
+  if (document.getElementById('settingServiceStatus')) {
+    document.getElementById('settingServiceStatus').value = settings.status || 'open';
+  }
+
+  const pill = document.getElementById('opsStatusPill');
+  if (pill) {
+    pill.classList.remove('status-open', 'status-busy', 'status-closed');
+    if (settings.status === 'busy') {
+      pill.classList.add('status-busy');
+      pill.textContent = 'Floor Full · Waitlist Only ↻';
+    } else if (settings.status === 'closed') {
+      pill.classList.add('status-closed');
+      pill.textContent = 'Service Closed · Reopening 9 AM ↻';
+    } else {
+      pill.classList.add('status-open');
+      pill.textContent = 'Service Live · Taking Bookings ↻';
+    }
+  }
+}
+
+// Click to cycle status on overview banner
+const opsStatusPill = document.getElementById('opsStatusPill');
+if (opsStatusPill) {
+  opsStatusPill.addEventListener('click', () => {
+    const cycle = { open: 'busy', busy: 'closed', closed: 'open' };
+    settings.status = cycle[settings.status] || 'open';
+    saveData(KEYS.SETTINGS, settings);
+    applySettingsUI();
+    showToast(`Service status updated: ${settings.status.toUpperCase()}`);
+  });
+}
+
+// Settings Save
+document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+  settings.capacity = Number(document.getElementById('settingCapacity').value) || 54;
+  settings.status = document.getElementById('settingServiceStatus').value || 'open';
+  settings.notice = document.getElementById('settingNotice').value.trim();
+  saveData(KEYS.SETTINGS, settings);
+  applySettingsUI();
+  showToast('Operational settings saved successfully');
+});
+
+document.getElementById('resetDemoDataBtn').addEventListener('click', () => {
+  if (confirm('Reset to standard initial demo bookings and dishes?')) {
+    localStorage.removeItem(KEYS.RESERVATIONS);
+    localStorage.removeItem(KEYS.DISHES);
+    localStorage.removeItem(KEYS.INQUIRIES);
+    localStorage.removeItem(KEYS.SETTINGS);
+    reservations = [...DEFAULT_RESERVATIONS];
+    dishes = [...DEFAULT_DISHES];
+    inquiries = [...DEFAULT_INQUIRIES];
+    settings = { ...DEFAULT_SETTINGS };
+    saveData(KEYS.RESERVATIONS, reservations);
+    saveData(KEYS.DISHES, dishes);
+    saveData(KEYS.INQUIRIES, inquiries);
+    saveData(KEYS.SETTINGS, settings);
+    applySettingsUI();
+    refreshAll();
+    showToast('Reset to default demo data');
+  }
+});
+
+// Helper utilities
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function showToast(msg) {
+  const shelf = document.getElementById('toastShelf');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>✓</span><span>${escapeHtml(msg)}</span>`;
+  shelf.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    toast.style.transition = 'all 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 3200);
+}
+
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const dateStr = now.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+  document.getElementById('currentTime').textContent = `Chandigarh · ${dateStr}, ${timeStr}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function refreshAll() {
+  updateMetrics();
+  renderOverviewReservations();
+  renderReservationsTable();
+  renderMenuGrid();
+  renderInquiriesTable();
+}
+
+// Check storage changes from customer site in another tab
+window.addEventListener('storage', (e) => {
+  if (e.key === KEYS.RESERVATIONS || e.key === KEYS.INQUIRIES) {
+    reservations = loadData(KEYS.RESERVATIONS, DEFAULT_RESERVATIONS);
+    inquiries = loadData(KEYS.INQUIRIES, DEFAULT_INQUIRIES);
+    refreshAll();
+    showToast('New guest submission synchronized!');
+  }
+});
+
+// Init
+checkAuth();
+applySettingsUI();
+refreshAll();
+</script>
+</body>
+</html>
